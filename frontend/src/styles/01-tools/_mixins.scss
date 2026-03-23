@@ -1,0 +1,82 @@
+// ==========================================================================
+// MIXINS REUTILIZABLES
+// ==========================================================================
+
+@use '../00-settings/variables' as v;
+
+// --------------------------------------------------------------------------
+// RESPONSIVE — Media queries por breakpoint
+// --------------------------------------------------------------------------
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == xs {
+    @media (min-width: v.$breakpoint-xs) { @content; }
+  } @else if $breakpoint == sm {
+    @media (min-width: v.$breakpoint-sm) { @content; }
+  } @else if $breakpoint == md {
+    @media (min-width: v.$breakpoint-md) { @content; }
+  } @else if $breakpoint == lg {
+    @media (min-width: v.$breakpoint-lg) { @content; }
+  } @else if $breakpoint == xl {
+    @media (min-width: v.$breakpoint-xl) { @content; }
+  }
+}
+
+// --------------------------------------------------------------------------
+// FLEX CENTER — Centra hijos en ambos ejes
+// --------------------------------------------------------------------------
+@mixin flex-center($direction: row) {
+  display: flex;
+  flex-direction: $direction;
+  align-items: center;
+  justify-content: center;
+}
+
+// --------------------------------------------------------------------------
+// TRUNCATE TEXT — Corta texto con puntos suspensivos
+// --------------------------------------------------------------------------
+@mixin truncate($lines: 1) {
+  @if $lines == 1 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  } @else {
+    display: -webkit-box;
+    -webkit-line-clamp: $lines;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+// --------------------------------------------------------------------------
+// VISUALLY HIDDEN — Oculta visualmente pero accesible para screen readers
+// --------------------------------------------------------------------------
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// --------------------------------------------------------------------------
+// CARD — Estilo base para tarjetas
+// --------------------------------------------------------------------------
+@mixin card($padding: v.$spacing-3) {
+  background-color: v.$color-card;
+  border-radius: v.$radius-lg;
+  box-shadow: v.$shadow-md;
+  padding: $padding;
+}
+
+// --------------------------------------------------------------------------
+// TRANSITION — Atajo para transiciones con propiedad personalizable
+// --------------------------------------------------------------------------
+@mixin transition($properties: all, $speed: v.$transition-base) {
+  transition-property: $properties;
+  transition-duration: $speed;
+  transition-timing-function: ease-in-out;
+}
