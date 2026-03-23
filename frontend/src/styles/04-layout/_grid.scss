@@ -1,0 +1,133 @@
+// ==========================================================================
+// SISTEMA DE LAYOUT — Grid, Flex y utilidades
+// ==========================================================================
+
+@use '../00-settings/variables' as v;
+@use '../01-tools/mixins' as m;
+
+// --------------------------------------------------------------------------
+// CONTENEDOR
+// --------------------------------------------------------------------------
+.container {
+  width: 100%;
+  max-width: v.$breakpoint-xl;
+  margin-inline: auto;
+  padding-inline: v.$spacing-2;
+
+  @include m.respond-to(md) {
+    padding-inline: v.$spacing-4;
+  }
+}
+
+// --------------------------------------------------------------------------
+// CSS GRID — Sistema de columnas
+// --------------------------------------------------------------------------
+.grid {
+  display: grid;
+  gap: v.$spacing-3;
+}
+
+// Columnas automáticas responsivas (auto-fit)
+.grid--auto {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+}
+
+// Columnas fijas
+.grid--2 { grid-template-columns: repeat(2, 1fr); }
+.grid--3 { grid-template-columns: repeat(3, 1fr); }
+.grid--4 { grid-template-columns: repeat(4, 1fr); }
+
+// Columnas responsivas: 1 col en móvil, N cols en desktop
+.grid--responsive-2 {
+  grid-template-columns: 1fr;
+
+  @include m.respond-to(md) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.grid--responsive-3 {
+  grid-template-columns: 1fr;
+
+  @include m.respond-to(sm) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include m.respond-to(lg) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.grid--responsive-4 {
+  grid-template-columns: 1fr;
+
+  @include m.respond-to(sm) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include m.respond-to(lg) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+// --------------------------------------------------------------------------
+// LAYOUT DE PÁGINA — Header / Main / Footer
+// --------------------------------------------------------------------------
+.page-layout {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+// Layout con sidebar
+.page-layout--sidebar {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  @include m.respond-to(lg) {
+    grid-template-columns: 16rem 1fr;
+    grid-template-rows: auto 1fr auto;
+  }
+}
+
+// --------------------------------------------------------------------------
+// FLEXBOX — Utilidades
+// --------------------------------------------------------------------------
+.flex {
+  display: flex;
+}
+
+.flex--center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex--between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flex--column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex--wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: v.$spacing-2;
+}
+
+// --------------------------------------------------------------------------
+// GAPS
+// --------------------------------------------------------------------------
+.gap-1 { gap: v.$spacing-1; }
+.gap-2 { gap: v.$spacing-2; }
+.gap-3 { gap: v.$spacing-3; }
+.gap-4 { gap: v.$spacing-4; }
