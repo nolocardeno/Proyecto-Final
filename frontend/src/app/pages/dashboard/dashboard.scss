@@ -1,0 +1,36 @@
+@use '../../../styles/00-settings/variables' as v;
+
+// --------------------------------------------------------------------------
+// HOST: Layout con Sidebar
+// --------------------------------------------------------------------------
+:host {
+  display: flex;
+  flex: 1;
+  margin-left: v.$spacing-sidebar-width;
+}
+
+// --------------------------------------------------------------------------
+// ÁREA DE CONTENIDO
+// --------------------------------------------------------------------------
+.dashboard__contenido {
+  flex: 1;
+  padding: v.$spacing-4;
+  display: flex;
+  flex-direction: column;
+  gap: v.$spacing-3;
+}
+
+// --------------------------------------------------------------------------
+// CARDS DE DOCUMENTOS
+// --------------------------------------------------------------------------
+.dashboard__cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: v.$spacing-3;
+}
+
+.dashboard__empty {
+  font-family: v.$font-primary;
+  font-size: v.$font-size-md;
+  color: v.$neutral-500;
+}

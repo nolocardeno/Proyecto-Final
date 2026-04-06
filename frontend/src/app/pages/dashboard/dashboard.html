@@ -1,0 +1,55 @@
+<!-- --------------------------------------------------------------------------
+     PÁGINA DASHBOARD: Sidebar + Área de contenido
+     -------------------------------------------------------------------------- -->
+<app-sidebar
+  [currentPage]="currentPage()"
+  (onNavigate)="onNavigate($event)"
+/>
+
+<section class="dashboard__contenido">
+  <!-- ------------------------------------------------------------------
+       PAGE HEADER
+       ------------------------------------------------------------------ -->
+  <app-page-header
+    [title]="'¡Bienvenido, ' + authService.user()!.name + '!'"
+    subtitle="Tus documentos de un vistazo..."
+  >
+    <app-button buttons variant="text">+ Añadir documento</app-button>
+  </app-page-header>
+
+  <!-- ------------------------------------------------------------------
+       FILTROS
+       ------------------------------------------------------------------ -->
+  <app-filter-bar
+    [counts]="filterCounts()"
+    [(activeFilter)]="activeFilter"
+  />
+
+  <!-- ------------------------------------------------------------------
+       BUSCADOR
+       ------------------------------------------------------------------ -->
+  <app-search-bar
+    [(value)]="searchTerm"
+    (searchChange)="onSearch($event)"
+  />
+
+  <!-- ------------------------------------------------------------------
+       CARDS DE DOCUMENTOS
+       ------------------------------------------------------------------ -->
+  <section class="dashboard__cards">
+    @for (doc of filteredDocuments(); track doc.id) {
+      <app-document-card
+        [type]="getCardType(doc.type)"
+        [title]="doc.title"
+        [category]="doc.category ?? doc.type"
+        [entity]="doc.storeName ?? '—'"
+        [issueDate]="formatDate(doc.issueDate)"
+        [expiryDate]="formatDate(doc.expiryDate)"
+        [statusText]="getStatusText(doc.daysRemaining)"
+      />
+    } @empty {
+      <p class="dashboard__empty">No hay documentos para este filtro.</p>
+    }
+  </section>
+
+</section>
