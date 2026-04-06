@@ -34,18 +34,6 @@ public final class DocumentMapper {
                 .build();
     }
 
-    public static AlertResponse toAlertResponse(com.nolocardeno.backend.model.Alert alert) {
-        return AlertResponse.builder()
-                .id(alert.getId())
-                .documentId(alert.getDocument().getId())
-                .documentTitle(alert.getDocument().getTitle())
-                .type(alert.getType())
-                .triggerDate(alert.getTriggerDate())
-                .status(alert.getStatus())
-                .createdAt(alert.getCreatedAt())
-                .build();
-    }
-
     public static RenewalHistoryResponse toRenewalResponse(com.nolocardeno.backend.model.RenewalHistory rh) {
         return RenewalHistoryResponse.builder()
                 .id(rh.getId())

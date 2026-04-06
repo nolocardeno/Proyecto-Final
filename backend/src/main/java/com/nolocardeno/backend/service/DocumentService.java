@@ -2,14 +2,10 @@ package com.nolocardeno.backend.service;
 
 import com.nolocardeno.backend.dto.*;
 import com.nolocardeno.backend.exception.ResourceNotFoundException;
-import com.nolocardeno.backend.model.Alert;
 import com.nolocardeno.backend.model.Document;
 import com.nolocardeno.backend.model.RenewalHistory;
 import com.nolocardeno.backend.model.User;
-import com.nolocardeno.backend.model.enums.AlertStatus;
-import com.nolocardeno.backend.model.enums.AlertType;
 import com.nolocardeno.backend.model.enums.DocumentStatus;
-import com.nolocardeno.backend.repository.AlertRepository;
 import com.nolocardeno.backend.repository.DocumentRepository;
 import com.nolocardeno.backend.repository.RenewalHistoryRepository;
 import com.nolocardeno.backend.repository.UserRepository;
@@ -27,7 +23,6 @@ public class DocumentService {
 
     private final DocumentRepository documentRepository;
     private final UserRepository userRepository;
-    private final AlertRepository alertRepository;
     private final RenewalHistoryRepository renewalHistoryRepository;
 
     @Transactional
@@ -68,7 +63,6 @@ public class DocumentService {
 
         updateDocumentStatus(doc);
         doc = documentRepository.save(doc);
-        generateAlerts(doc);
 
         return DocumentMapper.toResponse(doc);
     }
@@ -88,10 +82,6 @@ public class DocumentService {
 
         updateDocumentStatus(doc);
         doc = documentRepository.save(doc);
-
-        // Regenerar alertas
-        alertRepository.deleteAll(alertRepository.findByDocumentId(documentId));
-        generateAlerts(doc);
 
         return DocumentMapper.toResponse(doc);
     }
@@ -117,10 +107,6 @@ public class DocumentService {
         doc.setExpiryDate(newExpiryDate);
         doc.setStatus(DocumentStatus.ACTIVE);
         doc = documentRepository.save(doc);
-
-        // Regenerar alertas
-        alertRepository.deleteAll(alertRepository.findByDocumentId(documentId));
-        generateAlerts(doc);
 
         return DocumentMapper.toResponse(doc);
     }
@@ -168,37 +154,4 @@ public class DocumentService {
         }
     }
 
-    private void generateAlerts(Document doc) {
-        if (doc.getExpiryDate() == null) return;
-
-        LocalDate now = LocalDate.now();
-
-        // Alerta 30 días antes
-        LocalDate thirtyDaysBefore = doc.getExpiryDate().minusDays(30);
-        if (thirtyDaysBefore.isAfter(now)) {
-            createAlert(doc, AlertType.EXPIRING_SOON, thirtyDaysBefore);
-        }
-
-        // Alerta 7 días antes
-        LocalDate sevenDaysBefore = doc.getExpiryDate().minusDays(7);
-        if (sevenDaysBefore.isAfter(now)) {
-            createAlert(doc, AlertType.EXPIRING_SOON, sevenDaysBefore);
-        }
-
-        // Alerta el día de expiración
-        if (doc.getExpiryDate().isAfter(now)) {
-            createAlert(doc, AlertType.EXPIRED, doc.getExpiryDate());
-        }
-    }
-
-    private void createAlert(Document doc, AlertType type, LocalDate triggerDate) {
-        Alert alert = Alert.builder()
-                .document(doc)
-                .user(doc.getUser())
-                .type(type)
-                .triggerDate(triggerDate)
-                .status(AlertStatus.PENDING)
-                .build();
-        alertRepository.save(alert);
-    }
 }
