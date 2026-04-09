@@ -7,6 +7,7 @@
 :host {
   display: block;
   width: 100%;
+  min-width: 0;
 }
 
 // --------------------------------------------------------------------------
@@ -27,6 +28,7 @@
   flex-direction: column;
   width: 100%;
   min-height: 12.4375rem; // 199px
+  overflow: hidden;
   background-color: v.$color-accent-secondary;
   border: v.$border-thin solid v.$color-modal-border;
   border-radius: v.$radius-lg + 0.125rem; // 10px
@@ -93,6 +95,7 @@
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
+  max-width: 50%;
   padding: 0.1875rem 0.5rem;
   background: linear-gradient(to right, v.$color-accent-secondary, v.$color-accent-primary);
   border-radius: v.$radius-lg + 0.125rem; // 10px
@@ -114,6 +117,7 @@
   font-size: v.$font-size-md; // 16px
   color: v.$neutral-900;
   line-height: v.$line-height-tight;
+  min-width: 0;
   @include m.truncate(1);
 }
 
@@ -140,10 +144,17 @@
   font-size: v.$font-size-sm;
   font-weight: v.$font-weight-medium;
   color: v.$color-text-secondary;
+  min-width: 0;
 
   strong {
     font-weight: v.$font-weight-bold;
     color: v.$neutral-900;
+    flex-shrink: 0;
+  }
+
+  > span {
+    @include m.truncate(1);
+    min-width: 0;
   }
 }
 
