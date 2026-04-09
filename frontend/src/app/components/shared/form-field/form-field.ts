@@ -23,6 +23,7 @@ export class FormFieldComponent implements ControlValueAccessor {
   label = input.required<string>();
   type = input<string>('text');
   inputId = input.required<string>();
+  maxlength = input<number | null>(null);
 
   protected value = '';
   protected disabled = false;
