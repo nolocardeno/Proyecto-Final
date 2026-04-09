@@ -67,6 +67,19 @@
 }
 
 // --------------------------------------------------------------------------
+// VARIANTE: CARD (botón embebido en tarjetas, 36px alto, ancho completo)
+// --------------------------------------------------------------------------
+.btn--card {
+  background: v.$color-gradient-accent;
+  color: v.$neutral-900;
+  border-radius: v.$radius-pill;
+  box-shadow: v.$shadow-card;
+  width: 100%;
+  height: 2.25rem; // 36px
+  font-size: v.$font-size-md;
+}
+
+// --------------------------------------------------------------------------
 // TAMAÑOS
 // --------------------------------------------------------------------------
 .btn--sm {
