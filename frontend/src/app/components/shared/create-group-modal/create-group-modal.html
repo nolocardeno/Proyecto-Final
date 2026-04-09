@@ -1,0 +1,38 @@
+<!-- --------------------------------------------------------------------------
+     MODAL CREAR GRUPO: Formulario de creación de grupo
+     -------------------------------------------------------------------------- -->
+<app-auth-card title="Creación de grupo" (closed)="onModalClosed()">
+  <form class="create-group" [formGroup]="createForm" (ngSubmit)="onSubmit()">
+    <app-form-field
+      label="Nombre del grupo"
+      type="text"
+      inputId="create-group-name"
+      formControlName="name"
+      [maxlength]="50"
+    />
+
+    @if (createForm.get('name')!.hasError('maxlength')) {
+      <p class="create-group__error">El nombre no puede superar los 50 caracteres</p>
+    }
+
+    <app-form-checkbox
+      label="Todos pueden añadir documentos"
+      checkboxId="create-group-all-can-add"
+      formControlName="allCanAdd"
+      (change)="onAllCanAddChange()"
+    />
+
+    <app-form-checkbox
+      label="Solo el creador puede añadir documentos"
+      checkboxId="create-group-only-creator"
+      formControlName="onlyCreatorCanAdd"
+      (change)="onOnlyCreatorChange()"
+    />
+
+    <hr class="create-group__separator" />
+
+    <app-button variant="primary" size="auth" type="submit" class="create-group__action" [disabled]="loading">
+      {{ loading ? 'Creando...' : 'Crear grupo' }}
+    </app-button>
+  </form>
+</app-auth-card>

@@ -1,0 +1,40 @@
+@use '../../../../styles/00-settings/variables' as v;
+
+// --------------------------------------------------------------------------
+// FORMULARIO CREAR GRUPO
+// --------------------------------------------------------------------------
+.create-group {
+  display: flex;
+  flex-direction: column;
+  padding: v.$spacing-4 3.375rem;
+  gap: v.$spacing-4;
+
+  // --------------------------------------------------------------------------
+  // ERROR DE VALIDACIÓN
+  // --------------------------------------------------------------------------
+  &__error {
+    font-family: v.$font-primary;
+    font-size: v.$font-size-sm;
+    font-weight: v.$font-weight-medium;
+    color: v.$color-error;
+    margin: calc(v.$spacing-4 * -1 + 0.25rem) 0 0;
+  }
+
+  // --------------------------------------------------------------------------
+  // SEPARADOR
+  // --------------------------------------------------------------------------
+  &__separator {
+    border: none;
+    height: v.$border-thin;
+    background-color: v.$neutral-900;
+    opacity: 0.2;
+    margin: 0;
+  }
+
+  // --------------------------------------------------------------------------
+  // BOTÓN ACCIÓN
+  // --------------------------------------------------------------------------
+  &__action {
+    align-self: center;
+  }
+}
