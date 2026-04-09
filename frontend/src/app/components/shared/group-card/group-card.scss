@@ -1,0 +1,125 @@
+@use '../../../../styles/00-settings/variables' as v;
+@use '../../../../styles/01-tools/mixins' as m;
+
+// --------------------------------------------------------------------------
+// HOST
+// --------------------------------------------------------------------------
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+// --------------------------------------------------------------------------
+// CARD GRUPO
+// --------------------------------------------------------------------------
+.group-card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow: hidden;
+  background-color: v.$color-accent-secondary;
+  border: v.$border-thin solid v.$color-modal-border;
+  border-radius: v.$radius-card;
+  box-shadow: v.$shadow-card;
+  transition:
+    transform v.$transition-fast,
+    box-shadow v.$transition-fast;
+
+  &:hover {
+    transform: translateY(v.$hover-translate);
+    box-shadow: v.$hover-shadow;
+
+    .group-card__header {
+      background: linear-gradient(to right, v.$color-primary, v.$color-secondary);
+    }
+  }
+}
+
+// --------------------------------------------------------------------------
+// HEADER (zona superior con gradiente)
+// --------------------------------------------------------------------------
+.group-card__header {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  min-height: 29.24%;
+  background: linear-gradient(
+    to right,
+    rgba(v.$color-primary, 0.7),
+    rgba(v.$color-secondary, 0.7)
+  );
+  border-radius: v.$radius-card v.$radius-card 0 0;
+  @include m.transition(background, v.$transition-base);
+}
+
+// --------------------------------------------------------------------------
+// NOMBRE DEL GRUPO
+// --------------------------------------------------------------------------
+.group-card__name {
+  font-family: v.$font-primary;
+  font-weight: v.$font-weight-bold;
+  font-size: v.$font-size-md;
+  color: v.$neutral-900;
+  line-height: v.$line-height-tight;
+  min-width: 0;
+  @include m.truncate(1);
+}
+
+// --------------------------------------------------------------------------
+// BODY (zona inferior con fondo sólido)
+// --------------------------------------------------------------------------
+.group-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  padding: 0.75rem 1rem 0.5rem;
+}
+
+// --------------------------------------------------------------------------
+// ESTADÍSTICAS (miembros / documentos)
+// --------------------------------------------------------------------------
+.group-card__stat {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-bottom: 0;
+  font-family: v.$font-primary;
+  font-weight: v.$font-weight-medium;
+  font-size: 0.8125rem; // 13px
+  color: v.$color-text-secondary;
+
+  strong {
+    font-weight: v.$font-weight-bold;
+    color: v.$neutral-900;
+  }
+}
+
+.group-card__stat-icon {
+  font-size: v.$font-size-md;
+  color: v.$neutral-900;
+  flex-shrink: 0;
+}
+
+// --------------------------------------------------------------------------
+// SEPARADOR
+// --------------------------------------------------------------------------
+.group-card__separator {
+  width: calc(100% - #{v.$spacing-4});
+  margin: 0 auto;
+  border: none;
+  border-top: v.$border-thin solid rgba(0, 0, 0, 0.2);
+}
+
+// --------------------------------------------------------------------------
+// FOOTER
+// --------------------------------------------------------------------------
+.group-card__footer {
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem v.$spacing-2 0.75rem;
+
+  app-button {
+    width: 100%;
+  }
+}

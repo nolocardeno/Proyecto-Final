@@ -1,0 +1,56 @@
+<!-- --------------------------------------------------------------------------
+     GROUP CARD: Tarjeta visual de grupo con acceso a documentos
+     -------------------------------------------------------------------------- -->
+
+<article class="group-card">
+  <!-- --------------------------------------------------------------------------
+       HEADER: Nombre del grupo
+       -------------------------------------------------------------------------- -->
+  <header class="group-card__header">
+    <h3 class="group-card__name">{{ name() }}</h3>
+  </header>
+
+  <!-- --------------------------------------------------------------------------
+       BODY: Estadísticas (miembros + documentos)
+       -------------------------------------------------------------------------- -->
+  <section class="group-card__body">
+    <p class="group-card__stat">
+      <fa-icon
+        class="group-card__stat-icon"
+        [icon]="faUsers"
+        aria-hidden="true"
+      />
+      <span>
+        <strong>{{ memberCount() }}</strong> Miembros
+      </span>
+    </p>
+
+    <p class="group-card__stat">
+      <fa-icon
+        class="group-card__stat-icon"
+        [icon]="faFileLines"
+        aria-hidden="true"
+      />
+      <span>
+        <strong>{{ documentCount() }}</strong> Documentos
+      </span>
+    </p>
+  </section>
+
+  <!-- --------------------------------------------------------------------------
+       SEPARADOR
+       -------------------------------------------------------------------------- -->
+  <hr class="group-card__separator" />
+
+  <!-- --------------------------------------------------------------------------
+       FOOTER: Botón de acción
+       -------------------------------------------------------------------------- -->
+  <footer class="group-card__footer">
+    <app-button
+      variant="card"
+      (click)="onViewDocuments()"
+    >
+      Ver documentos
+    </app-button>
+  </footer>
+</article>
