@@ -15,7 +15,7 @@ import { AlertsComponent } from './components/shared/alerts/alerts';
 // --------------------------------------------------------------------------
 // RUTAS QUE USAN LAYOUT CON SIDEBAR
 // --------------------------------------------------------------------------
-const SIDEBAR_ROUTES = ['/dashboard', '/settings'];
+const SIDEBAR_ROUTES = ['/dashboard', '/settings', '/groups'];
 
 // --------------------------------------------------------------------------
 // COMPONENTE: APP (ROOT)
