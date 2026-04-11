@@ -1,0 +1,51 @@
+<!-- --------------------------------------------------------------------------
+     PÁGINA GROUPS: Sidebar + Área de contenido
+     -------------------------------------------------------------------------- -->
+<app-sidebar
+  [currentPage]="currentPage()"
+  (onNavigate)="onNavigate($event)"
+/>
+
+<section class="groups__contenido">
+  <!-- ------------------------------------------------------------------
+       PAGE HEADER
+       ------------------------------------------------------------------ -->
+  <app-page-header
+    title="Grupos"
+    subtitle="Consulta todos tus grupos, miembros asociados a ellos, documentos..."
+  >
+    <app-button buttons variant="text" (click)="groupModal.open()">+ Crear grupo</app-button>
+  </app-page-header>
+
+  <!-- ------------------------------------------------------------------
+       BUSCADOR
+       ------------------------------------------------------------------ -->
+  <app-search-bar
+    placeholder="Busca grupos..."
+    [(value)]="searchTerm"
+    (searchChange)="onSearch($event)"
+  />
+
+  <!-- ------------------------------------------------------------------
+       CARDS DE GRUPOS
+       ------------------------------------------------------------------ -->
+  <section class="groups__cards">
+    @for (group of filteredGroups(); track group.id) {
+      <app-group-card
+        [name]="group.name"
+        [memberCount]="group.memberCount"
+        [documentCount]="group.documentCount"
+        (viewDocuments)="onViewDocuments(group.id)"
+      />
+    } @empty {
+      <p class="groups__empty">No se encontraron grupos.</p>
+    }
+  </section>
+</section>
+
+<!-- --------------------------------------------------------------------------
+     MODAL CREAR GRUPO
+     -------------------------------------------------------------------------- -->
+@if (groupModal.isOpen()) {
+  <app-create-group-modal (groupCreated)="onGroupCreated()" />
+}
