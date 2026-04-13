@@ -8,6 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "document_groups")
@@ -24,6 +25,12 @@ public class DocumentGroup {
 
     @Column(nullable = false)
     private String name;
+
+    @Column
+    private String description;
+
+    @Column(name = "access_code", unique = true, length = 10)
+    private String accessCode;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creator_id", nullable = false)
@@ -58,4 +65,11 @@ public class DocumentGroup {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @PrePersist
+    private void generateAccessCode() {
+        if (this.accessCode == null || this.accessCode.isBlank()) {
+            this.accessCode = UUID.randomUUID().toString().replace("-", "").substring(0, 10).toUpperCase();
+        }
+    }
 }
