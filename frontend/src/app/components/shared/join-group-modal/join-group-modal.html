@@ -1,0 +1,19 @@
+<!-- --------------------------------------------------------------------------
+     MODAL UNIRSE A GRUPO: Formulario para unirse mediante código de acceso
+     -------------------------------------------------------------------------- -->
+<app-auth-card title="Unión a un grupo" (closed)="onModalClosed()">
+  <form class="join-group" [formGroup]="joinForm" (ngSubmit)="onSubmit()">
+    <app-form-field
+      label="Introduce el codigo de acceso al grupo"
+      type="text"
+      inputId="join-group-access-code"
+      formControlName="accessCode"
+    />
+
+    <hr class="join-group__separator" />
+
+    <app-button variant="primary" size="auth" type="submit" class="join-group__action" [disabled]="loading">
+      {{ loading ? 'Uniéndose...' : 'Unirse al grupo' }}
+    </app-button>
+  </form>
+</app-auth-card>
