@@ -1,0 +1,62 @@
+@use '../../../../styles/00-settings/variables' as v;
+@use '../../../../styles/01-tools/mixins' as m;
+
+// --------------------------------------------------------------------------
+// HOST
+// --------------------------------------------------------------------------
+:host {
+  display: block;
+}
+
+// --------------------------------------------------------------------------
+// CARD CÓDIGO DE GRUPO
+// --------------------------------------------------------------------------
+.group-code-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: v.$color-accent-secondary;
+  border: v.$border-thin solid v.$color-modal-border;
+  border-radius: v.$radius-card;
+  box-shadow: v.$shadow-card;
+}
+
+// --------------------------------------------------------------------------
+// HEADER (gradiente igual que page-header)
+// --------------------------------------------------------------------------
+.group-code-card__header {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  background: v.$color-gradient-primary;
+}
+
+// --------------------------------------------------------------------------
+// TÍTULO
+// --------------------------------------------------------------------------
+.group-code-card__title {
+  font-family: v.$font-primary;
+  font-weight: v.$font-weight-bold;
+  font-size: v.$font-size-md-lg;
+  color: v.$neutral-900;
+  line-height: v.$line-height-tight;
+}
+
+// --------------------------------------------------------------------------
+// BODY (código + botón copiar)
+// --------------------------------------------------------------------------
+.group-code-card__body {
+  display: flex;
+  align-items: flex-end;
+  gap: v.$spacing-1;
+  padding: v.$spacing-2 1.25rem;
+
+  app-form-field {
+    flex: 1;
+    min-width: 0;
+  }
+
+  app-copy-button {
+    flex-shrink: 0;
+  }
+}

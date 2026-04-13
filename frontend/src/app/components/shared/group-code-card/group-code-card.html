@@ -1,0 +1,21 @@
+<!-- --------------------------------------------------------------------------
+     GROUP CODE CARD: Muestra el código de acceso del grupo con botón copiar
+     -------------------------------------------------------------------------- -->
+<article class="group-code-card">
+  <header class="group-code-card__header">
+    <h2 class="group-code-card__title">Código del grupo</h2>
+  </header>
+
+  <section class="group-code-card__body">
+    <app-form-field
+      inputId="group-code"
+      [ngModel]="accessCode()"
+      [readonly]="true"
+    />
+    <app-copy-button
+      [textToCopy]="accessCode()"
+      ariaLabel="Copiar código de acceso"
+      successMessage="Código copiado al portapapeles"
+    />
+  </section>
+</article>
