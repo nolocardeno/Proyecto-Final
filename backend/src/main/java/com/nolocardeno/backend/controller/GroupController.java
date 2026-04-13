@@ -1,5 +1,7 @@
 package com.nolocardeno.backend.controller;
 
+import com.nolocardeno.backend.dto.DocumentResponse;
+import com.nolocardeno.backend.dto.GroupDetailResponse;
 import com.nolocardeno.backend.dto.GroupRequest;
 import com.nolocardeno.backend.dto.GroupResponse;
 import com.nolocardeno.backend.service.GroupService;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/groups")
@@ -30,6 +33,20 @@ public class GroupController {
         return ResponseEntity.ok(groupService.getGroup(userId, id));
     }
 
+    @GetMapping("/{id}/detail")
+    public ResponseEntity<GroupDetailResponse> getDetail(
+            @RequestHeader("X-User-Id") Long userId,
+            @PathVariable Long id) {
+        return ResponseEntity.ok(groupService.getGroupDetail(userId, id));
+    }
+
+    @GetMapping("/{id}/documents")
+    public ResponseEntity<List<DocumentResponse>> getDocuments(
+            @RequestHeader("X-User-Id") Long userId,
+            @PathVariable Long id) {
+        return ResponseEntity.ok(groupService.getGroupDocuments(userId, id));
+    }
+
     @PostMapping
     public ResponseEntity<GroupResponse> create(
             @RequestHeader("X-User-Id") Long userId,
@@ -44,5 +61,13 @@ public class GroupController {
             @PathVariable Long id) {
         groupService.deleteGroup(userId, id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/join")
+    public ResponseEntity<GroupResponse> join(
+            @RequestHeader("X-User-Id") Long userId,
+            @RequestBody Map<String, String> body) {
+        String accessCode = body.get("accessCode");
+        return ResponseEntity.ok(groupService.joinGroup(userId, accessCode));
     }
 }

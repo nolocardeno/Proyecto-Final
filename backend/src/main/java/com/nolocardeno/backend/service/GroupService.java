@@ -37,6 +37,20 @@ public class GroupService {
         return GroupMapper.toResponse(group);
     }
 
+    @Transactional(readOnly = true)
+    public GroupDetailResponse getGroupDetail(Long userId, Long groupId) {
+        DocumentGroup group = findGroupByUser(userId, groupId);
+        return GroupMapper.toDetailResponse(group);
+    }
+
+    @Transactional(readOnly = true)
+    public List<DocumentResponse> getGroupDocuments(Long userId, Long groupId) {
+        DocumentGroup group = findGroupByUser(userId, groupId);
+        return group.getDocuments().stream()
+                .map(DocumentMapper::toResponse)
+                .toList();
+    }
+
     @Transactional
     public GroupResponse createGroup(Long userId, GroupRequest request) {
         User user = userRepository.findById(userId)
@@ -61,6 +75,27 @@ public class GroupService {
             throw new IllegalArgumentException("Solo el creador puede eliminar el grupo");
         }
         groupRepository.delete(group);
+    }
+
+    @Transactional
+    public GroupResponse joinGroup(Long userId, String accessCode) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+
+        DocumentGroup group = groupRepository.findByAccessCode(accessCode)
+                .orElseThrow(() -> new ResourceNotFoundException("Código de acceso no válido"));
+
+        boolean alreadyMember = group.getMembers().stream()
+                .anyMatch(m -> m.getId().equals(userId));
+
+        if (alreadyMember) {
+            throw new IllegalArgumentException("Ya eres miembro de este grupo");
+        }
+
+        group.getMembers().add(user);
+        groupRepository.save(group);
+
+        return GroupMapper.toResponse(group);
     }
 
     private DocumentGroup findGroupByUser(Long userId, Long groupId) {
