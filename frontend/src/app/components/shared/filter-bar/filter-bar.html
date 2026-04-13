@@ -7,7 +7,7 @@
   </defs>
 </svg>
 
-<nav class="filter-bar" role="radiogroup" aria-label="Filtros de documentos">
+<nav class="filter-bar" [class.filter-bar--compact]="size() === 'compact'" role="radiogroup" aria-label="Filtros de documentos">
   @for (filter of filters; track filter.type) {
     <button
       class="filter-bar__card"

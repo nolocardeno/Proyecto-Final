@@ -32,6 +32,7 @@ const FILTERS: FilterConfig[] = [
 export class FilterBarComponent {
   counts = input.required<Record<FilterType, number>>();
   activeFilter = model<FilterType>('all');
+  size = input<'default' | 'compact'>('default');
 
   protected readonly filters = FILTERS;
 

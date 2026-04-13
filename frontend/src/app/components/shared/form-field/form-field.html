@@ -2,13 +2,16 @@
      CAMPO FORMULARIO: Label + Input reutilizable
      -------------------------------------------------------------------------- -->
 <label class="form-field" [attr.for]="inputId()">
-  <span class="form-field__label">{{ label() }}</span>
+  @if (label()) {
+    <span class="form-field__label">{{ label() }}</span>
+  }
   <input
     class="form-field__input"
     [id]="inputId()"
     [type]="type()"
     [value]="value"
     [disabled]="disabled"
+    [readOnly]="readonly()"
     [attr.maxlength]="maxlength()"
     (input)="onInput($event)"
     (blur)="onBlur()"

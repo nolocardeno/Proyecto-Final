@@ -20,10 +20,11 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   ],
 })
 export class FormFieldComponent implements ControlValueAccessor {
-  label = input.required<string>();
+  label = input<string>('');
   type = input<string>('text');
   inputId = input.required<string>();
   maxlength = input<number | null>(null);
+  readonly = input<boolean>(false);
 
   protected value = '';
   protected disabled = false;

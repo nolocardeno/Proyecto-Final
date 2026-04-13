@@ -107,4 +107,16 @@
     line-height: v.$line-height-tight;
     text-transform: uppercase;
   }
+
+  // ------------------------------------------------------------------
+  // Variante compacta
+  // ------------------------------------------------------------------
+  &--compact {
+    gap: v.$spacing-2;
+
+    .filter-bar__card {
+      min-height: 8.75rem;
+      padding: v.$spacing-2 0.5rem;
+    }
+  }
 }
