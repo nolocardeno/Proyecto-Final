@@ -1,0 +1,30 @@
+@use '../../../../styles/00-settings/variables' as v;
+@use '../../../../styles/01-tools/mixins' as m;
+
+// --------------------------------------------------------------------------
+// HOST
+// --------------------------------------------------------------------------
+:host {
+  display: inline-flex;
+}
+
+// --------------------------------------------------------------------------
+// BOTÓN COPIAR
+// --------------------------------------------------------------------------
+.copy-button {
+  @include m.flex-center;
+  width: 2.875rem;
+  height: 2.875rem;
+  background: v.$color-gradient-accent;
+  border-radius: v.$radius-lg;
+  box-shadow: v.$shadow-card;
+  cursor: pointer;
+  color: v.$neutral-900;
+  font-size: v.$font-size-md-lg;
+  @include m.hover-elevation;
+
+  &:focus-visible {
+    outline: v.$border-medium solid v.$color-primary;
+    outline-offset: v.$border-medium;
+  }
+}
