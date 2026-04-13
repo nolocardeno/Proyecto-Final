@@ -1,0 +1,96 @@
+@use '../../../../styles/00-settings/variables' as v;
+
+// --------------------------------------------------------------------------
+// HOST
+// --------------------------------------------------------------------------
+:host {
+  display: block;
+}
+
+// --------------------------------------------------------------------------
+// CARD MIEMBROS DEL GRUPO
+// --------------------------------------------------------------------------
+.group-members-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: v.$color-accent-secondary;
+  border: v.$border-thin solid v.$color-modal-border;
+  border-radius: v.$radius-card;
+  box-shadow: v.$shadow-card;
+}
+
+// --------------------------------------------------------------------------
+// HEADER (zona superior con gradiente, igual que group-card)
+// --------------------------------------------------------------------------
+.group-members-card__header {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  background: v.$color-gradient-primary;
+}
+
+// --------------------------------------------------------------------------
+// TÍTULO
+// --------------------------------------------------------------------------
+.group-members-card__title {
+  font-family: v.$font-primary;
+  font-weight: v.$font-weight-bold;
+  font-size: v.$font-size-md-lg;
+  color: v.$neutral-900;
+  line-height: v.$line-height-tight;
+}
+
+// --------------------------------------------------------------------------
+// LISTA DE MIEMBROS
+// --------------------------------------------------------------------------
+.group-members-card__list {
+  display: flex;
+  flex-direction: column;
+  gap: v.$spacing-2;
+  list-style: none;
+  padding: v.$spacing-2 v.$spacing-3;
+  margin: 0;
+  max-height: 30rem;
+  overflow-y: auto;
+}
+
+// --------------------------------------------------------------------------
+// ITEM
+// --------------------------------------------------------------------------
+.group-members-card__item {
+  display: flex;
+  align-items: center;
+  gap: v.$spacing-1;
+}
+
+// --------------------------------------------------------------------------
+// CORONA DEL CREADOR
+// --------------------------------------------------------------------------
+.group-members-card__crown {
+  font-size: v.$font-size-md;
+  flex-shrink: 0;
+
+  ::ng-deep svg path {
+    fill: url(#grad-crown);
+  }
+}
+
+// --------------------------------------------------------------------------
+// SVG DEFS (oculto, solo define gradientes)
+// --------------------------------------------------------------------------
+.group-members-card__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+// --------------------------------------------------------------------------
+// VACÍO
+// --------------------------------------------------------------------------
+.group-members-card__empty {
+  font-family: v.$font-primary;
+  font-size: v.$font-size-md;
+  color: v.$neutral-500;
+}

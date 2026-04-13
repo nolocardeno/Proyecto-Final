@@ -1,0 +1,33 @@
+<!-- --------------------------------------------------------------------------
+     GROUP MEMBERS CARD: Lista de miembros del grupo con avatar y nombre
+     -------------------------------------------------------------------------- -->
+<svg class="group-members-card__defs" aria-hidden="true">
+  <defs>
+    <linearGradient id="grad-crown" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="var(--color-primary)" />
+      <stop offset="100%" stop-color="var(--color-secondary)" />
+    </linearGradient>
+  </defs>
+</svg>
+
+<article class="group-members-card">
+  <header class="group-members-card__header">
+    <h2 class="group-members-card__title">Miembros del grupo</h2>
+  </header>
+
+  <ul class="group-members-card__list">
+    @for (member of members(); track member.userId) {
+      <li class="group-members-card__item">
+        <app-user-card
+          [username]="member.name"
+          [photoUrl]="member.profileImagePath ? '/api/users/' + member.userId + '/profile-image' : ''"
+        />
+        @if (member.userId === creatorId()) {
+          <fa-icon class="group-members-card__crown" [icon]="faCrown" aria-label="Creador del grupo" />
+        }
+      </li>
+    } @empty {
+      <li class="group-members-card__empty">No hay miembros en este grupo.</li>
+    }
+  </ul>
+</article>
