@@ -1,0 +1,66 @@
+<!-- --------------------------------------------------------------------------
+     PÁGINA GROUP DETAIL: Sidebar + Contenido principal + Panel lateral
+     -------------------------------------------------------------------------- -->
+<app-sidebar
+  [currentPage]="currentPage()"
+  (onNavigate)="onNavigate($event)"
+/>
+
+@if (group(); as group) {
+  <section class="group-detail">
+    <!-- ------------------------------------------------------------------
+         CONTENIDO PRINCIPAL (izquierda)
+         ------------------------------------------------------------------ -->
+    <main class="group-detail__main">
+      <!-- PAGE HEADER -->
+      <app-page-header
+        [title]="group.name"
+        [subtitle]="group.description ?? 'Descripción del grupo...'"
+        size="compact"
+      >
+        <app-button buttons variant="text">+ Añadir documento</app-button>
+        <app-button buttons variant="text" (click)="goBack()">Volver a los grupos</app-button>
+      </app-page-header>
+
+      <!-- FILTROS (compactos) -->
+      <app-filter-bar
+        size="compact"
+        [counts]="filterCounts()"
+        [(activeFilter)]="activeFilter"
+      />
+
+      <!-- BUSCADOR -->
+      <app-search-bar
+        placeholder="Busca documentos..."
+        [(value)]="searchTerm"
+        (searchChange)="onSearch($event)"
+        size="compact"
+      />
+
+      <!-- CARDS DE DOCUMENTOS (2 columnas) -->
+      <section class="group-detail__cards">
+        @for (doc of filteredDocuments(); track doc.id) {
+          <app-document-card
+            [type]="getCardType(doc.type)"
+            [title]="doc.title"
+            [category]="doc.category ?? doc.type"
+            [entity]="doc.storeName ?? '—'"
+            [issueDate]="formatDate(doc.issueDate)"
+            [expiryDate]="formatDate(doc.expiryDate)"
+            [statusText]="getStatusText(doc.daysRemaining)"
+          />
+        } @empty {
+          <p class="group-detail__empty">No hay documentos en este grupo.</p>
+        }
+      </section>
+    </main>
+
+    <!-- ------------------------------------------------------------------
+         PANEL LATERAL (derecha)
+         ------------------------------------------------------------------ -->
+    <aside class="group-detail__sidebar">
+      <app-group-code-card [accessCode]="group.accessCode" />
+      <app-group-members-card [members]="group.members" [creatorId]="group.creatorId" />
+    </aside>
+  </section>
+}
