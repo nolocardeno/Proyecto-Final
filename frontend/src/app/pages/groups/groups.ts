@@ -9,8 +9,10 @@ import { PageHeaderComponent } from '../../components/shared/page-header/page-he
 import { ButtonComponent } from '../../components/shared/button/button';
 import { SearchBarComponent } from '../../components/shared/search-bar/search-bar';
 import { CreateGroupModalComponent } from '../../components/shared/create-group-modal/create-group-modal';
+import { JoinGroupModalComponent } from '../../components/shared/join-group-modal/join-group-modal';
 import { GroupService } from '../../services/group.service';
 import { GroupModalService } from '../../services/group-modal.service';
+import { JoinGroupModalService } from '../../services/join-group-modal.service';
 import { AuthService } from '../../services/auth.service';
 import { type GroupResponse } from '../../models/group.model';
 
@@ -26,6 +28,7 @@ import { type GroupResponse } from '../../models/group.model';
     ButtonComponent,
     SearchBarComponent,
     CreateGroupModalComponent,
+    JoinGroupModalComponent,
   ],
   templateUrl: './groups.html',
   styleUrl: './groups.scss',
@@ -33,6 +36,7 @@ import { type GroupResponse } from '../../models/group.model';
 export class GroupsComponent implements OnInit {
   private readonly groupService = inject(GroupService);
   protected readonly groupModal = inject(GroupModalService);
+  protected readonly joinGroupModal = inject(JoinGroupModalService);
   protected readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
@@ -55,8 +59,12 @@ export class GroupsComponent implements OnInit {
     this.loadGroups();
   }
 
+  protected onGroupJoined(): void {
+    this.loadGroups();
+  }
+
   protected onViewDocuments(groupId: number): void {
-    // TODO: Navegar a documentos del grupo
+    this.router.navigate(['/groups', groupId]);
   }
 
   onNavigate(page: string): void {

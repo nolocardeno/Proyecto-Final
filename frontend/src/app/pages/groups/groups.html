@@ -14,6 +14,7 @@
     title="Grupos"
     subtitle="Consulta todos tus grupos, miembros asociados a ellos, documentos..."
   >
+    <app-button buttons variant="text" (click)="joinGroupModal.open()">+ Unirse a un grupo</app-button>
     <app-button buttons variant="text" (click)="groupModal.open()">+ Crear grupo</app-button>
   </app-page-header>
 
@@ -48,4 +49,11 @@
      -------------------------------------------------------------------------- -->
 @if (groupModal.isOpen()) {
   <app-create-group-modal (groupCreated)="onGroupCreated()" />
+}
+
+<!-- --------------------------------------------------------------------------
+     MODAL UNIRSE A GRUPO
+     -------------------------------------------------------------------------- -->
+@if (joinGroupModal.isOpen()) {
+  <app-join-group-modal (groupJoined)="onGroupJoined()" />
 }
