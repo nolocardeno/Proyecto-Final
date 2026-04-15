@@ -28,4 +28,15 @@ export class DocumentService {
   getDocument(id: number): Observable<DocumentResponse> {
     return this.http.get<DocumentResponse>(`${this.baseUrl}/${id}`, { headers: this.headers });
   }
+
+  createDocument(body: Record<string, unknown>, groupId?: number): Observable<DocumentResponse> {
+    const url = groupId ? `/api/groups/${groupId}/documents` : this.baseUrl;
+    return this.http.post<DocumentResponse>(url, body, { headers: this.headers });
+  }
+
+  extractFromImage(file: File): Observable<DocumentResponse> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<DocumentResponse>(`${this.baseUrl}/extract`, formData, { headers: this.headers });
+  }
 }
