@@ -1,0 +1,61 @@
+@use '../../../../styles/00-settings/variables' as v;
+
+// --------------------------------------------------------------------------
+// HOST
+// --------------------------------------------------------------------------
+:host {
+  display: block;
+  width: 100%;
+}
+
+// --------------------------------------------------------------------------
+// PROGRESS BAR
+// --------------------------------------------------------------------------
+.progress-bar {
+  width: 100%;
+  height: 0.875rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: v.$radius-full;
+  overflow: hidden;
+  margin: 0;
+  border: none;
+  padding: 0;
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.45),
+    inset 0 1px 2px rgba(0, 0, 0, 0.25);
+
+  // --------------------------------------------------------------------------
+  // FILL: Gloss blanco brillante
+  // --------------------------------------------------------------------------
+  &__fill {
+    display: block;
+    height: 100%;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(255, 255, 255, 0.75) 50%,
+      rgba(255, 255, 255, 0.9) 100%
+    );
+    border-radius: v.$radius-full;
+    box-shadow: 2px 0 12px rgba(255, 255, 255, 0.55);
+    transition: width v.$transition-base;
+    position: relative;
+    overflow: hidden;
+
+    // ---- Brillo superior (gloss capsule) ----
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 45%;
+      background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.7) 0%,
+        transparent 100%
+      );
+      border-radius: v.$radius-full v.$radius-full 0 0;
+    }
+  }
+}
