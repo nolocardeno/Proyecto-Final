@@ -1,56 +1,91 @@
 <!-- --------------------------------------------------------------------------
-     GROUP CARD: Tarjeta visual de grupo con acceso a documentos
+     GROUP CARD: Tarjeta visual de grupo (entera clicable)
      -------------------------------------------------------------------------- -->
 
-<article class="group-card">
+<!-- Gradiente reutilizable para iconos del body -->
+<svg class="group-card__defs" aria-hidden="true">
+  <defs>
+    <linearGradient id="grad-group-card" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="var(--color-primary)" />
+      <stop offset="100%" stop-color="var(--color-secondary)" />
+    </linearGradient>
+  </defs>
+</svg>
+
+<article
+  class="group-card"
+  role="button"
+  tabindex="0"
+  (click)="onClick()"
+  (keydown.enter)="onClick()"
+>
   <!-- --------------------------------------------------------------------------
-       HEADER: Nombre del grupo
+       HEADER: Nombre del grupo + icono decorativo
        -------------------------------------------------------------------------- -->
   <header class="group-card__header">
     <h3 class="group-card__name">{{ name() }}</h3>
+    <span class="group-card__header-icon" aria-hidden="true">
+      <fa-icon [icon]="faUsers" />
+    </span>
   </header>
 
   <!-- --------------------------------------------------------------------------
-       BODY: Estadísticas (miembros + documentos)
+       BODY: Estadísticas (izquierda) + Avatares solapados (derecha, abajo)
        -------------------------------------------------------------------------- -->
   <section class="group-card__body">
-    <p class="group-card__stat">
-      <fa-icon
-        class="group-card__stat-icon"
-        [icon]="faUsers"
-        aria-hidden="true"
-      />
-      <span>
-        <strong>{{ memberCount() }}</strong> Miembros
-      </span>
-    </p>
 
-    <p class="group-card__stat">
-      <fa-icon
-        class="group-card__stat-icon"
-        [icon]="faFileLines"
-        aria-hidden="true"
-      />
-      <span>
-        <strong>{{ documentCount() }}</strong> Documentos
-      </span>
-    </p>
+    <!-- Estadísticas: miembros y documentos -->
+    <ul class="group-card__stats">
+      <li class="group-card__stat">
+        <fa-icon
+          class="group-card__stat-icon"
+          [icon]="faUser"
+          aria-hidden="true"
+        />
+        <span>
+          <strong>{{ memberCount() }}</strong> Miembros
+        </span>
+      </li>
+
+      <li class="group-card__stat">
+        <fa-icon
+          class="group-card__stat-icon"
+          [icon]="faFileLines"
+          aria-hidden="true"
+        />
+        <span>
+          <strong>{{ documentCount() }}</strong> Documentos
+        </span>
+      </li>
+    </ul>
+
+    <!-- Avatar stack: a la derecha, alineado con los stats -->
+    <app-avatar-stack
+      class="group-card__avatars"
+      [members]="members()"
+      [totalCount]="memberCount()"
+    />
+
   </section>
 
-  <!-- --------------------------------------------------------------------------
-       SEPARADOR
-       -------------------------------------------------------------------------- -->
-  <hr class="group-card__separator" />
+  <hr class="group-card__doc-separator" />
 
   <!-- --------------------------------------------------------------------------
-       FOOTER: Botón de acción
+       DOC INFO: Activos / Expirados + barra de progreso (una sola fila)
        -------------------------------------------------------------------------- -->
-  <footer class="group-card__footer">
-    <app-button
-      variant="card"
-      (click)="onViewDocuments()"
-    >
-      Ver documentos
-    </app-button>
-  </footer>
+  <div class="group-card__doc-info">
+    <p class="group-card__progress-labels">
+      <span class="group-card__label">
+        <fa-icon class="group-card__footer-icon" [icon]="faHourglassHalf" aria-hidden="true" />
+        {{ activeDocumentCount() }} activos
+      </span>
+      <span class="group-card__label-dot" aria-hidden="true">·</span>
+      <span class="group-card__label">
+        <fa-icon class="group-card__footer-icon" [icon]="faCircleXmark" aria-hidden="true" />
+        {{ expiredDocumentCount() }} expirados
+      </span>
+    </p>
+    <app-progress-bar [value]="progressValue()" variant="orange" size="sm" />
+  </div>
+
 </article>
