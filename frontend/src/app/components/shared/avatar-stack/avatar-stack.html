@@ -1,0 +1,29 @@
+<!-- --------------------------------------------------------------------------
+     AVATAR STACK: Avatares de usuario solapados con indicador de desbordamiento
+     -------------------------------------------------------------------------- -->
+
+<ul class="avatar-stack">
+  @for (slot of avatarSlots(); track $index) {
+    <li class="avatar-stack__item">
+      @if (slot?.profileImagePath) {
+        <img
+          class="avatar-stack__img"
+          [src]="'/api/users/' + slot!.userId + '/profile-image'"
+          [alt]="slot!.name"
+        />
+      } @else {
+        <span class="avatar-stack__placeholder" aria-hidden="true">
+          <fa-icon [icon]="faUser" />
+        </span>
+      }
+    </li>
+  }
+  @if (overflowCount() > 0) {
+    <li
+      class="avatar-stack__item avatar-stack__item--overflow"
+      [attr.aria-label]="overflowCount() + ' miembros más'"
+    >
+      +{{ overflowCount() }}
+    </li>
+  }
+</ul>
