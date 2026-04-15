@@ -1,0 +1,239 @@
+<!-- --------------------------------------------------------------------------
+     UPLOAD DOCUMENT MODAL: Modal multi-paso para subida de documentos
+     -------------------------------------------------------------------------- -->
+<aside class="upload-modal" (click)="onBackdropClick($event)">
+  <article class="upload-modal__card" role="dialog" aria-modal="true">
+
+    <!-- ----------------------------------------------------------------
+         CABECERA CON GRADIENTE
+         ---------------------------------------------------------------- -->
+    <header class="upload-modal__header" [class.upload-modal__header--with-back]="showBack()">
+      <h2 class="upload-modal__title">Subir un nuevo documento</h2>
+
+      <!-- Barra de progreso -->
+      <app-progress-bar [value]="progress()" />
+
+      <!-- Botón volver -->
+      @if (showBack()) {
+        <button class="upload-modal__back" type="button" (click)="goBack()">
+          ← Volver
+        </button>
+      }
+    </header>
+
+    <!-- ----------------------------------------------------------------
+         CUERPO: Pasos del flujo
+         ---------------------------------------------------------------- -->
+    <section class="upload-modal__body">
+
+      <!-- ============================================================
+           PASO 1: Selección de método
+           ============================================================ -->
+      @if (currentStep() === 'method') {
+        <h3 class="upload-modal__subtitle">Selecciona el metodo de subida</h3>
+        <menu class="upload-modal__options">
+          @for (option of methodOptions; track option.value) {
+            <li>
+              <app-option-button
+                [icon]="option.icon"
+                [label]="option.label"
+                (selected)="selectMethod(option.value)"
+              />
+            </li>
+          }
+        </menu>
+      }
+
+      <!-- ============================================================
+           PASO 2A: Subida desde imagen
+           ============================================================ -->
+      @if (currentStep() === 'image-upload') {
+        <label class="upload-modal__file-group">
+          <span class="upload-modal__file-label">Imagen</span>
+          <app-file-picker (fileSelected)="onImageSelected($event)" />
+        </label>
+        <footer class="upload-modal__actions">
+          <hr class="upload-modal__separator" />
+          <app-button
+            class="upload-modal__action-btn"
+            variant="text"
+            (click)="extractData()"
+            [disabled]="!imageFile() || loading()"
+          >
+            {{ loading() ? 'Extrayendo...' : 'Extraer datos' }}
+          </app-button>
+        </footer>
+      }
+
+      <!-- ============================================================
+           PASO 2B: Selección de tipo (Ticket / Documento)
+           ============================================================ -->
+      @if (currentStep() === 'type-select') {
+        <h3 class="upload-modal__subtitle">Selecciona el tipo</h3>
+        <menu class="upload-modal__options">
+          @for (option of typeOptions; track option.value) {
+            <li>
+              <app-option-button
+                [icon]="option.icon"
+                [label]="option.label"
+                [active]="selectedKind() === option.value"
+                (selected)="selectType(option.value)"
+              />
+            </li>
+          }
+        </menu>
+        <footer class="upload-modal__actions">
+          <hr class="upload-modal__separator" />
+          <app-button
+            class="upload-modal__action-btn"
+            variant="text"
+            (click)="onTypeNext()"
+            [disabled]="!selectedKind()"
+          >
+            Siguiente
+          </app-button>
+        </footer>
+      }
+
+      <!-- ============================================================
+           PASO 3A: Selección de categoría (Ticket)
+           ============================================================ -->
+      @if (currentStep() === 'ticket-category') {
+        <h3 class="upload-modal__subtitle">Selecciona la categoría</h3>
+        <menu class="upload-modal__options">
+          @for (option of ticketCategoryOptions; track option.value) {
+            <li>
+              <app-option-button
+                [icon]="option.icon"
+                [label]="option.label"
+                [active]="selectedTicketCategory() === option.value"
+                (selected)="selectTicketCategory(option.value)"
+              />
+            </li>
+          }
+        </menu>
+        @if (showCustomTicketInput()) {
+          <label class="upload-modal__file-group">
+            <span class="upload-modal__file-label">Escribe la categoría</span>
+            <input
+              class="upload-modal__custom-input"
+              type="text"
+              placeholder="P. ej. Devolución, Nota de crédito..."
+              maxlength="25"
+              [value]="customTicketCategory()"
+              (input)="customTicketCategory.set($any($event.target).value)"
+            />
+          </label>
+        }
+        <footer class="upload-modal__actions">
+          <hr class="upload-modal__separator" />
+          <app-button
+            class="upload-modal__action-btn"
+            variant="text"
+            (click)="onTicketCategoryNext()"
+            [disabled]="!selectedTicketCategory() || (showCustomTicketInput() && !customTicketCategory().trim())"
+          >
+            Siguiente
+          </app-button>
+        </footer>
+      }
+
+      <!-- ============================================================
+           PASO 3B: Selección de categoría (Documento)
+           ============================================================ -->
+      @if (currentStep() === 'category-select') {
+        <h3 class="upload-modal__subtitle">Selecciona la categoría</h3>
+        <menu class="upload-modal__options">
+          @for (option of categoryOptions; track option.value) {
+            <li>
+              <app-option-button
+                [icon]="option.icon"
+                [label]="option.label"
+                [active]="selectedCategory() === option.value"
+                (selected)="selectCategory(option.value)"
+              />
+            </li>
+          }
+        </menu>
+        @if (showCustomInput()) {
+          <label class="upload-modal__file-group">
+            <span class="upload-modal__file-label">Escribe la categoría</span>
+            <input
+              class="upload-modal__custom-input"
+              type="text"
+              placeholder="P. ej. Seguro, Factura..."
+              maxlength="25"
+              [value]="customCategory()"
+              (input)="customCategory.set($any($event.target).value)"
+            />
+          </label>
+        }
+        <footer class="upload-modal__actions">
+          <hr class="upload-modal__separator" />
+          <app-button
+            class="upload-modal__action-btn"
+            variant="text"
+            (click)="onCategoryNext()"
+            [disabled]="!selectedCategory() || (showCustomInput() && !customCategory().trim())"
+          >
+            Siguiente
+          </app-button>
+        </footer>
+      }
+
+      <!-- ============================================================
+           PASO 4: Formulario manual
+           ============================================================ -->
+      @if (currentStep() === 'form') {
+        <form class="upload-modal__form" [formGroup]="docForm" (ngSubmit)="onSubmit()">
+          <app-form-field
+            label="Nombre / Descripción"
+            type="text"
+            inputId="upload-doc-title"
+            formControlName="title"
+          />
+
+          <app-form-field
+            label="Comercio / Entidad"
+            type="text"
+            inputId="upload-doc-store"
+            formControlName="storeName"
+          />
+
+          <fieldset class="upload-modal__date-row">
+            <app-form-field
+              label="Fecha de emisión"
+              type="date"
+              inputId="upload-doc-issue-date"
+              formControlName="issueDate"
+            />
+            <app-form-field
+              label="Fecha de vencimiento"
+              type="date"
+              inputId="upload-doc-expiry-date"
+              formControlName="expiryDate"
+            />
+          </fieldset>
+
+          <label class="upload-modal__file-group">
+            <span class="upload-modal__file-label">Imagen</span>
+            <app-file-picker (fileSelected)="onImageSelected($event)" />
+          </label>
+
+          <footer class="upload-modal__actions">
+            <hr class="upload-modal__separator" />
+            <app-button
+              class="upload-modal__action-btn"
+              variant="text"
+              type="submit"
+              [disabled]="!docForm.valid || loading()"
+            >
+              {{ loading() ? 'Creando...' : 'Crear documento' }}
+            </app-button>
+          </footer>
+        </form>
+      }
+
+    </section>
+  </article>
+</aside>
