@@ -1,6 +1,12 @@
 <!-- --------------------------------------------------------------------------
      PROGRESS BAR: Barra de progreso con fill animado
      -------------------------------------------------------------------------- -->
-<figure class="progress-bar" role="progressbar" [attr.aria-valuenow]="value()">
+<figure
+  class="progress-bar"
+  [class.progress-bar--orange]="variant() === 'orange'"
+  [class.progress-bar--sm]="size() === 'sm'"
+  role="progressbar"
+  [attr.aria-valuenow]="value()"
+>
   <span class="progress-bar__fill" [style.width.%]="value()"></span>
 </figure>

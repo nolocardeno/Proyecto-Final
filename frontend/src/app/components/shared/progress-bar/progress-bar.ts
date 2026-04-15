@@ -13,4 +13,8 @@ import { Component, input } from '@angular/core';
 })
 export class ProgressBarComponent {
   value = input.required<number>();
+  /** 'default' | 'orange' */
+  variant = input<'default' | 'orange'>('default');
+  /** 'md' (default 0.875rem) | 'sm' (0.5rem) */
+  size = input<'md' | 'sm'>('md');
 }

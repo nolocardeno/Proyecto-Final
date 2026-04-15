@@ -58,4 +58,34 @@
       border-radius: v.$radius-full v.$radius-full 0 0;
     }
   }
+
+  // --------------------------------------------------------------------------
+  // VARIANTE: tamaño pequeño
+  // --------------------------------------------------------------------------
+  &--sm {
+    height: 0.5rem;
+  }
+
+  // --------------------------------------------------------------------------
+  // VARIANTE: fill naranja con depth + gloss
+  // --------------------------------------------------------------------------
+  &--orange .progress-bar__fill {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.22) 0%,
+        rgba(0, 0, 0, 0.08) 50%,
+        rgba(255, 255, 255, 0.14) 100%
+      ),
+      linear-gradient(to right, v.$color-primary, v.$color-secondary);
+    box-shadow: 2px 0 12px rgba(v.$color-primary, 0.55);
+
+    &::before {
+      background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.45) 0%,
+        transparent 100%
+      );
+    }
+  }
 }
