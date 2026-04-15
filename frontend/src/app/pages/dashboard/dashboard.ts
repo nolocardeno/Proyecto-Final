@@ -9,8 +9,10 @@ import { PageHeaderComponent } from '../../components/shared/page-header/page-he
 import { ButtonComponent } from '../../components/shared/button/button';
 import { FilterBarComponent, type FilterType } from '../../components/shared/filter-bar/filter-bar';
 import { SearchBarComponent } from '../../components/shared/search-bar/search-bar';
+import { UploadDocumentModalComponent } from '../../components/shared/upload-document-modal/upload-document-modal';
 import { DocumentService } from '../../services/document.service';
 import { AuthService } from '../../services/auth.service';
+import { UploadDocumentModalService } from '../../services/upload-document-modal.service';
 import {
   type DocumentResponse,
   getCardType,
@@ -23,13 +25,14 @@ import {
 // --------------------------------------------------------------------------
 @Component({
   selector: 'app-dashboard',
-  imports: [SidebarComponent, DocumentCardComponent, PageHeaderComponent, ButtonComponent, FilterBarComponent, SearchBarComponent],
+  imports: [SidebarComponent, DocumentCardComponent, PageHeaderComponent, ButtonComponent, FilterBarComponent, SearchBarComponent, UploadDocumentModalComponent],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
 export class DashboardComponent implements OnInit {
   private readonly documentService = inject(DocumentService);
   protected readonly authService = inject(AuthService);
+  protected readonly uploadModal = inject(UploadDocumentModalService);
   private readonly router = inject(Router);
 
   protected readonly currentPage = signal<SidebarPage>('Dashboard');
@@ -85,6 +88,10 @@ export class DashboardComponent implements OnInit {
   protected readonly getStatusText = getStatusText;
 
   ngOnInit(): void {
+    this.loadDocuments();
+  }
+
+  protected loadDocuments(): void {
     this.documentService.getDocuments().subscribe((docs) => {
       this.documentos.set(docs);
       this.updateFilterCounts(docs);

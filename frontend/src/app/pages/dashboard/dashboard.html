@@ -14,7 +14,7 @@
     [title]="'¡Bienvenido, ' + authService.user()!.name + '!'"
     subtitle="Tus documentos de un vistazo..."
   >
-    <app-button buttons variant="text">+ Añadir documento</app-button>
+    <app-button buttons variant="text" (click)="uploadModal.open()">+ Añadir documento</app-button>
   </app-page-header>
 
   <!-- ------------------------------------------------------------------
@@ -53,3 +53,10 @@
   </section>
 
 </section>
+
+<!-- --------------------------------------------------------------------------
+     MODAL SUBIDA DE DOCUMENTO
+     -------------------------------------------------------------------------- -->
+@if (uploadModal.isOpen()) {
+  <app-upload-document-modal (documentCreated)="loadDocuments()" />
+}
