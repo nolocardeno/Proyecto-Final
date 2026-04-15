@@ -1,0 +1,47 @@
+@use '../../../../styles/00-settings/variables' as v;
+@use '../../../../styles/01-tools/mixins' as m;
+
+// --------------------------------------------------------------------------
+// HOST
+// --------------------------------------------------------------------------
+:host {
+  display: block;
+  width: 100%;
+}
+
+// --------------------------------------------------------------------------
+// OPTION BUTTON
+// --------------------------------------------------------------------------
+.option-btn {
+  display: flex;
+  align-items: center;
+  gap: v.$spacing-1;
+  width: 100%;
+  height: 3.125rem;
+  padding: 0 v.$spacing-3;
+  background: v.$color-gradient-accent;
+  border: none;
+  border-radius: v.$radius-input;
+  box-shadow: v.$shadow-card;
+  cursor: pointer;
+  font-family: v.$font-primary;
+  @include m.hover-elevation;
+
+  &--active {
+    outline: v.$border-medium solid v.$color-primary;
+    outline-offset: -#{v.$border-medium};
+  }
+
+  &__icon {
+    font-size: v.$font-size-lg;
+    color: v.$neutral-900;
+    width: 2.125rem;
+    flex-shrink: 0;
+  }
+
+  &__label {
+    font-size: v.$font-size-md;
+    font-weight: v.$font-weight-bold;
+    color: v.$neutral-900;
+  }
+}

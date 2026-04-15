@@ -1,0 +1,12 @@
+<!-- --------------------------------------------------------------------------
+     OPTION BUTTON: Botón de selección con icono y label
+     -------------------------------------------------------------------------- -->
+<button
+  class="option-btn"
+  type="button"
+  [class.option-btn--active]="active()"
+  (click)="selected.emit()"
+>
+  <fa-icon class="option-btn__icon" [icon]="icon()" />
+  <span class="option-btn__label">{{ label() }}</span>
+</button>
