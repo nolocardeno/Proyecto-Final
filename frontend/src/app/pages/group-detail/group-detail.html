@@ -18,7 +18,7 @@
         [subtitle]="group.description ?? 'Descripción del grupo...'"
         size="compact"
       >
-        <app-button buttons variant="text">+ Añadir documento</app-button>
+        <app-button buttons variant="text" (click)="uploadModal.open(group.id)">+ Añadir documento</app-button>
         <app-button buttons variant="text" (click)="goBack()">Volver a los grupos</app-button>
       </app-page-header>
 
@@ -63,4 +63,11 @@
       <app-group-members-card [members]="group.members" [creatorId]="group.creatorId" />
     </aside>
   </section>
+}
+
+<!-- --------------------------------------------------------------------------
+     MODAL SUBIDA DE DOCUMENTO
+     -------------------------------------------------------------------------- -->
+@if (uploadModal.isOpen()) {
+  <app-upload-document-modal (documentCreated)="reloadDocuments()" />
 }

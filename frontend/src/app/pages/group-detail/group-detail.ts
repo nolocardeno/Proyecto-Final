@@ -11,8 +11,10 @@ import { SearchBarComponent } from '../../components/shared/search-bar/search-ba
 import { DocumentCardComponent } from '../../components/shared/document-card/document-card';
 import { GroupCodeCardComponent } from '../../components/shared/group-code-card/group-code-card';
 import { GroupMembersCardComponent } from '../../components/shared/group-members-card/group-members-card';
+import { UploadDocumentModalComponent } from '../../components/shared/upload-document-modal/upload-document-modal';
 import { GroupService } from '../../services/group.service';
 import { AuthService } from '../../services/auth.service';
+import { UploadDocumentModalService } from '../../services/upload-document-modal.service';
 import { type GroupDetailResponse } from '../../models/group.model';
 import {
   type DocumentResponse,
@@ -35,6 +37,7 @@ import {
     DocumentCardComponent,
     GroupCodeCardComponent,
     GroupMembersCardComponent,
+    UploadDocumentModalComponent,
   ],
   templateUrl: './group-detail.html',
   styleUrl: './group-detail.scss',
@@ -44,6 +47,7 @@ export class GroupDetailComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly groupService = inject(GroupService);
   protected readonly authService = inject(AuthService);
+  protected readonly uploadModal = inject(UploadDocumentModalService);
 
   protected readonly currentPage = signal<SidebarPage>('Groups');
   protected readonly group = signal<GroupDetailResponse | null>(null);
@@ -97,6 +101,11 @@ export class GroupDetailComponent implements OnInit {
   ngOnInit(): void {
     const groupId = Number(this.route.snapshot.paramMap.get('id'));
     this.loadGroupDetail(groupId);
+    this.loadGroupDocuments(groupId);
+  }
+
+  protected reloadDocuments(): void {
+    const groupId = Number(this.route.snapshot.paramMap.get('id'));
     this.loadGroupDocuments(groupId);
   }
 
