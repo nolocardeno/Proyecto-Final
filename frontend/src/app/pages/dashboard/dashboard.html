@@ -14,7 +14,9 @@
     [title]="'¡Bienvenido, ' + authService.user()!.name + '!'"
     subtitle="Tus documentos de un vistazo..."
   >
-    <app-button buttons variant="text" (click)="uploadModal.open()">+ Añadir documento</app-button>
+    <app-button buttons variant="text" (click)="uploadModal.open()">
+      <fa-icon [icon]="faCirclePlus" aria-hidden="true" /> Añadir documento
+    </app-button>
   </app-page-header>
 
   <!-- ------------------------------------------------------------------

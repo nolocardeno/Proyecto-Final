@@ -3,6 +3,8 @@
 // --------------------------------------------------------------------------
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { faCirclePlus, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { SidebarComponent, type SidebarPage } from '../../components/layout/sidebar/sidebar';
 import { PageHeaderComponent } from '../../components/shared/page-header/page-header';
 import { ButtonComponent } from '../../components/shared/button/button';
@@ -29,6 +31,7 @@ import {
 @Component({
   selector: 'app-group-detail',
   imports: [
+    FaIconComponent,
     SidebarComponent,
     PageHeaderComponent,
     ButtonComponent,
@@ -48,6 +51,9 @@ export class GroupDetailComponent implements OnInit {
   private readonly groupService = inject(GroupService);
   protected readonly authService = inject(AuthService);
   protected readonly uploadModal = inject(UploadDocumentModalService);
+
+  protected readonly faCirclePlus = faCirclePlus;
+  protected readonly faArrowLeft = faArrowLeft;
 
   protected readonly currentPage = signal<SidebarPage>('Groups');
   protected readonly group = signal<GroupDetailResponse | null>(null);

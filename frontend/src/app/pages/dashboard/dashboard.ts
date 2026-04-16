@@ -3,6 +3,8 @@
 // --------------------------------------------------------------------------
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 import { SidebarComponent, type SidebarPage } from '../../components/layout/sidebar/sidebar';
 import { DocumentCardComponent } from '../../components/shared/document-card/document-card';
 import { PageHeaderComponent } from '../../components/shared/page-header/page-header';
@@ -25,13 +27,15 @@ import {
 // --------------------------------------------------------------------------
 @Component({
   selector: 'app-dashboard',
-  imports: [SidebarComponent, DocumentCardComponent, PageHeaderComponent, ButtonComponent, FilterBarComponent, SearchBarComponent, UploadDocumentModalComponent],
+  imports: [FaIconComponent, SidebarComponent, DocumentCardComponent, PageHeaderComponent, ButtonComponent, FilterBarComponent, SearchBarComponent, UploadDocumentModalComponent],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
 export class DashboardComponent implements OnInit {
   private readonly documentService = inject(DocumentService);
   protected readonly authService = inject(AuthService);
+
+  protected readonly faCirclePlus = faCirclePlus;
   protected readonly uploadModal = inject(UploadDocumentModalService);
   private readonly router = inject(Router);
 

@@ -15,11 +15,17 @@
       <!-- PAGE HEADER -->
       <app-page-header
         [title]="group.name"
-        [subtitle]="group.description ?? 'Descripción del grupo...'"
+        [subtitle]="group.allCanAddDocuments ? 'Todos los miembros pueden añadir documentos...' : 'Solo el creador puede añadir documentos...'"
         size="compact"
       >
-        <app-button buttons variant="text" (click)="uploadModal.open(group.id)">+ Añadir documento</app-button>
-        <app-button buttons variant="text" (click)="goBack()">Volver a los grupos</app-button>
+        @if (group.allCanAddDocuments || group.creatorId === authService.user()?.userId) {
+          <app-button buttons variant="text" (click)="uploadModal.open(group.id)">
+            <fa-icon [icon]="faCirclePlus" aria-hidden="true" /> Añadir documento
+          </app-button>
+        }
+        <app-button buttons variant="text" (click)="goBack()">
+          <fa-icon [icon]="faArrowLeft" aria-hidden="true" /> Volver a los grupos
+        </app-button>
       </app-page-header>
 
       <!-- FILTROS (compactos) -->

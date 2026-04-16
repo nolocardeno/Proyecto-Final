@@ -3,6 +3,8 @@
 // --------------------------------------------------------------------------
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { faCirclePlus, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { SidebarComponent, type SidebarPage } from '../../components/layout/sidebar/sidebar';
 import { GroupCardComponent } from '../../components/shared/group-card/group-card';
 import { PageHeaderComponent } from '../../components/shared/page-header/page-header';
@@ -22,6 +24,7 @@ import { type GroupResponse } from '../../models/group.model';
 @Component({
   selector: 'app-groups',
   imports: [
+    FaIconComponent,
     SidebarComponent,
     GroupCardComponent,
     PageHeaderComponent,
@@ -39,6 +42,9 @@ export class GroupsComponent implements OnInit {
   protected readonly joinGroupModal = inject(JoinGroupModalService);
   protected readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+
+  protected readonly faCirclePlus = faCirclePlus;
+  protected readonly faUserPlus = faUserPlus;
 
   protected readonly currentPage = signal<SidebarPage>('Groups');
   protected readonly groups = signal<GroupResponse[]>([]);

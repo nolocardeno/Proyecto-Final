@@ -14,8 +14,12 @@
     title="Grupos"
     subtitle="Consulta todos tus grupos, miembros asociados a ellos, documentos..."
   >
-    <app-button buttons variant="text" (click)="joinGroupModal.open()">+ Unirse a un grupo</app-button>
-    <app-button buttons variant="text" (click)="groupModal.open()">+ Crear grupo</app-button>
+    <app-button buttons variant="text" (click)="joinGroupModal.open()">
+      <fa-icon [icon]="faUserPlus" aria-hidden="true" /> Unirse a un grupo
+    </app-button>
+    <app-button buttons variant="text" (click)="groupModal.open()">
+      <fa-icon [icon]="faCirclePlus" aria-hidden="true" /> Crear grupo
+    </app-button>
   </app-page-header>
 
   <!-- ------------------------------------------------------------------
