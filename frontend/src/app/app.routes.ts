@@ -2,6 +2,7 @@
 // IMPORTS
 // --------------------------------------------------------------------------
 import { Routes } from '@angular/router';
+import { authRedirectGuard } from './guards/auth-redirect.guard';
 
 // --------------------------------------------------------------------------
 // RUTAS DE LA APLICACIÓN
@@ -9,6 +10,7 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
+    canActivate: [authRedirectGuard],
     loadComponent: () =>
       import('./pages/landing-page/landing-page').then((m) => m.LandingPageComponent),
   },
