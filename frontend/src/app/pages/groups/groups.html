@@ -36,6 +36,9 @@
         [name]="group.name"
         [memberCount]="group.memberCount"
         [documentCount]="group.documentCount"
+        [activeDocumentCount]="group.activeDocumentCount"
+        [expiredDocumentCount]="group.expiredDocumentCount"
+        [members]="group.memberPreviews ?? []"
         (viewDocuments)="onViewDocuments(group.id)"
       />
     } @empty {

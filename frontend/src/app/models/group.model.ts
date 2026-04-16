@@ -12,6 +12,9 @@ export interface GroupResponse {
   allCanAddDocuments: boolean;
   memberCount: number;
   documentCount: number;
+  activeDocumentCount: number;
+  expiredDocumentCount: number;
+  memberPreviews?: GroupMember[];
   createdAt: string;
   updatedAt: string;
 }
