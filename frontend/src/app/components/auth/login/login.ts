@@ -1,7 +1,7 @@
 // --------------------------------------------------------------------------
 // IMPORTS
 // --------------------------------------------------------------------------
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -28,12 +28,14 @@ import { AlertService } from '../../../services/alert.service';
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
   private readonly authModal = inject(AuthModalService);
   private readonly alert = inject(AlertService);
+
+  private readonly REMEMBER_ME_KEY = 'scantral_remembered_email';
 
   protected loading = false;
 
@@ -43,14 +45,26 @@ export class LoginComponent {
     rememberMe: [false],
   });
 
+  ngOnInit(): void {
+    const rememberedEmail = localStorage.getItem(this.REMEMBER_ME_KEY);
+    if (rememberedEmail) {
+      this.loginForm.patchValue({ email: rememberedEmail, rememberMe: true });
+    }
+  }
+
   protected onSubmit(): void {
     if (!this.loginForm.valid || this.loading) return;
 
     this.loading = true;
-    const { email, password } = this.loginForm.getRawValue();
+    const { email, password, rememberMe } = this.loginForm.getRawValue();
 
     this.authService.login({ email: email!, password: password! }).subscribe({
       next: (res) => {
+        if (rememberMe) {
+          localStorage.setItem(this.REMEMBER_ME_KEY, email!);
+        } else {
+          localStorage.removeItem(this.REMEMBER_ME_KEY);
+        }
         this.alert.show('success', `¡Bienvenido, ${res.name}!`);
         this.authModal.close();
         this.router.navigate(['/dashboard']);
