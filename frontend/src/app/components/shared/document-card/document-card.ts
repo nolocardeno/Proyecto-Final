@@ -2,6 +2,7 @@
 // IMPORTS
 // --------------------------------------------------------------------------
 import { Component, computed, input } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
   faTicket,
@@ -35,7 +36,7 @@ const ICONS: Record<DocumentVariant, IconDefinition> = {
 // --------------------------------------------------------------------------
 @Component({
   selector: 'app-document-card',
-  imports: [FaIconComponent],
+  imports: [FaIconComponent, RouterLink],
   templateUrl: './document-card.html',
   styleUrl: './document-card.scss',
 })
@@ -47,6 +48,8 @@ export class DocumentCardComponent {
   issueDate = input.required<string>();
   expiryDate = input.required<string>();
   statusText = input.required<string>();
+  documentId = input<number>();
+  groupId = input<number>();
 
   // --- Iconos Font Awesome ---
   protected readonly faBuilding = faBuilding;

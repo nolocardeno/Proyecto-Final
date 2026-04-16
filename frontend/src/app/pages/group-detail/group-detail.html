@@ -54,6 +54,8 @@
             [issueDate]="formatDate(doc.issueDate)"
             [expiryDate]="formatDate(doc.expiryDate)"
             [statusText]="getStatusText(doc.daysRemaining)"
+            [documentId]="doc.id"
+            [groupId]="group.id"
           />
         } @empty {
           <p class="group-detail__empty">No hay documentos en este grupo.</p>

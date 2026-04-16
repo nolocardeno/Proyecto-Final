@@ -48,6 +48,7 @@
         [issueDate]="formatDate(doc.issueDate)"
         [expiryDate]="formatDate(doc.expiryDate)"
         [statusText]="getStatusText(doc.daysRemaining)"
+        [documentId]="doc.id"
       />
     } @empty {
       <p class="dashboard__empty">No hay documentos para este filtro.</p>

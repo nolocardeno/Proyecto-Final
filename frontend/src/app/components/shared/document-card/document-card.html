@@ -12,7 +12,7 @@
   </defs>
 </svg>
 
-<article class="document-card">
+<article class="document-card" [class.document-card--clickable]="documentId() !== undefined" [routerLink]="documentId() !== undefined ? ['/documents', documentId()] : null" [queryParams]="groupId() !== undefined ? { groupId: groupId() } : {}">
   <!-- --------------------------------------------------------------------------
        HEADER: Type + Title + Category badge
        -------------------------------------------------------------------------- -->

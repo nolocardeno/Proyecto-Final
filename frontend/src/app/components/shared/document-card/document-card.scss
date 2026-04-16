@@ -37,6 +37,11 @@
     transform v.$transition-fast,
     box-shadow v.$transition-fast;
 
+  &--clickable {
+    cursor: pointer;
+    text-decoration: none;
+  }
+
   &:hover {
     transform: translateY(v.$hover-translate);
     box-shadow: v.$hover-shadow;
