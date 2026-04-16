@@ -2,14 +2,18 @@ package com.nolocardeno.backend.service;
 
 import com.nolocardeno.backend.dto.*;
 import com.nolocardeno.backend.exception.ResourceNotFoundException;
+import com.nolocardeno.backend.model.Document;
 import com.nolocardeno.backend.model.DocumentGroup;
 import com.nolocardeno.backend.model.User;
+import com.nolocardeno.backend.model.enums.DocumentStatus;
+import com.nolocardeno.backend.repository.DocumentRepository;
 import com.nolocardeno.backend.repository.GroupRepository;
 import com.nolocardeno.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -19,6 +23,7 @@ public class GroupService {
 
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
+    private final DocumentRepository documentRepository;
 
     @Transactional(readOnly = true)
     public List<GroupResponse> getGroupsByUser(Long userId) {
@@ -75,6 +80,42 @@ public class GroupService {
             throw new IllegalArgumentException("Solo el creador puede eliminar el grupo");
         }
         groupRepository.delete(group);
+    }
+
+    @Transactional
+    public DocumentResponse addDocumentToGroup(Long userId, Long groupId, DocumentRequest request) {
+        DocumentGroup group = findGroupByUser(userId, groupId);
+
+        boolean isCreator = group.getCreator().getId().equals(userId);
+        if (!isCreator && !group.getAllCanAddDocuments()) {
+            throw new IllegalArgumentException("No tienes permisos para añadir documentos a este grupo");
+        }
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+
+        Document doc = Document.builder()
+                .user(user)
+                .type(request.getType())
+                .title(request.getTitle())
+                .category(request.getCategory())
+                .storeName(request.getStoreName())
+                .amount(request.getAmount())
+                .issueDate(request.getIssueDate())
+                .expiryDate(request.getExpiryDate())
+                .notes(request.getNotes())
+                .status(DocumentStatus.ACTIVE)
+                .build();
+
+        if (doc.getExpiryDate() != null && doc.getExpiryDate().isBefore(LocalDate.now())) {
+            doc.setStatus(DocumentStatus.EXPIRED);
+        }
+
+        doc = documentRepository.save(doc);
+        group.getDocuments().add(doc);
+        groupRepository.save(group);
+
+        return DocumentMapper.toResponse(doc);
     }
 
     @Transactional
