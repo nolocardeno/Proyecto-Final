@@ -1,5 +1,6 @@
 package com.nolocardeno.backend.controller;
 
+import com.nolocardeno.backend.dto.DocumentRequest;
 import com.nolocardeno.backend.dto.DocumentResponse;
 import com.nolocardeno.backend.dto.GroupDetailResponse;
 import com.nolocardeno.backend.dto.GroupRequest;
@@ -45,6 +46,15 @@ public class GroupController {
             @RequestHeader("X-User-Id") Long userId,
             @PathVariable Long id) {
         return ResponseEntity.ok(groupService.getGroupDocuments(userId, id));
+    }
+
+    @PostMapping("/{id}/documents")
+    public ResponseEntity<DocumentResponse> addDocument(
+            @RequestHeader("X-User-Id") Long userId,
+            @PathVariable Long id,
+            @Valid @RequestBody DocumentRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(groupService.addDocumentToGroup(userId, id, request));
     }
 
     @PostMapping
