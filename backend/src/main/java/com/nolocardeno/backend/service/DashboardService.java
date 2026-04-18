@@ -15,7 +15,7 @@ public class DashboardService {
 
     @Transactional(readOnly = true)
     public DashboardStats getStats(Long userId) {
-        var allDocs = documentRepository.findByUserIdOrderByCreatedAtDesc(userId);
+        var allDocs = documentRepository.findPersonalDocumentsByUserId(userId);
 
         long total = allDocs.size();
         long active = allDocs.stream().filter(d -> d.getStatus() == DocumentStatus.ACTIVE).count();

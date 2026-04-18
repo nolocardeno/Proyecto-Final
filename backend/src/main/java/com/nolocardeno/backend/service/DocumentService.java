@@ -27,7 +27,7 @@ public class DocumentService {
 
     @Transactional
     public List<DocumentResponse> getDocumentsByUser(Long userId) {
-        List<Document> docs = documentRepository.findByUserIdOrderByCreatedAtDesc(userId);
+        List<Document> docs = documentRepository.findPersonalDocumentsByUserId(userId);
         docs.forEach(this::updateDocumentStatus);
         documentRepository.saveAll(docs);
         return docs.stream()
