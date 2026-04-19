@@ -17,8 +17,9 @@
   @if (authService.isLoggedIn()) {
     <nav class="header__nav">
       <app-user-card
+        variant="header"
         [username]="authService.user()!.name"
-        subtitle="Cuenta personal"
+        subtitle="Usuario"
         [photoUrl]="authService.profileImageUrl()"
       />
     </nav>

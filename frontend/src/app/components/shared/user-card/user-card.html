@@ -1,23 +1,45 @@
 <!-- --------------------------------------------------------------------------
      CARD USUARIO: Foto de perfil + nombre + subtítulo
      -------------------------------------------------------------------------- -->
-<figure class="user-card">
-  @if (photoUrl() && !imageError()) {
-    <img
-      class="user-card__photo"
-      [src]="photoUrl()"
-      [alt]="'Foto de perfil de ' + username()"
-      (error)="onImageError()"
-    />
-  } @else {
-    <span class="user-card__photo user-card__photo--placeholder" aria-hidden="true">
-      <fa-icon [icon]="faUser" />
-    </span>
-  }
-  <figcaption class="user-card__info">
-    <span class="user-card__name">{{ username() }}</span>
-    @if (subtitle()) {
-      <span class="user-card__subtitle">{{ subtitle() }}</span>
+<figure class="user-card" [class.user-card--header]="variant() === 'header'">
+  @if (variant() === 'header') {
+    <span class="user-card__separator" role="separator" aria-hidden="true"></span>
+    <figcaption class="user-card__info">
+      <span class="user-card__name">{{ username() }}</span>
+      @if (subtitle()) {
+        <span class="user-card__subtitle">{{ subtitle() }}</span>
+      }
+    </figcaption>
+    @if (photoUrl() && !imageError()) {
+      <img
+        class="user-card__photo"
+        [src]="photoUrl()"
+        [alt]="'Foto de perfil de ' + username()"
+        (error)="onImageError()"
+      />
+    } @else {
+      <span class="user-card__photo user-card__photo--placeholder" aria-hidden="true">
+        <fa-icon [icon]="faUser" />
+      </span>
     }
-  </figcaption>
+  } @else {
+    @if (photoUrl() && !imageError()) {
+      <img
+        class="user-card__photo"
+        [src]="photoUrl()"
+        [alt]="'Foto de perfil de ' + username()"
+        (error)="onImageError()"
+      />
+    } @else {
+      <span class="user-card__photo user-card__photo--placeholder" aria-hidden="true">
+        <fa-icon [icon]="faUser" />
+      </span>
+    }
+    <figcaption class="user-card__info">
+      <span class="user-card__name">{{ username() }}</span>
+      @if (subtitle()) {
+        <span class="user-card__subtitle">{{ subtitle() }}</span>
+      }
+    </figcaption>
+  }
 </figure>

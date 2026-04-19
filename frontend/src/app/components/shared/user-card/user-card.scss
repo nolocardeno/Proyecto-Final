@@ -10,13 +10,55 @@
   margin: 0;
 
   // --------------------------------------------------------------------------
+  // CONTENIDO DE TEXTO
+  // --------------------------------------------------------------------------
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: v.$spacing-half;
+  }
+
+  // VARIANTE HEADER: texto alineado a la derecha
+  &--header &__info {
+    text-align: right;
+  }
+
+  &__name {
+    font-family: v.$font-primary;
+    font-weight: v.$font-weight-bold;
+    font-size: v.$font-size-sm-md;
+    color: v.$neutral-900;
+    line-height: v.$line-height-tight;
+  }
+
+  &__subtitle {
+    font-family: v.$font-primary;
+    font-weight: v.$font-weight-regular;
+    font-size: v.$font-size-sm;
+    color: v.$neutral-500;
+    line-height: v.$line-height-tight;
+  }
+
+  // --------------------------------------------------------------------------
+  // SEPARADOR VERTICAL
+  // --------------------------------------------------------------------------
+  &__separator {
+    width: v.$border-thin;
+    height: 2rem;
+    background-color: v.$color-surface-border;
+    flex-shrink: 0;
+    margin-right: v.$spacing-1;
+  }
+
+  // --------------------------------------------------------------------------
   // FOTO DE PERFIL
   // --------------------------------------------------------------------------
   &__photo {
-    width: 3.0625rem;  // 49px
-    height: 3.0625rem; // 49px
+    width: 2.5rem;
+    height: 2.5rem;
     border-radius: v.$radius-full;
     border: v.$border-medium solid v.$color-primary;
+    box-shadow: v.$shadow-card;
     object-fit: cover;
     flex-shrink: 0;
 
@@ -26,31 +68,7 @@
       justify-content: center;
       background: v.$color-gradient-primary;
       color: v.$color-surface;
-      font-size: 1.5rem;
+      font-size: v.$font-size-md;
     }
-  }
-
-  // --------------------------------------------------------------------------
-  // CONTENIDO DE TEXTO
-  // --------------------------------------------------------------------------
-  &__info {
-    display: flex;
-    flex-direction: column;
-  }
-
-  &__name {
-    font-family: v.$font-primary;
-    font-weight: v.$font-weight-bold;
-    font-size: v.$font-size-md;
-    color: v.$neutral-900;
-    line-height: v.$line-height-tight;
-  }
-
-  &__subtitle {
-    font-family: v.$font-primary;
-    font-weight: v.$font-weight-regular;
-    font-size: v.$font-size-md;
-    color: v.$neutral-900;
-    line-height: v.$line-height-tight;
   }
 }

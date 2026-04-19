@@ -18,6 +18,7 @@ export class UserCardComponent {
   username = input.required<string>();
   subtitle = input<string>('');
   photoUrl = input<string>('');
+  variant = input<'default' | 'header'>('default');
 
   protected readonly faUser = faUser;
   protected readonly imageError = signal(false);

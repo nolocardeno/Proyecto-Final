@@ -75,6 +75,7 @@ $font-primary: 'Inter', sans-serif;
 // Escala de tamaños (base 8px)
 $font-size-xs: 0.5rem;    // 8px
 $font-size-sm: 0.75rem;   // 12px
+$font-size-sm-md: 0.875rem; // 14px
 $font-size-md: 1rem;      // 16px
 $font-size-md-lg: 1.25rem; // 20px
 $font-size-lg: 1.5rem;    // 24px
@@ -100,6 +101,7 @@ $line-height-relaxed: 1.75; // Textos largos
 // --------------------------------------------------------------------------
 // ESPACIADO
 // --------------------------------------------------------------------------
+$spacing-half: 0.25rem;  // 4px
 $spacing-1: 0.5rem;     // 8px
 $spacing-2: 1rem;       // 16px
 $spacing-3: 1.5rem;     // 24px
