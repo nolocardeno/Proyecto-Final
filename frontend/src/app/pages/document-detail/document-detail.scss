@@ -1,0 +1,21 @@
+@use '../../../styles/00-settings/variables' as v;
+
+// --------------------------------------------------------------------------
+// HOST: Layout con Sidebar
+// --------------------------------------------------------------------------
+:host {
+  display: flex;
+  flex: 1;
+  margin-left: v.$spacing-sidebar-width;
+}
+
+// --------------------------------------------------------------------------
+// ÁREA DE CONTENIDO
+// --------------------------------------------------------------------------
+.document-detail {
+  flex: 1;
+  padding: v.$spacing-4;
+  display: flex;
+  flex-direction: column;
+  gap: v.$spacing-3;
+}

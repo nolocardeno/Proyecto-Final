@@ -36,6 +36,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'documents/:id',
+    loadComponent: () =>
+      import('./pages/document-detail/document-detail').then(
+        (m) => m.DocumentDetailComponent,
+      ),
+  },
+  {
     path: 'settings',
     loadComponent: () =>
       import('./pages/settings/settings').then(

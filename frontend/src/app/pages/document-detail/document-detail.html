@@ -1,0 +1,19 @@
+<!-- --------------------------------------------------------------------------
+     PÁGINA DOCUMENT DETAIL: Sidebar + Contenido principal
+     -------------------------------------------------------------------------- -->
+<app-sidebar [currentPage]="currentPage()" (onNavigate)="onNavigate($event)" />
+
+@if (document(); as doc) {
+  <section class="document-detail">
+    <!-- PAGE HEADER -->
+    <app-page-header
+      title="Detalles del documento"
+      subtitle="Consulta, modifica o elimina los detalles de tu documento..."
+    >
+      <app-button buttons variant="text" (click)="goBack()">
+        <fa-icon [icon]="faArrowLeft" aria-hidden="true" />
+        {{ groupId() !== null ? 'Volver al grupo' : 'Volver al dashboard' }}
+      </app-button>
+    </app-page-header>
+  </section>
+}
