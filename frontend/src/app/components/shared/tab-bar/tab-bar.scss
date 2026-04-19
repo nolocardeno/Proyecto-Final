@@ -1,0 +1,92 @@
+@use '../../../../styles/00-settings/variables' as v;
+@use '../../../../styles/01-tools/mixins' as m;
+
+// --------------------------------------------------------------------------
+// HOST
+// --------------------------------------------------------------------------
+:host {
+  display: block;
+}
+
+// --------------------------------------------------------------------------
+// TAB BAR
+// --------------------------------------------------------------------------
+.tab-bar {
+  display: flex;
+  gap: v.$spacing-1;
+  background-color: v.$color-accent-secondary;
+  border: v.$border-thin solid v.$color-modal-border;
+  border-radius: v.$radius-card;
+  box-shadow: v.$shadow-card;
+  padding: 0.375rem;
+}
+
+// --------------------------------------------------------------------------
+// TAB INDIVIDUAL
+// --------------------------------------------------------------------------
+.tab-bar__tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: v.$spacing-1;
+  flex: 1;
+  padding: 0.625rem v.$spacing-2;
+  border: none;
+  border-radius: v.$radius-lg;
+  background: transparent;
+  cursor: pointer;
+  font-family: v.$font-primary;
+  font-weight: v.$font-weight-semibold;
+  font-size: v.$font-size-sm;
+  color: v.$neutral-500;
+  @include m.transition(all, v.$transition-base);
+
+  &:hover:not(.tab-bar__tab--active) {
+    background: linear-gradient(
+      to right,
+      rgba(v.$color-primary, 0.1),
+      rgba(v.$color-secondary, 0.15)
+    );
+    color: v.$neutral-700;
+  }
+
+  &:focus-visible {
+    outline: v.$border-medium solid v.$color-primary;
+    outline-offset: v.$border-medium;
+  }
+
+  &--active {
+    background: v.$color-gradient-primary;
+    color: v.$neutral-900;
+    font-weight: v.$font-weight-bold;
+  }
+}
+
+// --------------------------------------------------------------------------
+// ICONO
+// --------------------------------------------------------------------------
+.tab-bar__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.tab-bar__icon {
+  font-size: v.$font-size-md;
+
+  ::ng-deep svg path {
+    fill: url(#grad-tab-bar);
+  }
+}
+
+.tab-bar__tab--active .tab-bar__icon ::ng-deep svg path {
+  fill: v.$neutral-900;
+}
+
+// --------------------------------------------------------------------------
+// LABEL
+// --------------------------------------------------------------------------
+.tab-bar__label {
+  line-height: v.$line-height-tight;
+}

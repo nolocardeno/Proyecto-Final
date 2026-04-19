@@ -1,0 +1,29 @@
+<!-- Hidden SVG gradient defs -->
+<svg class="tab-bar__defs" aria-hidden="true">
+  <defs>
+    <linearGradient id="grad-tab-bar" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="var(--color-primary)" />
+      <stop offset="100%" stop-color="var(--color-secondary)" />
+    </linearGradient>
+  </defs>
+</svg>
+
+<!-- --------------------------------------------------------------------------
+     TAB BAR: Barra de pestañas con iconos
+     -------------------------------------------------------------------------- -->
+<div class="tab-bar" role="tablist" [attr.aria-label]="ariaLabel()">
+  @for (tab of tabs(); track tab.key) {
+    <button
+      class="tab-bar__tab"
+      [class.tab-bar__tab--active]="activeTab() === tab.key"
+      (click)="selectTab(tab.key)"
+      role="tab"
+      [attr.aria-selected]="activeTab() === tab.key"
+      [attr.aria-controls]="'panel-' + tab.key"
+      type="button"
+    >
+      <fa-icon class="tab-bar__icon" [icon]="tab.icon" aria-hidden="true" />
+      <span class="tab-bar__label">{{ tab.label }}</span>
+    </button>
+  }
+</div>
