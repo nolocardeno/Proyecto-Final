@@ -1,7 +1,7 @@
 // --------------------------------------------------------------------------
 // IMPORTS
 // --------------------------------------------------------------------------
-import { Component, inject } from '@angular/core';
+import { Component, inject, AfterViewInit, ElementRef } from '@angular/core';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import {
   faFileImport,
@@ -39,8 +39,26 @@ interface FaqItem {
   templateUrl: './landing-page.html',
   styleUrl: './landing-page.scss',
 })
-export class LandingPageComponent {
+export class LandingPageComponent implements AfterViewInit {
   protected readonly authModal = inject(AuthModalService);
+  private readonly el = inject(ElementRef);
+
+  ngAfterViewInit(): void {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('reveal--visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+
+    const elements: NodeListOf<Element> = this.el.nativeElement.querySelectorAll('.reveal');
+    elements.forEach(el => observer.observe(el));
+  }
 
   readonly features: Feature[] = [
     {

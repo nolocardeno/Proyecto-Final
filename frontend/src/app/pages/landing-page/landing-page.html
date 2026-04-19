@@ -2,17 +2,17 @@
      SECCIÓN HERO
      -------------------------------------------------------------------------- -->
 <section class="hero">
-  <h1 class="hero__titulo">
+  <h1 class="hero__titulo reveal">
     Tus documentos y tickets,<br />
     <span class="hero__titulo--gradiente">organizados</span> y siempre a mano
   </h1>
 
-  <p class="hero__descripcion">
+  <p class="hero__descripcion reveal">
     Olvídate del caos de papeles. Scantral digitaliza tus compras, organiza
     tus documentos y crea recordatorios antes de que algo caduque.
   </p>
 
-  <a class="hero__cta" (click)="authModal.openRegister()">
+  <a class="hero__cta reveal" (click)="authModal.openRegister()">
     <app-button variant="primary" size="cta">Comienza gratis</app-button>
   </a>
 </section>
@@ -21,11 +21,11 @@
      SECCIÓN CARACTERÍSTICAS PRINCIPALES
      -------------------------------------------------------------------------- -->
 <section class="features">
-  <h2 class="features__title">Características principales</h2>
+  <h2 class="features__title reveal">Características principales</h2>
 
   <ul class="features__grid">
     @for (feature of features; track feature.text) {
-      <li>
+      <li class="reveal">
         <app-feature-card [icon]="feature.icon" [text]="feature.text" [description]="feature.description" />
       </li>
     }
@@ -36,11 +36,11 @@
      SECCIÓN PREGUNTAS FRECUENTES
      -------------------------------------------------------------------------- -->
 <section class="faq">
-  <h2 class="faq__titulo">Preguntas frecuentes</h2>
+  <h2 class="faq__titulo reveal">Preguntas frecuentes</h2>
 
   <ul class="faq__lista">
     @for (item of faq; track item.question) {
-      <li>
+      <li class="reveal">
         <app-accordion-item [question]="item.question">
           {{ item.answer }}
         </app-accordion-item>
