@@ -1,4 +1,5 @@
 @use '../../../styles/00-settings/variables' as v;
+@use '../../../styles/01-tools/mixins' as m;
 
 // --------------------------------------------------------------------------
 // HOST: Layout con Sidebar
@@ -19,3 +20,317 @@
   flex-direction: column;
   gap: v.$spacing-3;
 }
+
+// --------------------------------------------------------------------------
+// CONTENIDO DE LA PESTAÑA (preview izquierda + panel derecha)
+// --------------------------------------------------------------------------
+.document-detail__content {
+  display: flex;
+  gap: v.$spacing-3;
+  align-items: flex-start;
+}
+
+// --------------------------------------------------------------------------
+// COLUMNA IZQUIERDA: Vista previa
+// --------------------------------------------------------------------------
+.document-detail__preview {
+  flex: 1;
+  min-width: 0;
+}
+
+.document-detail__preview-card {
+  display: flex;
+  flex-direction: column;
+  background-color: v.$color-accent-secondary;
+  border: v.$border-thin solid v.$color-modal-border;
+  border-radius: v.$radius-card;
+  box-shadow: v.$shadow-card;
+  overflow: hidden;
+}
+
+.document-detail__preview-header {
+  background: v.$color-gradient-primary;
+  padding: v.$spacing-2 v.$spacing-3;
+}
+
+.document-detail__preview-title {
+  font-family: v.$font-primary;
+  font-weight: v.$font-weight-bold;
+  font-size: v.$font-size-md;
+  color: v.$neutral-900;
+  line-height: v.$line-height-tight;
+}
+
+.document-detail__preview-figure {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: v.$spacing-3;
+}
+
+.document-detail__preview-image {
+  max-width: 100%;
+  max-height: 30rem;
+  object-fit: contain;
+  border-radius: v.$radius-lg;
+
+  &--clickable {
+    cursor: pointer;
+  }
+}
+
+// --------------------------------------------------------------------------
+// LIGHTBOX: Overlay pantalla completa
+// --------------------------------------------------------------------------
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background-color: rgba(v.$neutral-900, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: v.$spacing-3;
+  outline: none;
+  animation: lightbox-fade-in v.$transition-fast;
+}
+
+@keyframes lightbox-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.lightbox__image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: v.$radius-lg;
+  cursor: default;
+  box-shadow: v.$shadow-xl;
+}
+
+.document-detail__preview-empty {
+  @include m.flex-center;
+  padding: v.$spacing-4;
+  font-family: v.$font-primary;
+  font-size: v.$font-size-sm;
+  color: v.$neutral-500;
+}
+
+// --------------------------------------------------------------------------
+// COLUMNA DERECHA: Info + Estado
+// --------------------------------------------------------------------------
+.document-detail__main {
+  display: flex;
+  flex-direction: column;
+  gap: v.$spacing-3;
+  width: 34rem;
+  flex-shrink: 0;
+}
+
+// --------------------------------------------------------------------------
+// CARD GENÉRICA (información)
+// --------------------------------------------------------------------------
+.document-detail__card {
+  background-color: v.$color-accent-secondary;
+  border: v.$border-thin solid v.$color-modal-border;
+  border-radius: v.$radius-card;
+  box-shadow: v.$shadow-card;
+  padding: v.$spacing-3;
+}
+
+// --------------------------------------------------------------------------
+// CABECERA DE INFORMACIÓN (icono + título)
+// --------------------------------------------------------------------------
+.document-detail__info-header {
+  display: flex;
+  align-items: center;
+  gap: v.$spacing-1;
+  margin-bottom: v.$spacing-2;
+}
+
+.document-detail__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.document-detail__info-icon {
+  font-size: v.$font-size-md-lg;
+
+  ::ng-deep svg path {
+    fill: url(#grad-document-detail);
+  }
+}
+
+.document-detail__card-title {
+  font-family: v.$font-primary;
+  font-weight: v.$font-weight-bold;
+  font-size: v.$font-size-md-lg;
+  color: v.$neutral-900;
+  line-height: v.$line-height-tight;
+}
+
+// --------------------------------------------------------------------------
+// LISTA VERTICAL DE CAMPOS
+// --------------------------------------------------------------------------
+.document-detail__info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.document-detail__info-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  padding: v.$spacing-1 0;
+  border-bottom: v.$border-thin solid v.$color-modal-border;
+
+  &:first-child {
+    padding-top: 0;
+  }
+
+  &:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+}
+
+.document-detail__info-label {
+  font-family: v.$font-primary;
+  font-weight: v.$font-weight-semibold;
+  font-size: v.$font-size-sm;
+  color: v.$neutral-500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.document-detail__info-value {
+  font-family: v.$font-primary;
+  font-weight: v.$font-weight-regular;
+  font-size: v.$font-size-sm;
+  color: v.$neutral-900;
+}
+
+// --------------------------------------------------------------------------
+// CARD DE ESTADO
+// --------------------------------------------------------------------------
+.document-detail__status-card {
+  background-color: v.$color-accent-secondary;
+  border: v.$border-thin solid v.$color-modal-border;
+  border-radius: v.$radius-card;
+  box-shadow: v.$shadow-card;
+  padding: v.$spacing-3;
+}
+
+// --------------------------------------------------------------------------
+// CABECERA DEL ESTADO (icono circular + texto)
+// --------------------------------------------------------------------------
+.document-detail__status-top {
+  display: flex;
+  align-items: center;
+  gap: v.$spacing-2;
+  margin-bottom: v.$spacing-2;
+}
+
+.document-detail__status-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: v.$radius-full;
+  font-size: v.$font-size-md-lg;
+  flex-shrink: 0;
+  color: v.$color-accent-secondary;
+
+  &--expired {
+    background-color: v.$color-error;
+  }
+
+  &--active {
+    background: v.$color-gradient-primary;
+  }
+}
+
+.document-detail__status-text-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.document-detail__status-title {
+  font-family: v.$font-primary;
+  font-weight: v.$font-weight-bold;
+  font-size: v.$font-size-md;
+  color: v.$neutral-900;
+  line-height: v.$line-height-tight;
+}
+
+.document-detail__status-subtitle {
+  font-family: v.$font-primary;
+  font-weight: v.$font-weight-medium;
+  font-size: v.$font-size-sm;
+  line-height: v.$line-height-tight;
+
+  &--expired {
+    color: v.$color-error-dark;
+  }
+
+  &--active {
+    color: v.$neutral-700;
+  }
+}
+
+// --------------------------------------------------------------------------
+// SEPARADOR
+// --------------------------------------------------------------------------
+.document-detail__divider {
+  border: none;
+  border-top: v.$border-thin solid rgba(v.$neutral-900, 0.12);
+  margin: 0 0 v.$spacing-2;
+}
+
+// --------------------------------------------------------------------------
+// FECHAS
+// --------------------------------------------------------------------------
+.document-detail__dates {
+  display: flex;
+  flex-direction: column;
+  gap: v.$spacing-1;
+}
+
+.document-detail__date-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: v.$spacing-1;
+}
+
+.document-detail__date-label {
+  font-family: v.$font-primary;
+  font-weight: v.$font-weight-regular;
+  font-size: v.$font-size-sm;
+  color: v.$neutral-700;
+}
+
+.document-detail__date-value {
+  font-family: v.$font-primary;
+  font-weight: v.$font-weight-bold;
+  font-size: v.$font-size-sm;
+  color: v.$neutral-900;
+}
+
+// --------------------------------------------------------------------------
+// PLACEHOLDER (tabs futuras)
+// --------------------------------------------------------------------------
+.document-detail__placeholder {
+  font-family: v.$font-primary;
+  font-size: v.$font-size-md;
+  color: v.$neutral-500;
+  padding: v.$spacing-4;
+}
+

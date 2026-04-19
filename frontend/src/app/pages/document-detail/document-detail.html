@@ -4,6 +4,15 @@
 <app-sidebar [currentPage]="currentPage()" (onNavigate)="onNavigate($event)" />
 
 @if (document(); as doc) {
+  <!-- Hidden SVG gradient defs -->
+  <svg class="document-detail__defs" aria-hidden="true">
+    <defs>
+      <linearGradient id="grad-document-detail" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="var(--color-primary)" />
+        <stop offset="100%" stop-color="var(--color-secondary)" />
+      </linearGradient>
+    </defs>
+  </svg>
   <section class="document-detail">
     <!-- PAGE HEADER -->
     <app-page-header
@@ -15,5 +24,152 @@
         {{ groupId() !== null ? 'Volver al grupo' : 'Volver al dashboard' }}
       </app-button>
     </app-page-header>
+
+    <!-- TAB BAR -->
+    <app-tab-bar [tabs]="tabs" [(activeTab)]="activeTab" />
+
+    <!-- ================================================================
+         TAB: DETALLES DEL DOCUMENTO
+         ================================================================ -->
+    @if (activeTab() === 'details') {
+      <section class="document-detail__content" role="tabpanel" id="panel-details">
+
+        <!-- COLUMNA IZQUIERDA: Vista previa de la imagen -->
+        <aside class="document-detail__preview">
+          <article class="document-detail__preview-card">
+            <header class="document-detail__preview-header">
+              <h2 class="document-detail__preview-title">Vista previa del documento</h2>
+            </header>
+
+            @if (doc.imagePath) {
+              <figure class="document-detail__preview-figure">
+                <img
+                  class="document-detail__preview-image document-detail__preview-image--clickable"
+                  [src]="doc.imagePath"
+                  [alt]="'Vista previa de ' + doc.title"
+                  (click)="openLightbox(doc.imagePath)"
+                />
+              </figure>
+            } @else {
+              <p class="document-detail__preview-empty">No hay imagen disponible.</p>
+            }
+          </article>
+        </aside>
+
+        <!-- COLUMNA DERECHA: Información + Estado -->
+        <main class="document-detail__main">
+
+          <!-- CARD: Información del documento -->
+          <article class="document-detail__card">
+            <header class="document-detail__info-header">
+              <fa-icon class="document-detail__info-icon" [icon]="faFileLines" aria-hidden="true" />
+              <h2 class="document-detail__card-title">Información</h2>
+            </header>
+
+            <dl class="document-detail__info-list">
+              <section class="document-detail__info-field">
+                <dt class="document-detail__info-label">Nombre</dt>
+                <dd class="document-detail__info-value">{{ doc.title }}</dd>
+              </section>
+
+              <section class="document-detail__info-field">
+                <dt class="document-detail__info-label">Comercio</dt>
+                <dd class="document-detail__info-value">{{ doc.storeName ?? '—' }}</dd>
+              </section>
+
+              <section class="document-detail__info-field">
+                <dt class="document-detail__info-label">Tipo</dt>
+                <dd class="document-detail__info-value">{{ getTypeLabel(doc.type) }}</dd>
+              </section>
+
+              <section class="document-detail__info-field">
+                <dt class="document-detail__info-label">Categoría</dt>
+                <dd class="document-detail__info-value">{{ doc.category ?? doc.type }}</dd>
+              </section>
+            </dl>
+          </article>
+
+          <!-- CARD: Estado del documento -->
+          <article class="document-detail__status-card">
+            <header class="document-detail__status-top">
+              <span
+                class="document-detail__status-icon-wrap"
+                [class.document-detail__status-icon-wrap--expired]="isExpired(doc)"
+                [class.document-detail__status-icon-wrap--active]="!isExpired(doc)"
+              >
+                <fa-icon
+                  [icon]="isExpired(doc) ? faCircleExclamation : faCircleCheck"
+                  aria-hidden="true"
+                />
+              </span>
+
+              <hgroup class="document-detail__status-text-group">
+                <h2 class="document-detail__status-title">Estado: {{ getStatusLabel(doc.status) }}</h2>
+                <p
+                  class="document-detail__status-subtitle"
+                  [class.document-detail__status-subtitle--expired]="isExpired(doc)"
+                  [class.document-detail__status-subtitle--active]="!isExpired(doc)"
+                >{{ getStatusSubtitle(doc.daysRemaining) }}</p>
+              </hgroup>
+            </header>
+
+            <hr class="document-detail__divider" />
+
+            <dl class="document-detail__dates">
+              <section class="document-detail__date-row">
+                <dt class="document-detail__date-label">Fecha de emisión:</dt>
+                <dd class="document-detail__date-value">{{ formatDate(doc.issueDate) }}</dd>
+              </section>
+
+              <section class="document-detail__date-row">
+                <dt class="document-detail__date-label">Fecha de expiración:</dt>
+                <dd class="document-detail__date-value">{{ formatDate(doc.expiryDate) }}</dd>
+              </section>
+            </dl>
+          </article>
+
+        </main>
+      </section>
+    }
+
+    <!-- ================================================================
+         TAB: ALERTAS Y EXPORTACIÓN (placeholder)
+         ================================================================ -->
+    @if (activeTab() === 'alerts') {
+      <section class="document-detail__content" role="tabpanel" id="panel-alerts">
+        <p class="document-detail__placeholder">Alertas y exportación (próximamente)</p>
+      </section>
+    }
+
+    <!-- ================================================================
+         TAB: HISTORIAL DE VERSIONES (placeholder)
+         ================================================================ -->
+    @if (activeTab() === 'history') {
+      <section class="document-detail__content" role="tabpanel" id="panel-history">
+        <p class="document-detail__placeholder">Historial de versiones (próximamente)</p>
+      </section>
+    }
   </section>
+}
+
+<!-- ============================================================
+     LIGHTBOX: Vista completa de la imagen
+     ============================================================ -->
+@if (lightboxSrc()) {
+  <aside
+    class="lightbox"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Vista completa de la imagen"
+    (click)="closeLightbox()"
+    (keydown.escape)="closeLightbox()"
+    tabindex="0"
+  >
+    <img
+      class="lightbox__image"
+      [src]="lightboxSrc()!"
+      alt="Vista completa"
+      (click)="$event.stopPropagation()"
+    />
+  </aside>
 }
