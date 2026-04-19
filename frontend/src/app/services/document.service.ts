@@ -39,4 +39,10 @@ export class DocumentService {
     formData.append('file', file);
     return this.http.post<DocumentResponse>(`${this.baseUrl}/extract`, formData, { headers: this.headers });
   }
+
+  uploadImage(documentId: number, file: File): Observable<DocumentResponse> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<DocumentResponse>(`${this.baseUrl}/${documentId}/image`, formData, { headers: this.headers });
+  }
 }
