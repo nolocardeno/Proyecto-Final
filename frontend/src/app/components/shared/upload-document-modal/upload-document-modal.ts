@@ -129,7 +129,7 @@ export class UploadDocumentModalComponent {
 
   // --- Formulario manual ---
   protected readonly docForm = this.fb.group({
-    title: ['', [Validators.required]],
+    title: ['', [Validators.required, Validators.maxLength(25)]],
     storeName: [''],
     issueDate: [''],
     expiryDate: [''],

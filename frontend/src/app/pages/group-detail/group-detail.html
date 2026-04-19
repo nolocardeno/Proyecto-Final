@@ -54,6 +54,7 @@
             [issueDate]="formatDate(doc.issueDate)"
             [expiryDate]="formatDate(doc.expiryDate)"
             [statusText]="getStatusText(doc.daysRemaining)"
+            [status]="doc.status"
             [documentId]="doc.id"
             [groupId]="group.id"
           />

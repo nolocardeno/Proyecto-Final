@@ -10,8 +10,11 @@ import {
   faBuilding,
   faCalendarCheck,
   faCalendarXmark,
+  faCircleExclamation,
+  faCircleCheck,
   type IconDefinition,
 } from '@fortawesome/free-solid-svg-icons';
+import { type DocumentStatus } from '../../../models/document.model';
 
 // --------------------------------------------------------------------------
 // TIPO: Document variants
@@ -21,11 +24,6 @@ export type DocumentVariant = 'ticket' | 'document';
 // --------------------------------------------------------------------------
 // CONFIGURATION MAPS
 // --------------------------------------------------------------------------
-const LABELS: Record<DocumentVariant, string> = {
-  ticket: 'TICKET',
-  document: 'DOCUMENTO',
-};
-
 const ICONS: Record<DocumentVariant, IconDefinition> = {
   ticket: faTicket,
   document: faFileLines,
@@ -48,6 +46,7 @@ export class DocumentCardComponent {
   issueDate = input.required<string>();
   expiryDate = input.required<string>();
   statusText = input.required<string>();
+  status = input.required<DocumentStatus>();
   documentId = input<number>();
   groupId = input<number>();
 
@@ -55,8 +54,10 @@ export class DocumentCardComponent {
   protected readonly faBuilding = faBuilding;
   protected readonly faCalendarCheck = faCalendarCheck;
   protected readonly faCalendarXmark = faCalendarXmark;
+  protected readonly faCircleExclamation = faCircleExclamation;
+  protected readonly faCircleCheck = faCircleCheck;
 
   // --- Computed ---
-  protected readonly typeLabel = computed(() => LABELS[this.type()]);
   protected readonly typeIcon = computed(() => ICONS[this.type()]);
+  protected readonly isExpired = computed(() => this.status() === 'EXPIRED');
 }

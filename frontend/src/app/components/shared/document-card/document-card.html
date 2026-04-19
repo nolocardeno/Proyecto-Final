@@ -17,21 +17,18 @@
        HEADER: Type + Title + Category badge
        -------------------------------------------------------------------------- -->
   <header class="document-card__header">
-    <!-- Type (icon + text) -->
-    <span class="document-card__type">
+    <!-- Type icon + Title -->
+    <div class="document-card__type">
       <fa-icon
         class="document-card__type-icon"
         [icon]="typeIcon()"
         aria-hidden="true"
       />
-      <span>{{ typeLabel() }}</span>
-    </span>
+      <span class="document-card__title">{{ title() }}</span>
+    </div>
 
     <!-- Category badge -->
     <span class="document-card__badge">{{ category() }}</span>
-
-    <!-- Title -->
-    <h3 class="document-card__title">{{ title() }}</h3>
   </header>
 
   <!-- --------------------------------------------------------------------------
@@ -70,7 +67,7 @@
         aria-hidden="true"
       />
       <span>
-        <strong>Vencimiento: </strong>{{ expiryDate() }}
+        <strong>Expiración: </strong>{{ expiryDate() }}
       </span>
     </p>
   </section>
@@ -81,6 +78,12 @@
   <hr class="document-card__separator" />
 
   <footer class="document-card__footer">
-    <span class="document-card__status">{{ statusText() }}</span>
+    <fa-icon
+      class="document-card__status-icon"
+      [class.document-card__status-icon--expired]="isExpired()"
+      [icon]="isExpired() ? faCircleExclamation : faCircleCheck"
+      aria-hidden="true"
+    />
+    <span class="document-card__status" [class.document-card__status--expired]="isExpired()">{{ statusText() }}</span>
   </footer>
 </article>

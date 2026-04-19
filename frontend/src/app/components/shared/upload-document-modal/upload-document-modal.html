@@ -119,7 +119,7 @@
               class="upload-modal__custom-input"
               type="text"
               placeholder="P. ej. Devolución, Nota de crédito..."
-              maxlength="25"
+              maxlength="12"
               [value]="customTicketCategory()"
               (input)="customTicketCategory.set($any($event.target).value)"
             />
@@ -162,7 +162,7 @@
               class="upload-modal__custom-input"
               type="text"
               placeholder="P. ej. Seguro, Factura..."
-              maxlength="25"
+              maxlength="12"
               [value]="customCategory()"
               (input)="customCategory.set($any($event.target).value)"
             />
@@ -191,6 +191,7 @@
             type="text"
             inputId="upload-doc-title"
             formControlName="title"
+            [maxlength]="25"
           />
 
           <app-form-field
@@ -208,7 +209,7 @@
               formControlName="issueDate"
             />
             <app-form-field
-              label="Fecha de vencimiento"
+              label="Fecha de expiración"
               type="date"
               inputId="upload-doc-expiry-date"
               formControlName="expiryDate"

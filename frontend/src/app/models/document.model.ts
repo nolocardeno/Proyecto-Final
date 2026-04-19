@@ -66,9 +66,9 @@ export function formatDate(date: string | null): string {
 }
 
 export function getStatusText(daysRemaining: number | null): string {
-  if (daysRemaining === null) return 'Sin vencimiento';
+  if (daysRemaining === null) return 'Sin expiración';
   if (daysRemaining < 0) {
-    return `Vencido hace ${Math.abs(daysRemaining)} día(s)`;
+    return `Expirado hace ${Math.abs(daysRemaining)} día(s)`;
   }
   return `Expira en ${daysRemaining} día(s)`;
 }
