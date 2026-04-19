@@ -12,7 +12,9 @@ import com.nolocardeno.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,6 +26,7 @@ public class DocumentService {
     private final DocumentRepository documentRepository;
     private final UserRepository userRepository;
     private final RenewalHistoryRepository renewalHistoryRepository;
+    private final FileStorageService fileStorageService;
 
     @Transactional
     public List<DocumentResponse> getDocumentsByUser(Long userId) {
@@ -117,6 +120,25 @@ public class DocumentService {
         return renewalHistoryRepository.findByDocumentIdOrderByRenewedAtDesc(documentId).stream()
                 .map(DocumentMapper::toRenewalResponse)
                 .toList();
+    }
+
+    @Transactional
+    public DocumentResponse uploadDocumentImage(Long userId, Long documentId, MultipartFile file) {
+        Document doc = findDocumentByUser(userId, documentId);
+
+        if (doc.getImagePath() != null) {
+            fileStorageService.delete(doc.getImagePath());
+        }
+
+        try {
+            String imagePath = fileStorageService.store(file);
+            doc.setImagePath(imagePath);
+        } catch (IOException e) {
+            throw new RuntimeException("No se pudo guardar la imagen", e);
+        }
+
+        doc = documentRepository.save(doc);
+        return DocumentMapper.toResponse(doc);
     }
 
     @Transactional(readOnly = true)

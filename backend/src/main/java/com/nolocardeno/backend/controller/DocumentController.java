@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -78,5 +79,13 @@ public class DocumentController {
             @RequestHeader("X-User-Id") Long userId,
             @Valid @RequestBody DocumentRequest request) {
         return ResponseEntity.ok(documentService.checkDuplicates(userId, request));
+    }
+
+    @PostMapping("/{id}/image")
+    public ResponseEntity<DocumentResponse> uploadImage(
+            @RequestHeader("X-User-Id") Long userId,
+            @PathVariable Long id,
+            @RequestParam("file") MultipartFile file) {
+        return ResponseEntity.ok(documentService.uploadDocumentImage(userId, id, file));
     }
 }
