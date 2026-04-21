@@ -16,6 +16,8 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/scantral
       SPRING_DATASOURCE_USERNAME: scantral
       SPRING_DATASOURCE_PASSWORD: scantral_dev
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
     volumes:
       - uploads:/app/uploads
     depends_on:
