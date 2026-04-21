@@ -1,0 +1,33 @@
+<article class="status-card">
+  <header class="status-card__top">
+    <span
+      class="status-card__icon-wrap"
+      [class.status-card__icon-wrap--expired]="isExpired"
+      [class.status-card__icon-wrap--active]="!isExpired"
+    >
+      <fa-icon [icon]="isExpired ? faCircleExclamation : faCircleCheck" aria-hidden="true" />
+    </span>
+
+    <hgroup class="status-card__text-group">
+      <h2 class="status-card__title">Estado: {{ statusLabel() }}</h2>
+      <p
+        class="status-card__subtitle"
+        [class.status-card__subtitle--expired]="isExpired"
+        [class.status-card__subtitle--active]="!isExpired"
+      >{{ statusSubtitle() }}</p>
+    </hgroup>
+  </header>
+
+  <hr class="status-card__divider" />
+
+  <dl class="status-card__dates">
+    <div class="status-card__date-row">
+      <dt class="status-card__date-label">Fecha de emisión:</dt>
+      <dd class="status-card__date-value">{{ issueDate() }}</dd>
+    </div>
+    <div class="status-card__date-row">
+      <dt class="status-card__date-label">Fecha de expiración:</dt>
+      <dd class="status-card__date-value">{{ expiryDate() }}</dd>
+    </div>
+  </dl>
+</article>
