@@ -1,0 +1,15 @@
+<button
+  type="button"
+  class="export-btn"
+  [attr.aria-label]="ariaLabel()"
+  (click)="action.emit()"
+>
+  <span class="export-btn__icon" aria-hidden="true">
+    <fa-icon [icon]="icon()" />
+  </span>
+  <span class="export-btn__body">
+    <strong class="export-btn__name">{{ name() }}</strong>
+    <span class="export-btn__desc">{{ description() }}</span>
+  </span>
+  <fa-icon class="export-btn__arrow" [icon]="faCalendarPlus" aria-hidden="true" />
+</button>

@@ -1,0 +1,60 @@
+@use '../../../../styles/00-settings/variables' as v;
+@use '../../../../styles/01-tools/mixins' as m;
+
+.export-btn {
+  display: flex;
+  align-items: center;
+  gap: v.$spacing-2;
+  width: 100%;
+  padding: v.$spacing-1 v.$spacing-2;
+  background-color: v.$color-input-bg;
+  border: v.$border-thin solid v.$color-input-border;
+  border-radius: v.$radius-card;
+  cursor: pointer;
+  text-align: left;
+  @include m.hover-elevation;
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: v.$radius-full;
+    font-size: v.$font-size-md-lg;
+    flex-shrink: 0;
+    background: v.$color-gradient-primary;
+    color: v.$color-accent-secondary;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__name {
+    font-family: v.$font-primary;
+    font-size: v.$font-size-sm-md;
+    font-weight: v.$font-weight-semibold;
+    color: v.$neutral-900;
+  }
+
+  &__desc {
+    font-family: v.$font-primary;
+    font-size: v.$font-size-sm;
+    color: v.$neutral-500;
+    @include m.truncate(1);
+  }
+
+  &__arrow {
+    font-size: v.$font-size-md;
+    flex-shrink: 0;
+
+    ::ng-deep svg path {
+      fill: url(#grad-export-icon);
+    }
+  }
+}
