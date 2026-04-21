@@ -1,0 +1,92 @@
+<article class="alerts-section">
+  <!-- SVG gradient defs -->
+  <svg class="alerts-section__defs" aria-hidden="true">
+    <defs>
+      <linearGradient id="grad-alerts-icon" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="var(--color-primary)" />
+        <stop offset="100%" stop-color="var(--color-secondary)" />
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <header class="alerts-section__header">
+    <fa-icon class="alerts-section__header-icon" [icon]="faBell" aria-hidden="true" />
+    <hgroup class="alerts-section__header-text">
+      <h2 class="alerts-section__title">Alertas de caducidad</h2>
+      <p class="alerts-section__subtitle">
+        Recibe alertas por email cuando falten los días configurados para que el documento caduque.
+      </p>
+    </hgroup>
+  </header>
+
+  <hr class="alerts-section__divider" />
+
+  @if (!hasExpiryDate()) {
+    <p class="alerts-section__no-expiry">
+      <fa-icon [icon]="faBellSlash" aria-hidden="true" />
+      Este documento no tiene fecha de caducidad. Añade una fecha de caducidad para poder configurar alertas.
+    </p>
+  } @else {
+    <!-- ROW: predeterminadas + personalizadas -->
+    <div class="alerts-section__row">
+      <section class="alerts-section__presets" aria-label="Alertas predeterminadas">
+        <h3 class="alerts-section__label">Alertas predeterminadas</h3>
+        <ul class="alerts-section__btn-list" role="list">
+          @for (days of presetDays(); track days) {
+            <li>
+              <app-alert-button
+                [days]="days"
+                [active]="isActive(days)"
+                (toggle)="toggleAlert.emit($event)"
+              />
+            </li>
+          }
+        </ul>
+      </section>
+
+      <section class="alerts-section__custom-col" aria-label="Alertas personalizadas">
+        <h3 class="alerts-section__label">Alertas personalizadas</h3>
+        <ul class="alerts-section__btn-list" role="list">
+          @for (alert of customAlerts(); track alert.id) {
+            <li>
+              <app-alert-button
+                [days]="alert.daysBeforeExpiry"
+                [active]="true"
+                [deletable]="true"
+                (delete)="deleteAlert.emit(alert)"
+              />
+            </li>
+          }
+          @if (customAlerts().length === 0) {
+            <li class="alerts-section__custom-empty">Sin alertas personalizadas</li>
+          }
+        </ul>
+      </section>
+    </div>
+
+    <!-- CREATE FORM -->
+    <section class="alerts-section__create" aria-label="Crear alerta personalizada">
+      <h3 class="alerts-section__label">Crear alerta</h3>
+      <form class="alerts-section__form" (ngSubmit)="onSubmit()" novalidate>
+        <fieldset class="alerts-section__form-row">
+          <legend class="alerts-section__form-legend">Configurar alerta personalizada</legend>
+          <input
+            id="custom-days"
+            class="alerts-section__input"
+            type="number"
+            min="1"
+            max="365"
+            placeholder="Ej: 14"
+            [(ngModel)]="customDays"
+            name="customDays"
+            aria-label="Días de anticipación personalizados"
+          />
+          <app-button type="submit" variant="primary" size="md">
+            <fa-icon [icon]="faPlus" aria-hidden="true" />
+            Añadir alerta
+          </app-button>
+        </fieldset>
+      </form>
+    </section>
+  }
+</article>

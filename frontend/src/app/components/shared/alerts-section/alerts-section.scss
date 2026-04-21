@@ -1,0 +1,189 @@
+@use '../../../../styles/00-settings/variables' as v;
+@use '../../../../styles/01-tools/mixins' as m;
+
+:host {
+  display: block;
+  height: 100%;
+}
+
+.alerts-section {
+  background-color: v.$color-accent-secondary;
+  border: v.$border-thin solid v.$color-modal-border;
+  border-radius: v.$radius-card;
+  box-shadow: v.$shadow-card;
+  padding: v.$spacing-3;
+  display: flex;
+  flex-direction: column;
+  gap: v.$spacing-2;
+  height: 100%;
+
+  &__defs {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    gap: v.$spacing-2;
+  }
+
+  &__header-icon {
+    font-size: v.$font-size-md-lg;
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+
+    ::ng-deep svg path {
+      fill: url(#grad-alerts-icon);
+    }
+  }
+
+  &__header-text {
+    display: flex;
+    flex-direction: column;
+    gap: v.$spacing-half;
+  }
+
+  &__title {
+    font-family: v.$font-primary;
+    font-weight: v.$font-weight-bold;
+    font-size: v.$font-size-md-lg;
+    color: v.$neutral-900;
+    line-height: v.$line-height-tight;
+  }
+
+  &__subtitle {
+    font-family: v.$font-primary;
+    font-size: v.$font-size-sm;
+    color: v.$neutral-500;
+    line-height: v.$line-height-normal;
+  }
+
+  &__divider {
+    border: none;
+    border-top: v.$border-thin solid rgba(v.$neutral-900, 0.12);
+    margin: 0;
+  }
+
+  &__label {
+    font-family: v.$font-primary;
+    font-weight: v.$font-weight-semibold;
+    font-size: v.$font-size-sm;
+    color: v.$neutral-500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  &__row {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    gap: v.$spacing-4;
+    flex-wrap: nowrap;
+    padding-bottom: v.$spacing-1;
+  }
+
+  &__presets {
+    display: flex;
+    flex-direction: column;
+    gap: v.$spacing-1;
+    width: 17.5rem;
+    flex-shrink: 0;
+  }
+
+  &__custom-col {
+    display: flex;
+    flex-direction: column;
+    gap: v.$spacing-1;
+    flex-shrink: 0;
+    width: 17.5rem;
+  }
+
+  &__btn-list {
+    display: flex;
+    flex-direction: row;
+    gap: v.$spacing-1;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  &__custom-empty {
+    display: flex;
+    align-items: center;
+    height: 5.5rem;
+    font-family: v.$font-primary;
+    font-size: v.$font-size-sm;
+    color: v.$neutral-400;
+    font-style: italic;
+    white-space: nowrap;
+  }
+
+  &__no-expiry {
+    display: flex;
+    align-items: center;
+    gap: v.$spacing-1;
+    font-family: v.$font-primary;
+    font-size: v.$font-size-sm;
+    color: v.$neutral-500;
+    padding: v.$spacing-2;
+    background-color: v.$color-warning-light;
+    border: v.$border-thin solid v.$color-warning;
+    border-radius: v.$radius-lg;
+  }
+
+  &__create {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: v.$spacing-1;
+    padding-top: 0;
+    margin-top: v.$spacing-2;
+    width: calc(17.5rem * 2 + v.$spacing-4);
+    align-self: center;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: v.$spacing-1;
+  }
+
+  &__form-row {
+    display: flex;
+    align-items: center;
+    gap: v.$spacing-1;
+    border: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  &__form-legend {
+    @include m.visually-hidden;
+  }
+
+  &__input {
+    width: 10rem;
+    height: 2.625rem;
+    padding: 0 v.$spacing-2;
+    background-color: v.$color-input-bg;
+    border: v.$border-thin solid v.$color-input-border;
+    border-radius: v.$radius-input;
+    font-family: v.$font-primary;
+    font-size: v.$font-size-sm-md;
+    color: v.$neutral-900;
+    outline: none;
+
+    &:focus {
+      border-color: v.$color-primary;
+      box-shadow: 0 0 0 0.1875rem v.$color-focus-glow;
+    }
+
+    &::placeholder {
+      color: v.$color-placeholder;
+    }
+  }
+}
