@@ -1,0 +1,72 @@
+@use '../../../../styles/00-settings/variables' as v;
+
+.info-card {
+  background-color: v.$color-accent-secondary;
+  border: v.$border-thin solid v.$color-modal-border;
+  border-radius: v.$radius-card;
+  box-shadow: v.$shadow-card;
+  padding: v.$spacing-3;
+
+  &__defs {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: v.$spacing-1;
+    margin-bottom: v.$spacing-2;
+  }
+
+  &__icon {
+    font-size: v.$font-size-md-lg;
+
+    ::ng-deep svg path {
+      fill: url(#grad-info-icon);
+    }
+  }
+
+  &__title {
+    font-family: v.$font-primary;
+    font-weight: v.$font-weight-bold;
+    font-size: v.$font-size-md-lg;
+    color: v.$neutral-900;
+    line-height: v.$line-height-tight;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    padding: v.$spacing-1 0;
+    border-bottom: v.$border-thin solid v.$color-modal-border;
+
+    &:first-child { padding-top: 0; }
+    &:last-child  { border-bottom: none; padding-bottom: 0; }
+  }
+
+  &__label {
+    font-family: v.$font-primary;
+    font-weight: v.$font-weight-semibold;
+    font-size: v.$font-size-sm;
+    color: v.$neutral-500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  &__value {
+    font-family: v.$font-primary;
+    font-weight: v.$font-weight-regular;
+    font-size: v.$font-size-sm;
+    color: v.$neutral-900;
+  }
+}

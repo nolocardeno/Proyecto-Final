@@ -1,0 +1,25 @@
+<!-- SVG gradient used by the header icon -->
+<svg class="info-card__defs" aria-hidden="true">
+  <defs>
+    <linearGradient id="grad-info-icon" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="var(--color-primary)" />
+      <stop offset="100%" stop-color="var(--color-secondary)" />
+    </linearGradient>
+  </defs>
+</svg>
+
+<article class="info-card">
+  <header class="info-card__header">
+    <fa-icon class="info-card__icon" [icon]="faFileLines" aria-hidden="true" />
+    <h2 class="info-card__title">Información</h2>
+  </header>
+
+  <dl class="info-card__list">
+    @for (field of fields(); track field.label) {
+      <div class="info-card__field">
+        <dt class="info-card__label">{{ field.label }}</dt>
+        <dd class="info-card__value">{{ field.value }}</dd>
+      </div>
+    }
+  </dl>
+</article>
