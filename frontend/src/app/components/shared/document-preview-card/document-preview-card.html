@@ -1,0 +1,18 @@
+<article class="preview-card">
+  <header class="preview-card__header">
+    <h2 class="preview-card__title">Vista previa del documento</h2>
+  </header>
+
+  @if (imagePath()) {
+    <figure class="preview-card__figure">
+      <img
+        class="preview-card__image preview-card__image--clickable"
+        [src]="imagePath()!"
+        [alt]="alt()"
+        (click)="openLightbox.emit(imagePath()!)"
+      />
+    </figure>
+  } @else {
+    <p class="preview-card__empty">No hay imagen disponible.</p>
+  }
+</article>

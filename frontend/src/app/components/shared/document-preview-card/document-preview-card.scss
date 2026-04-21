@@ -1,0 +1,51 @@
+@use '../../../../styles/00-settings/variables' as v;
+@use '../../../../styles/01-tools/mixins' as m;
+
+.preview-card {
+  display: flex;
+  flex-direction: column;
+  background-color: v.$color-accent-secondary;
+  border: v.$border-thin solid v.$color-modal-border;
+  border-radius: v.$radius-card;
+  box-shadow: v.$shadow-card;
+  overflow: hidden;
+
+  &__header {
+    background: v.$color-gradient-primary;
+    padding: v.$spacing-2 v.$spacing-3;
+  }
+
+  &__title {
+    font-family: v.$font-primary;
+    font-weight: v.$font-weight-bold;
+    font-size: v.$font-size-md;
+    color: v.$neutral-900;
+    line-height: v.$line-height-tight;
+  }
+
+  &__figure {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: v.$spacing-3;
+  }
+
+  &__image {
+    max-width: 100%;
+    max-height: 30rem;
+    object-fit: contain;
+    border-radius: v.$radius-lg;
+
+    &--clickable {
+      cursor: pointer;
+    }
+  }
+
+  &__empty {
+    @include m.flex-center;
+    padding: v.$spacing-4;
+    font-family: v.$font-primary;
+    font-size: v.$font-size-sm;
+    color: v.$neutral-500;
+  }
+}
