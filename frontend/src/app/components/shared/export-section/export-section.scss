@@ -1,0 +1,91 @@
+@use '../../../../styles/00-settings/variables' as v;
+@use '../../../../styles/01-tools/mixins' as m;
+
+:host {
+  display: block;
+  height: 100%;
+}
+
+.export-section {
+  background-color: v.$color-accent-secondary;
+  border: v.$border-thin solid v.$color-modal-border;
+  border-radius: v.$radius-card;
+  box-shadow: v.$shadow-card;
+  padding: v.$spacing-3;
+  display: flex;
+  flex-direction: column;
+  gap: v.$spacing-2;
+  height: 100%;
+
+  &__defs {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    gap: v.$spacing-2;
+  }
+
+  &__header-icon {
+    font-size: v.$font-size-md-lg;
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+
+    ::ng-deep svg path {
+      fill: url(#grad-export-icon);
+    }
+  }
+
+  &__header-text {
+    display: flex;
+    flex-direction: column;
+    gap: v.$spacing-half;
+  }
+
+  &__title {
+    font-family: v.$font-primary;
+    font-weight: v.$font-weight-bold;
+    font-size: v.$font-size-md-lg;
+    color: v.$neutral-900;
+    line-height: v.$line-height-tight;
+  }
+
+  &__subtitle {
+    font-family: v.$font-primary;
+    font-size: v.$font-size-sm;
+    color: v.$neutral-500;
+    line-height: v.$line-height-normal;
+  }
+
+  &__divider {
+    border: none;
+    border-top: v.$border-thin solid rgba(v.$neutral-900, 0.12);
+    margin: 0;
+  }
+
+  &__no-expiry {
+    display: flex;
+    align-items: center;
+    gap: v.$spacing-1;
+    font-family: v.$font-primary;
+    font-size: v.$font-size-sm;
+    color: v.$neutral-500;
+    padding: v.$spacing-2;
+    background-color: v.$color-warning-light;
+    border: v.$border-thin solid v.$color-warning;
+    border-radius: v.$radius-lg;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: v.$spacing-1;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+}

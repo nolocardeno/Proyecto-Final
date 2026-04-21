@@ -1,0 +1,59 @@
+<article class="export-section">
+  <svg class="export-section__defs" aria-hidden="true">
+    <defs>
+      <linearGradient id="grad-export-icon" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="var(--color-primary)" />
+        <stop offset="100%" stop-color="var(--color-secondary)" />
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <header class="export-section__header">
+    <fa-icon class="export-section__header-icon" [icon]="faCalendarDays" aria-hidden="true" />
+    <hgroup class="export-section__header-text">
+      <h2 class="export-section__title">Exportar al calendario</h2>
+      <p class="export-section__subtitle">
+        Añade la fecha de caducidad del documento a tu aplicación de calendario favorita.
+      </p>
+    </hgroup>
+  </header>
+
+  <hr class="export-section__divider" />
+
+  @if (!hasExpiryDate()) {
+    <p class="export-section__no-expiry">
+      <fa-icon [icon]="faCalendarDays" aria-hidden="true" />
+      Sin fecha de caducidad. No es posible exportar al calendario.
+    </p>
+  } @else {
+    <ul class="export-section__list" role="list">
+      <li>
+        <app-export-button
+          [icon]="faGoogle"
+          name="Google Calendar"
+          description="Abre Google Calendar para añadir el evento"
+          ariaLabel="Añadir caducidad a Google Calendar"
+          (action)="openGoogle.emit()"
+        />
+      </li>
+      <li>
+        <app-export-button
+          [icon]="faCalendarDays"
+          name="Outlook Calendar"
+          description="Abre Outlook Web para añadir el evento"
+          ariaLabel="Añadir caducidad a Outlook Calendar"
+          (action)="openOutlook.emit()"
+        />
+      </li>
+      <li>
+        <app-export-button
+          [icon]="faDownload"
+          name="Archivo ICS"
+          description="Descarga el evento para cualquier calendario"
+          ariaLabel="Descargar archivo ICS"
+          (action)="downloadIcs.emit()"
+        />
+      </li>
+    </ul>
+  }
+</article>
