@@ -1,0 +1,20 @@
+<button
+  type="button"
+  class="alert-btn"
+  [class.alert-btn--active]="active()"
+  [class.alert-btn--deletable]="deletable()"
+  (click)="onClick()"
+  [attr.aria-pressed]="active()"
+  [attr.aria-label]="deletable()
+    ? 'Eliminar alerta de ' + days() + ' días'
+    : (active() ? 'Desactivar' : 'Activar') + ' alerta ' + days() + ' día(s) antes'"
+>
+  @if (deletable()) {
+    <span class="alert-btn__overlay" aria-hidden="true">
+      <fa-icon [icon]="faTrash" />
+    </span>
+  }
+  <fa-icon class="alert-btn__icon" [icon]="faBell" aria-hidden="true" />
+  <strong class="alert-btn__days">{{ days() }}</strong>
+  <span class="alert-btn__label">DÍAS</span>
+</button>

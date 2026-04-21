@@ -1,0 +1,76 @@
+@use '../../../../styles/00-settings/variables' as v;
+@use '../../../../styles/01-tools/mixins' as m;
+
+.alert-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: v.$spacing-half;
+  width: 5.5rem;
+  height: 5.5rem;
+  background: v.$color-gradient-accent;
+  border: v.$border-thin solid v.$color-input-border;
+  border-radius: v.$radius-card;
+  box-shadow: v.$shadow-card;
+  cursor: pointer;
+  color: v.$neutral-700;
+  @include m.hover-elevation;
+
+  &--active {
+    background: v.$color-gradient-primary;
+    border-color: transparent;
+    color: v.$neutral-900;
+
+    .alert-btn__icon,
+    .alert-btn__days,
+    .alert-btn__label {
+      color: v.$neutral-900;
+      opacity: 1;
+    }
+  }
+
+  &--deletable {
+    position: relative;
+    overflow: hidden;
+  }
+
+  &__overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: inherit;
+    background: rgba(0, 0, 0, 0.45);
+    color: v.$neutral-50;
+    font-size: v.$font-size-md-lg;
+    opacity: 0;
+    @include m.transition(opacity);
+  }
+
+  &--deletable:hover &__overlay {
+    opacity: 1;
+  }
+
+  &__icon {
+    font-size: v.$font-size-md-lg;
+  }
+
+  &__days {
+    font-family: v.$font-primary;
+    font-size: v.$font-size-md-lg;
+    font-weight: v.$font-weight-bold;
+    line-height: 1;
+    color: inherit;
+  }
+
+  &__label {
+    font-family: v.$font-primary;
+    font-size: v.$font-size-sm;
+    font-weight: v.$font-weight-medium;
+    letter-spacing: 0.05em;
+    color: inherit;
+    opacity: 0.75;
+  }
+}
