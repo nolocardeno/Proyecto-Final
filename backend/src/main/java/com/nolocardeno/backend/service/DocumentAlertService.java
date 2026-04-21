@@ -39,7 +39,7 @@ public class DocumentAlertService {
 
         if (document.getExpiryDate() == null) {
             throw new ResponseStatusException(
-                    HttpStatus.UNPROCESSABLE_ENTITY,
+                    HttpStatus.UNPROCESSABLE_CONTENT,
                     "No se puede crear una alerta para un documento sin fecha de caducidad");
         }
 

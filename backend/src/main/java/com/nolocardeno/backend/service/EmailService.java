@@ -17,7 +17,6 @@ public class EmailService {
 
     // --- Paleta de colores del template ---
     private static final String COLOR_PRIMARY      = "#ff9a3c";   // $color-primary
-    private static final String COLOR_SECONDARY    = "#ff5e3a";   // $color-secondary
     private static final String COLOR_HEADER_TEXT  = "#171717";   // $neutral-900 (texto sobre gradiente naranja)
     private static final String COLOR_BODY_BG      = "#f7fafc";   // fondo exterior y footer
     private static final String COLOR_BODY_TEXT    = "#4a5568";   // texto principal del cuerpo
