@@ -4,7 +4,6 @@
 import { Component, HostListener, inject, output, signal, computed } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
-import { switchMap, of } from 'rxjs';
 import {
   faPenToSquare,
   faExpand,
@@ -286,14 +285,7 @@ export class UploadDocumentModalComponent {
     const groupId = this.modalService.groupId();
     const imageFile = this.imageFile();
 
-    this.documentService.createDocument(body, groupId ?? undefined).pipe(
-      switchMap(doc => {
-        if (imageFile) {
-          return this.documentService.uploadImage(doc.id, imageFile);
-        }
-        return of(doc);
-      }),
-    ).subscribe({
+    this.documentService.createDocument(body, groupId ?? undefined, imageFile).subscribe({
       next: () => {
         this.alert.show('success', 'Documento creado correctamente');
         this.documentCreated.emit();

@@ -3,7 +3,6 @@
 // --------------------------------------------------------------------------
 import { Component, HostListener, inject, input, output, OnInit, signal, computed } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { switchMap, of } from 'rxjs';
 import { ButtonComponent } from '../button/button';
 import { FormFieldComponent } from '../form-field/form-field';
 import { FilePickerComponent } from '../file-picker/file-picker';
@@ -159,21 +158,14 @@ export class EditDocumentModalComponent implements OnInit {
       title: raw.title,
       storeName: raw.storeName || null,
       type: this.resolveDocumentType(),
+      kind: this.selectedKind(),
       category: this.resolveCategory(),
       issueDate: raw.issueDate || null,
       expiryDate: raw.expiryDate || null,
     };
 
     this.loading.set(true);
-    this.documentService.updateDocument(this.document().id, body).pipe(
-      switchMap((updated: DocumentResponse) => {
-        const file = this.imageFile();
-        if (file) {
-          return this.documentService.uploadImage(updated.id, file);
-        }
-        return of(updated);
-      }),
-    ).subscribe({
+    this.documentService.updateDocument(this.document().id, body, this.imageFile()).subscribe({
       next: (updated: DocumentResponse) => {
         this.loading.set(false);
         this.alertService.show('success', 'Documento actualizado correctamente');

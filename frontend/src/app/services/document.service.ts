@@ -29,9 +29,14 @@ export class DocumentService {
     return this.http.get<DocumentResponse>(`${this.baseUrl}/${id}`, { headers: this.headers });
   }
 
-  createDocument(body: Record<string, unknown>, groupId?: number): Observable<DocumentResponse> {
+  createDocument(body: Record<string, unknown>, groupId?: number, imageFile?: File | null): Observable<DocumentResponse> {
     const url = groupId ? `/api/groups/${groupId}/documents` : this.baseUrl;
-    return this.http.post<DocumentResponse>(url, body, { headers: this.headers });
+    const formData = new FormData();
+    formData.append('data', new Blob([JSON.stringify(body)], { type: 'application/json' }));
+    if (imageFile) {
+      formData.append('file', imageFile);
+    }
+    return this.http.post<DocumentResponse>(url, formData, { headers: this.headers });
   }
 
   extractFromImage(file: File): Observable<DocumentResponse> {
@@ -46,8 +51,13 @@ export class DocumentService {
     return this.http.post<DocumentResponse>(`${this.baseUrl}/${documentId}/image`, formData, { headers: this.headers });
   }
 
-  updateDocument(id: number, body: Partial<Record<string, unknown>>): Observable<DocumentResponse> {
-    return this.http.put<DocumentResponse>(`${this.baseUrl}/${id}`, body, { headers: this.headers });
+  updateDocument(id: number, body: Partial<Record<string, unknown>>, imageFile?: File | null): Observable<DocumentResponse> {
+    const formData = new FormData();
+    formData.append('data', new Blob([JSON.stringify(body)], { type: 'application/json' }));
+    if (imageFile) {
+      formData.append('file', imageFile);
+    }
+    return this.http.put<DocumentResponse>(`${this.baseUrl}/${id}`, formData, { headers: this.headers });
   }
 
   deleteDocument(id: number): Observable<void> {
