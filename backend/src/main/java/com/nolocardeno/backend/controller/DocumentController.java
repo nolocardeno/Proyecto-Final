@@ -1,5 +1,6 @@
 package com.nolocardeno.backend.controller;
 
+import com.nolocardeno.backend.dto.DocumentHistoryResponse;
 import com.nolocardeno.backend.dto.DocumentRequest;
 import com.nolocardeno.backend.dto.DocumentResponse;
 import com.nolocardeno.backend.dto.RenewalHistoryResponse;
@@ -7,6 +8,7 @@ import com.nolocardeno.backend.service.DocumentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,20 +37,22 @@ public class DocumentController {
         return ResponseEntity.ok(documentService.getDocument(userId, id));
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<DocumentResponse> create(
             @RequestHeader("X-User-Id") Long userId,
-            @Valid @RequestBody DocumentRequest request) {
+            @RequestPart("data") @Valid DocumentRequest request,
+            @RequestPart(value = "file", required = false) MultipartFile file) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(documentService.createDocument(userId, request));
+                .body(documentService.createDocument(userId, request, file));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<DocumentResponse> update(
             @RequestHeader("X-User-Id") Long userId,
             @PathVariable Long id,
-            @Valid @RequestBody DocumentRequest request) {
-        return ResponseEntity.ok(documentService.updateDocument(userId, id, request));
+            @RequestPart("data") @Valid DocumentRequest request,
+            @RequestPart(value = "file", required = false) MultipartFile file) {
+        return ResponseEntity.ok(documentService.updateDocument(userId, id, request, file));
     }
 
     @DeleteMapping("/{id}")
@@ -72,6 +76,13 @@ public class DocumentController {
             @RequestHeader("X-User-Id") Long userId,
             @PathVariable Long id) {
         return ResponseEntity.ok(documentService.getRenewalHistory(userId, id));
+    }
+
+    @GetMapping("/{id}/history")
+    public ResponseEntity<List<DocumentHistoryResponse>> getHistory(
+            @RequestHeader("X-User-Id") Long userId,
+            @PathVariable Long id) {
+        return ResponseEntity.ok(documentService.getDocumentHistory(userId, id));
     }
 
     @PostMapping("/check-duplicates")
