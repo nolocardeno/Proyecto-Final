@@ -9,6 +9,8 @@ import {
   faCircleInfo,
   faClockRotateLeft,
   faBell,
+  faTrash,
+  faPenToSquare,
 } from '@fortawesome/free-solid-svg-icons';
 import { SidebarComponent, type SidebarPage } from '../../components/layout/sidebar/sidebar';
 import { PageHeaderComponent } from '../../components/shared/page-header/page-header';
@@ -30,6 +32,7 @@ import { DocumentInfoCardComponent, type InfoField } from '../../components/shar
 import { DocumentStatusCardComponent } from '../../components/shared/document-status-card/document-status-card';
 import { AlertsSectionComponent } from '../../components/shared/alerts-section/alerts-section';
 import { ExportSectionComponent } from '../../components/shared/export-section/export-section';
+import { EditDocumentModalComponent } from '../../components/shared/edit-document-modal/edit-document-modal';
 
 // --------------------------------------------------------------------------
 // PÁGINA: DOCUMENT DETAIL
@@ -55,6 +58,7 @@ const STATUS_LABELS: Record<DocumentStatus, string> = {
     DocumentStatusCardComponent,
     AlertsSectionComponent,
     ExportSectionComponent,
+    EditDocumentModalComponent,
   ],
   templateUrl: './document-detail.html',
   styleUrl: './document-detail.scss',
@@ -69,6 +73,8 @@ export class DocumentDetailComponent implements OnInit {
 
   // Icons
   protected readonly faArrowLeft = faArrowLeft;
+  protected readonly faTrash = faTrash;
+  protected readonly faPenToSquare = faPenToSquare;
 
   protected readonly formatDate = formatDate;
   protected readonly getTypeLabel = (type: DocumentType): string =>
@@ -105,6 +111,10 @@ export class DocumentDetailComponent implements OnInit {
   // Alerts state
   protected readonly activeAlerts = signal<DocumentAlertResponse[]>([]);
   protected alertToDelete = signal<DocumentAlertResponse | null>(null);
+
+  // Document actions state
+  protected readonly showDeleteDocConfirm = signal(false);
+  protected readonly showEditDocModal = signal(false);
 
   protected get customAlerts(): DocumentAlertResponse[] {
     return this.activeAlerts()
@@ -231,6 +241,48 @@ export class DocumentDetailComponent implements OnInit {
 
   protected onCancelDelete(): void {
     this.alertToDelete.set(null);
+  }
+
+  // --------------------------------------------------------------------------
+  // DOCUMENT DELETE
+  // --------------------------------------------------------------------------
+
+  protected requestDeleteDocument(): void {
+    this.showDeleteDocConfirm.set(true);
+  }
+
+  protected onConfirmDeleteDocument(): void {
+    const doc = this.document();
+    if (!doc) return;
+    this.showDeleteDocConfirm.set(false);
+    this.documentService.deleteDocument(doc.id).subscribe({
+      next: () => {
+        this.alertService.show('success', 'Documento eliminado correctamente');
+        this.goBack();
+      },
+      error: () => this.alertService.show('error', 'No se pudo eliminar el documento'),
+    });
+  }
+
+  protected onCancelDeleteDocument(): void {
+    this.showDeleteDocConfirm.set(false);
+  }
+
+  // --------------------------------------------------------------------------
+  // DOCUMENT EDIT
+  // --------------------------------------------------------------------------
+
+  protected openEditModal(): void {
+    this.showEditDocModal.set(true);
+  }
+
+  protected onDocumentSaved(updated: DocumentResponse): void {
+    this.document.set(updated);
+    this.showEditDocModal.set(false);
+  }
+
+  protected onEditCancelled(): void {
+    this.showEditDocModal.set(false);
   }
 
   // --------------------------------------------------------------------------

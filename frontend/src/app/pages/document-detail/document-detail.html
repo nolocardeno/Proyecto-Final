@@ -19,6 +19,12 @@
       title="Detalles del documento"
       subtitle="Consulta, modifica o elimina los detalles de tu documento..."
     >
+      <app-button buttons variant="icon" (click)="requestDeleteDocument()" aria-label="Eliminar documento">
+        <fa-icon [icon]="faTrash" aria-hidden="true" />
+      </app-button>
+      <app-button buttons variant="icon" (click)="openEditModal()" aria-label="Editar documento">
+        <fa-icon [icon]="faPenToSquare" aria-hidden="true" />
+      </app-button>
       <app-button buttons variant="text" (click)="goBack()">
         <fa-icon [icon]="faArrowLeft" aria-hidden="true" />
         {{ groupId() !== null ? 'Volver al grupo' : 'Volver al dashboard' }}
@@ -96,6 +102,25 @@
     cancelLabel="Cancelar"
     (confirmed)="onConfirmDelete()"
     (cancelled)="onCancelDelete()"
+  />
+}
+
+@if (showDeleteDocConfirm()) {
+  <app-confirm-modal
+    title="Eliminar documento"
+    message="¿Estás seguro de que quieres eliminar este documento? Esta acción no se puede deshacer."
+    confirmLabel="Eliminar"
+    cancelLabel="Cancelar"
+    (confirmed)="onConfirmDeleteDocument()"
+    (cancelled)="onCancelDeleteDocument()"
+  />
+}
+
+@if (showEditDocModal() && document()) {
+  <app-edit-document-modal
+    [document]="document()!"
+    (saved)="onDocumentSaved($event)"
+    (cancelled)="onEditCancelled()"
   />
 }
 
