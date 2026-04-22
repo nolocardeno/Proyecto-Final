@@ -1,5 +1,7 @@
 package com.nolocardeno.backend.dto;
 
+import com.nolocardeno.backend.model.DocumentHistory;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
@@ -42,6 +44,17 @@ public final class DocumentMapper {
                 .newExpiryDate(rh.getNewExpiryDate())
                 .renewedAt(rh.getRenewedAt())
                 .notes(rh.getNotes())
+                .build();
+    }
+
+    public static DocumentHistoryResponse toHistoryResponse(DocumentHistory dh) {
+        return DocumentHistoryResponse.builder()
+                .id(dh.getId())
+                .documentId(dh.getDocument().getId())
+                .changeType(dh.getChangeType())
+                .description(dh.getDescription())
+                .changedByName(dh.getChangedBy().getName())
+                .changedAt(dh.getChangedAt())
                 .build();
     }
 }
