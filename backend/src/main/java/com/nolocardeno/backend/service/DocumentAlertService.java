@@ -8,6 +8,7 @@ import com.nolocardeno.backend.model.DocumentAlert;
 import com.nolocardeno.backend.model.User;
 import com.nolocardeno.backend.repository.DocumentAlertRepository;
 import com.nolocardeno.backend.repository.DocumentRepository;
+import com.nolocardeno.backend.repository.GroupRepository;
 import com.nolocardeno.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,9 +25,10 @@ public class DocumentAlertService {
     private final DocumentAlertRepository alertRepository;
     private final DocumentRepository documentRepository;
     private final UserRepository userRepository;
+    private final GroupRepository groupRepository;
 
     public List<DocumentAlertResponse> getAlerts(Long userId, Long documentId) {
-        validateDocumentOwnership(userId, documentId);
+        validateDocumentAccess(userId, documentId);
         return alertRepository.findByDocumentIdAndUserId(documentId, userId)
                 .stream()
                 .map(this::toResponse)
@@ -35,7 +37,7 @@ public class DocumentAlertService {
 
     @Transactional
     public DocumentAlertResponse createAlert(Long userId, Long documentId, DocumentAlertRequest request) {
-        Document document = validateDocumentOwnership(userId, documentId);
+        Document document = validateDocumentAccess(userId, documentId);
 
         if (document.getExpiryDate() == null) {
             throw new ResponseStatusException(
@@ -59,12 +61,14 @@ public class DocumentAlertService {
                 .daysBeforeExpiry(request.getDaysBeforeExpiry())
                 .build();
 
-        return toResponse(alertRepository.save(alert));
+        DocumentAlert saved = alertRepository.save(alert);
+
+        return toResponse(saved);
     }
 
     @Transactional
     public void deleteAlert(Long userId, Long documentId, Long alertId) {
-        validateDocumentOwnership(userId, documentId);
+        Document document = validateDocumentAccess(userId, documentId);
         DocumentAlert alert = alertRepository.findById(alertId)
                 .orElseThrow(() -> new ResourceNotFoundException("Alerta no encontrada"));
 
@@ -75,10 +79,12 @@ public class DocumentAlertService {
         alertRepository.delete(alert);
     }
 
-    private Document validateDocumentOwnership(Long userId, Long documentId) {
+    private Document validateDocumentAccess(Long userId, Long documentId) {
         Document document = documentRepository.findById(documentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Documento no encontrado"));
-        if (!document.getUser().getId().equals(userId)) {
+        boolean isOwner = document.getUser().getId().equals(userId);
+        boolean isMember = groupRepository.existsByDocumentsIdAndMembersId(documentId, userId);
+        if (!isOwner && !isMember) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acceso denegado");
         }
         return document;
