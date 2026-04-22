@@ -13,4 +13,6 @@ public interface GroupRepository extends JpaRepository<DocumentGroup, Long> {
     List<DocumentGroup> findByMembersIdOrderByCreatedAtDesc(Long userId);
 
     Optional<DocumentGroup> findByAccessCode(String accessCode);
+
+    boolean existsByDocumentsIdAndMembersId(Long documentId, Long userId);
 }
