@@ -9,17 +9,27 @@ import {
   faCircleInfo,
   faClockRotateLeft,
   faBell,
-  faFileLines,
-  faCircleExclamation,
-  faCircleCheck,
 } from '@fortawesome/free-solid-svg-icons';
 import { SidebarComponent, type SidebarPage } from '../../components/layout/sidebar/sidebar';
 import { PageHeaderComponent } from '../../components/shared/page-header/page-header';
 import { ButtonComponent } from '../../components/shared/button/button';
 import { TabBarComponent, type Tab } from '../../components/shared/tab-bar/tab-bar';
 import { DocumentService } from '../../services/document.service';
+import { DocumentAlertService, type DocumentAlertResponse } from '../../services/document-alert.service';
+import { ConfirmModalComponent } from '../../components/shared/confirm-modal/confirm-modal';
+import { AlertService } from '../../services/alert.service';
 import { AuthService } from '../../services/auth.service';
 import { type DocumentResponse, type DocumentType, type DocumentStatus, formatDate, getCardType } from '../../models/document.model';
+import {
+  buildGoogleCalendarUrl,
+  buildOutlookCalendarUrl,
+  downloadIcsFile,
+} from '../../utils/calendar-export.utils';
+import { DocumentPreviewCardComponent } from '../../components/shared/document-preview-card/document-preview-card';
+import { DocumentInfoCardComponent, type InfoField } from '../../components/shared/document-info-card/document-info-card';
+import { DocumentStatusCardComponent } from '../../components/shared/document-status-card/document-status-card';
+import { AlertsSectionComponent } from '../../components/shared/alerts-section/alerts-section';
+import { ExportSectionComponent } from '../../components/shared/export-section/export-section';
 
 // --------------------------------------------------------------------------
 // PÁGINA: DOCUMENT DETAIL
@@ -33,7 +43,19 @@ const STATUS_LABELS: Record<DocumentStatus, string> = {
 
 @Component({
   selector: 'app-document-detail',
-  imports: [FaIconComponent, SidebarComponent, PageHeaderComponent, ButtonComponent, TabBarComponent],
+  imports: [
+    FaIconComponent,
+    SidebarComponent,
+    PageHeaderComponent,
+    ButtonComponent,
+    TabBarComponent,
+    ConfirmModalComponent,
+    DocumentPreviewCardComponent,
+    DocumentInfoCardComponent,
+    DocumentStatusCardComponent,
+    AlertsSectionComponent,
+    ExportSectionComponent,
+  ],
   templateUrl: './document-detail.html',
   styleUrl: './document-detail.scss',
 })
@@ -41,15 +63,19 @@ export class DocumentDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly documentService = inject(DocumentService);
+  private readonly documentAlertService = inject(DocumentAlertService);
+  private readonly alertService = inject(AlertService);
   protected readonly authService = inject(AuthService);
 
+  // Icons
   protected readonly faArrowLeft = faArrowLeft;
-  protected readonly faFileLines = faFileLines;
-  protected readonly faCircleExclamation = faCircleExclamation;
-  protected readonly faCircleCheck = faCircleCheck;
+
   protected readonly formatDate = formatDate;
   protected readonly getTypeLabel = (type: DocumentType): string =>
     getCardType(type) === 'ticket' ? 'Ticket' : 'Documento';
+
+  // Preset alert options (days before expiry)
+  protected readonly presetAlertDays = [1, 7, 30] as const;
 
   protected getStatusLabel(status: DocumentStatus): string {
     return STATUS_LABELS[status];
@@ -61,11 +87,30 @@ export class DocumentDetailComponent implements OnInit {
     return `Quedan ${daysRemaining} día(s)`;
   }
 
+  protected infoFields(doc: DocumentResponse): InfoField[] {
+    return [
+      { label: 'Nombre', value: doc.title },
+      { label: 'Comercio', value: doc.storeName ?? '—' },
+      { label: 'Tipo', value: this.getTypeLabel(doc.type) },
+      { label: 'Categoría', value: doc.category ?? doc.type },
+    ];
+  }
+
   protected readonly currentPage = signal<SidebarPage>('Dashboard');
   protected readonly document = signal<DocumentResponse | null>(null);
   protected readonly groupId = signal<number | null>(null);
   protected readonly activeTab = signal('details');
   protected readonly lightboxSrc = signal<string | null>(null);
+
+  // Alerts state
+  protected readonly activeAlerts = signal<DocumentAlertResponse[]>([]);
+  protected alertToDelete = signal<DocumentAlertResponse | null>(null);
+
+  protected get customAlerts(): DocumentAlertResponse[] {
+    return this.activeAlerts()
+      .filter((a) => !(this.presetAlertDays as readonly number[]).includes(a.daysBeforeExpiry))
+      .slice(0, 3);
+  }
 
   protected readonly tabs: Tab[] = [
     { key: 'details', label: 'Detalles del documento', icon: faCircleInfo },
@@ -82,8 +127,139 @@ export class DocumentDetailComponent implements OnInit {
     }
     this.documentService.getDocument(id).subscribe((doc) => {
       this.document.set(doc);
+      this.loadAlerts(doc.id);
     });
   }
+
+  // --------------------------------------------------------------------------
+  // ALERTS
+  // --------------------------------------------------------------------------
+
+  private loadAlerts(documentId: number): void {
+    this.documentAlertService.getAlerts(documentId).subscribe({
+      next: (alerts) => this.activeAlerts.set(alerts),
+      error: () => {},
+    });
+  }
+
+  private isAlertActive(days: number): boolean {
+    return this.activeAlerts().some((a) => a.daysBeforeExpiry === days);
+  }
+
+  private getAlertId(days: number): number | undefined {
+    return this.activeAlerts().find((a) => a.daysBeforeExpiry === days)?.id;
+  }
+
+  protected toggleAlert(days: number): void {
+    const doc = this.document();
+    if (!doc) return;
+
+    if (this.isAlertActive(days)) {
+      const alertId = this.getAlertId(days);
+      if (alertId === undefined) return;
+      this.documentAlertService.deleteAlert(doc.id, alertId).subscribe({
+        next: () => {
+          this.activeAlerts.update((alerts) => alerts.filter((a) => a.id !== alertId));
+          this.alertService.show('info', `Alerta de ${days} día(s) eliminada`);
+        },
+        error: () => this.alertService.show('error', 'No se pudo eliminar la alerta'),
+      });
+    } else {
+      this.documentAlertService.createAlert(doc.id, days).subscribe({
+        next: (alert) => {
+          this.activeAlerts.update((alerts) => [...alerts, alert]);
+          this.alertService.show('success', `Alerta de ${days} día(s) activada`);
+        },
+        error: (err) => {
+          const msg = err.status === 409 ? 'Ya existe esa alerta' : 'No se pudo crear la alerta';
+          this.alertService.show('error', msg);
+        },
+      });
+    }
+  }
+
+  protected addCustomAlertDays(days: number): void {
+    if (isNaN(days) || days < 1) {
+      this.alertService.show('error', 'Introduce un número de días válido (mínimo 1)');
+      return;
+    }
+    if (this.isAlertActive(days)) {
+      this.alertService.show('warning', `Ya tienes una alerta para ${days} día(s) antes`);
+      return;
+    }
+    const isCustomDay = !(this.presetAlertDays as readonly number[]).includes(days);
+    if (isCustomDay && this.customAlerts.length >= 3) {
+      this.alertService.show('warning', 'Máximo 3 alertas personalizadas permitidas');
+      return;
+    }
+    const doc = this.document();
+    if (!doc) return;
+    this.documentAlertService.createAlert(doc.id, days).subscribe({
+      next: (alert) => {
+        this.activeAlerts.update((alerts) => [...alerts, alert]);
+        this.alertService.show('success', `Alerta de ${days} día(s) activada`);
+      },
+      error: (err) => {
+        const msg = err.status === 409 ? 'Ya existe esa alerta' : 'No se pudo crear la alerta';
+        this.alertService.show('error', msg);
+      },
+    });
+  }
+
+  private removeAlert(alertId: number): void {
+    const doc = this.document();
+    if (!doc) return;
+    this.documentAlertService.deleteAlert(doc.id, alertId).subscribe({
+      next: () => {
+        this.activeAlerts.update((alerts) => alerts.filter((a) => a.id !== alertId));
+        this.alertService.show('info', 'Alerta eliminada');
+      },
+      error: () => this.alertService.show('error', 'No se pudo eliminar la alerta'),
+    });
+  }
+
+  protected requestDeleteAlert(alert: DocumentAlertResponse): void {
+    this.alertToDelete.set(alert);
+  }
+
+  protected onConfirmDelete(): void {
+    const alert = this.alertToDelete();
+    if (!alert) return;
+    this.alertToDelete.set(null);
+    this.removeAlert(alert.id);
+  }
+
+  protected onCancelDelete(): void {
+    this.alertToDelete.set(null);
+  }
+
+  // --------------------------------------------------------------------------
+  // CALENDAR EXPORT
+  // --------------------------------------------------------------------------
+
+  protected openGoogleCalendar(): void {
+    const doc = this.document();
+    if (!doc?.expiryDate) return;
+    const url = buildGoogleCalendarUrl({ title: doc.title, expiryDate: doc.expiryDate });
+    window.open(url, '_blank', 'noopener,noreferrer');
+  }
+
+  protected openOutlookCalendar(): void {
+    const doc = this.document();
+    if (!doc?.expiryDate) return;
+    const url = buildOutlookCalendarUrl({ title: doc.title, expiryDate: doc.expiryDate });
+    window.open(url, '_blank', 'noopener,noreferrer');
+  }
+
+  protected downloadIcs(): void {
+    const doc = this.document();
+    if (!doc?.expiryDate) return;
+    downloadIcsFile({ title: doc.title, expiryDate: doc.expiryDate });
+  }
+
+  // --------------------------------------------------------------------------
+  // NAVIGATION / MISC
+  // --------------------------------------------------------------------------
 
   protected goBack(): void {
     const gid = this.groupId();
@@ -92,10 +268,6 @@ export class DocumentDetailComponent implements OnInit {
     } else {
       this.router.navigate(['/dashboard']);
     }
-  }
-
-  protected isExpired(doc: DocumentResponse): boolean {
-    return doc.status === 'EXPIRED';
   }
 
   protected openLightbox(src: string): void {

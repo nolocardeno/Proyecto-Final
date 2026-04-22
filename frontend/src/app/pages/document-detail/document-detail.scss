@@ -334,3 +334,359 @@
   padding: v.$spacing-4;
 }
 
+// --------------------------------------------------------------------------
+// TAB ALERTAS: layout de dos columnas iguales
+// --------------------------------------------------------------------------
+.document-detail__content--alerts {
+  flex: 1;
+  align-items: stretch;
+
+  app-alerts-section,
+  app-export-section {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+// --------------------------------------------------------------------------
+// CARD DE ALERTAS y CARD DE EXPORTACIÓN (base compartida)
+// --------------------------------------------------------------------------
+// Card base styles are now owned by the component's own scss
+
+// --------------------------------------------------------------------------
+// CABECERA DE LAS CARDS DE ALERTAS
+// --------------------------------------------------------------------------
+.document-detail__alerts-header {
+  display: flex;
+  align-items: flex-start;
+  gap: v.$spacing-2;
+}
+
+.document-detail__icon-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.document-detail__alerts-header-icon {
+  font-size: v.$font-size-md-lg;
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+
+  ::ng-deep svg path {
+    fill: url(#grad-alert-icon);
+  }
+}
+
+.document-detail__alerts-header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.document-detail__alerts-subtitle {
+  font-family: v.$font-primary;
+  font-size: v.$font-size-sm;
+  color: v.$neutral-500;
+  line-height: v.$line-height-normal;
+}
+
+// --------------------------------------------------------------------------
+// ETIQUETA DE SECCIÓN INTERIOR
+// --------------------------------------------------------------------------
+.document-detail__alerts-section-label {
+  font-family: v.$font-primary;
+  font-weight: v.$font-weight-semibold;
+  font-size: v.$font-size-sm;
+  color: v.$neutral-500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.25rem;
+}
+
+// --------------------------------------------------------------------------
+// FILA PRINCIPAL: predeterminadas + personalizada en horizontal
+// --------------------------------------------------------------------------
+.document-detail__alerts-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  gap: v.$spacing-4;
+  flex-wrap: nowrap;
+  padding-bottom: v.$spacing-1;
+}
+
+.document-detail__alerts-presets {
+  display: flex;
+  flex-direction: column;
+  gap: v.$spacing-1;
+  width: 17.5rem;
+  flex-shrink: 0;
+}
+
+.document-detail__alerts-preset-list {
+  display: flex;
+  flex-direction: row;
+  gap: v.$spacing-1;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+// --------------------------------------------------------------------------
+// COLUMNA DERECHA: ALERTAS PERSONALIZADAS (tarjetas activas con trash)
+// --------------------------------------------------------------------------
+.document-detail__alerts-custom-col {
+  display: flex;
+  flex-direction: column;
+  gap: v.$spacing-1;
+  flex-shrink: 0;
+  width: 17.5rem;
+}
+
+.document-detail__alerts-custom-empty {
+  display: flex;
+  align-items: center;
+  height: 5.5rem;
+  font-family: v.$font-primary;
+  font-size: v.$font-size-sm;
+  color: v.$neutral-400;
+  font-style: italic;
+  white-space: nowrap;
+}
+
+// Tarjeta custom: misma clase base alert-btn + active, añade overlay hover
+.document-detail__custom-alert-card {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+
+  .document-detail__custom-alert-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: inherit;
+    background: rgba(0, 0, 0, 0.45);
+    color: v.$neutral-50;
+    font-size: v.$font-size-md-lg;
+    opacity: 0;
+    @include m.transition(opacity);
+  }
+
+  &:hover .document-detail__custom-alert-overlay {
+    opacity: 1;
+  }
+}
+
+// --------------------------------------------------------------------------
+// SECCIÓN INFERIOR: CREAR ALERTA (formulario)
+// --------------------------------------------------------------------------
+.document-detail__alerts-create {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: v.$spacing-1;
+  padding-top: v.$spacing-2;
+  margin-top: v.$spacing-1;
+  width: calc(17.5rem * 2 + v.$spacing-4);
+  align-self: center;
+}
+
+.document-detail__alerts-create-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: v.$spacing-1;
+}
+
+.document-detail__alerts-custom-form {
+  display: flex;
+  flex-direction: column;
+  gap: v.$spacing-1;
+}
+
+.document-detail__alerts-custom-row {
+  display: flex;
+  align-items: center;
+  gap: v.$spacing-1;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.document-detail__alerts-custom-legend {
+  @include m.visually-hidden;
+}
+
+.document-detail__alerts-custom-input {
+  width: 10rem;
+  height: 2.625rem;
+  padding: 0 v.$spacing-2;
+  background-color: v.$color-input-bg;
+  border: v.$border-thin solid v.$color-input-border;
+  border-radius: v.$radius-input;
+  font-family: v.$font-primary;
+  font-size: v.$font-size-sm-md;
+  color: v.$neutral-900;
+  outline: none;
+
+  &:focus {
+    border-color: v.$color-primary;
+    box-shadow: 0 0 0 0.1875rem v.$color-focus-glow;
+  }
+
+  &::placeholder {
+    color: v.$color-placeholder;
+  }
+}
+
+// --------------------------------------------------------------------------
+// BOTÓN TOGGLE DE ALERTA (estilo tarjeta vertical)
+// --------------------------------------------------------------------------
+.document-detail__alert-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: v.$spacing-half;
+  width: 5.5rem;
+  height: 5.5rem;
+  background: v.$color-gradient-accent;
+  border: v.$border-thin solid v.$color-input-border;
+  border-radius: v.$radius-card;
+  box-shadow: v.$shadow-card;
+  cursor: pointer;
+  color: v.$neutral-700;
+  @include m.hover-elevation;
+
+  &--active {
+    background: v.$color-gradient-primary;
+    border-color: transparent;
+    color: v.$neutral-900;
+
+    .document-detail__alert-btn-icon,
+    .document-detail__alert-btn-days,
+    .document-detail__alert-btn-label {
+      color: v.$neutral-900;
+      opacity: 1;
+    }
+  }
+
+  &-icon {
+    font-size: v.$font-size-md-lg;
+  }
+
+  &-days {
+    font-family: v.$font-primary;
+    font-size: v.$font-size-md-lg;
+    font-weight: v.$font-weight-bold;
+    line-height: 1;
+    color: inherit;
+  }
+
+  &-label {
+    font-family: v.$font-primary;
+    font-size: v.$font-size-sm;
+    font-weight: v.$font-weight-medium;
+    letter-spacing: 0.05em;
+    color: inherit;
+    opacity: 0.75;
+  }
+}
+
+
+
+// --------------------------------------------------------------------------
+// AVISO SIN FECHA DE CADUCIDAD
+// --------------------------------------------------------------------------
+.document-detail__alerts-no-expiry {
+  display: flex;
+  align-items: center;
+  gap: v.$spacing-1;
+  font-family: v.$font-primary;
+  font-size: v.$font-size-sm;
+  color: v.$neutral-500;
+  padding: v.$spacing-2;
+  background-color: v.$color-warning-light;
+  border: v.$border-thin solid v.$color-warning;
+  border-radius: v.$radius-lg;
+}
+
+// --------------------------------------------------------------------------
+// LISTA DE EXPORTACIÓN
+// --------------------------------------------------------------------------
+.document-detail__export-list {
+  display: flex;
+  flex-direction: column;
+  gap: v.$spacing-1;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+// --------------------------------------------------------------------------
+// BOTÓN DE EXPORTACIÓN
+// --------------------------------------------------------------------------
+.document-detail__export-btn {
+  display: flex;
+  align-items: center;
+  gap: v.$spacing-2;
+  width: 100%;
+  padding: v.$spacing-1 v.$spacing-2;
+  background-color: v.$color-input-bg;
+  border: v.$border-thin solid v.$color-input-border;
+  border-radius: v.$radius-card;
+  cursor: pointer;
+  text-align: left;
+  @include m.hover-elevation;
+
+  &-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: v.$radius-full;
+    font-size: v.$font-size-md-lg;
+    flex-shrink: 0;
+    background: v.$color-gradient-primary;
+    color: v.$color-accent-secondary;
+  }
+
+  &-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    flex: 1;
+    min-width: 0;
+  }
+
+  &-name {
+    font-family: v.$font-primary;
+    font-size: v.$font-size-sm-md;
+    font-weight: v.$font-weight-semibold;
+    color: v.$neutral-900;
+  }
+
+  &-desc {
+    font-family: v.$font-primary;
+    font-size: v.$font-size-sm;
+    color: v.$neutral-500;
+    @include m.truncate(1);
+  }
+
+  &-arrow {
+    font-size: v.$font-size-md;
+    color: v.$color-primary;
+    flex-shrink: 0;
+
+    ::ng-deep svg path {
+      fill: url(#grad-alert-icon);
+    }
+  }
+}
+
