@@ -13,6 +13,8 @@ public interface DocumentAlertRepository extends JpaRepository<DocumentAlert, Lo
 
     List<DocumentAlert> findByDocumentIdAndUserId(Long documentId, Long userId);
 
+    void deleteByDocumentId(Long documentId);
+
     Optional<DocumentAlert> findByDocumentIdAndUserIdAndDaysBeforeExpiry(
             Long documentId, Long userId, Integer daysBeforeExpiry);
 
