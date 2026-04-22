@@ -1,0 +1,125 @@
+<!-- --------------------------------------------------------------------------
+     EDIT DOCUMENT MODAL: Formulario para editar un documento existente
+     -------------------------------------------------------------------------- -->
+<aside class="edit-modal" (click)="onBackdropClick($event)">
+  <article class="edit-modal__card" role="dialog" aria-modal="true" aria-labelledby="edit-modal-title">
+
+    <!-- ----------------------------------------------------------------
+         CABECERA CON GRADIENTE
+         ---------------------------------------------------------------- -->
+    <header class="edit-modal__header">
+      <h2 class="edit-modal__title" id="edit-modal-title">Editar documento</h2>
+    </header>
+
+    <!-- ----------------------------------------------------------------
+         CUERPO: Formulario
+         ---------------------------------------------------------------- -->
+    <form class="edit-modal__form" [formGroup]="editForm" (ngSubmit)="onSubmit()">
+
+      <app-form-field
+        label="Nombre / Descripción"
+        type="text"
+        inputId="edit-doc-title"
+        formControlName="title"
+        [maxlength]="25"
+      />
+
+      <app-form-field
+        label="Comercio / Entidad"
+        type="text"
+        inputId="edit-doc-store"
+        formControlName="storeName"
+      />
+
+      <hr class="edit-modal__separator" />
+
+      <!-- TIPO: Ticket o Documento -->
+      <label class="edit-modal__select-group">
+        <span class="edit-modal__select-label">Tipo</span>
+        <select
+          class="edit-modal__select"
+          [value]="selectedKind() ?? ''"
+          (change)="onKindChange($any($event.target).value)"
+        >
+          <option value="" disabled>Selecciona un tipo</option>
+          <option value="ticket">Ticket</option>
+          <option value="document">Documento</option>
+        </select>
+      </label>
+
+      <!-- CATEGORÍA: opciones según tipo + campo personalizado -->
+      @if (selectedKind()) {
+        <label class="edit-modal__select-group">
+          <span class="edit-modal__select-label">Categoría</span>
+          <select
+            class="edit-modal__select"
+            [value]="selectedCategory() ?? ''"
+            (change)="onCategoryChange($any($event.target).value)"
+          >
+            <option value="" disabled>Selecciona una categoría</option>
+            @for (cat of categoryOptions(); track cat) {
+              <option [value]="cat">{{ cat }}</option>
+            }
+          </select>
+        </label>
+
+        @if (showCustomInput()) {
+          <label class="edit-modal__select-group">
+            <span class="edit-modal__select-label">Escribe la categoría</span>
+            <input
+              class="edit-modal__custom-input"
+              type="text"
+              placeholder="P. ej. Seguro, Factura..."
+              maxlength="12"
+              [value]="customCategory()"
+              (input)="customCategory.set($any($event.target).value)"
+            />
+          </label>
+        }
+
+        <hr class="edit-modal__separator" />
+      }
+
+      <app-form-field
+        label="Fecha de emisión"
+        type="date"
+        inputId="edit-doc-issue"
+        formControlName="issueDate"
+      />
+
+      <app-form-field
+        label="Fecha de caducidad"
+        type="date"
+        inputId="edit-doc-expiry"
+        formControlName="expiryDate"
+      />
+
+      <hr class="edit-modal__separator" />
+
+      <!-- ----------------------------------------------------------------
+           IMAGEN
+           ---------------------------------------------------------------- -->
+      <label class="edit-modal__select-group">
+        <span class="edit-modal__select-label">Imagen del documento</span>
+        <app-file-picker (fileSelected)="imageFile.set($event)" />
+      </label>
+
+      <!-- ----------------------------------------------------------------
+           ACCIONES
+           ---------------------------------------------------------------- -->
+      <hr class="edit-modal__separator" />
+      <footer class="edit-modal__actions">
+        <app-button
+          variant="primary"
+          size="auth"
+          type="submit"
+          [disabled]="editForm.invalid || loading() || !selectedCategory() || (showCustomInput() && !customCategory().trim())"
+        >
+          {{ loading() ? 'Guardando...' : 'Guardar cambios' }}
+        </app-button>
+      </footer>
+
+    </form>
+
+  </article>
+</aside>

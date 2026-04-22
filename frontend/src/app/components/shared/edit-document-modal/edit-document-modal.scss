@@ -1,0 +1,157 @@
+@use '../../../../styles/00-settings/variables' as v;
+
+// --------------------------------------------------------------------------
+// EDIT MODAL: Backdrop
+// --------------------------------------------------------------------------
+.edit-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  animation: backdrop-in v.$transition-base;
+
+  // --------------------------------------------------------------------------
+  // TARJETA DEL MODAL
+  // --------------------------------------------------------------------------
+  &__card {
+    width: 37.5rem;
+    max-width: 95vw;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background-color: v.$color-surface;
+    border: v.$border-thin solid v.$color-modal-border;
+    border-radius: v.$radius-card;
+    box-shadow: v.$shadow-card;
+    animation: card-in v.$transition-base;
+  }
+
+  // --------------------------------------------------------------------------
+  // CABECERA CON GRADIENTE
+  // --------------------------------------------------------------------------
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 5.5rem;
+    padding: v.$spacing-3;
+    background: v.$color-gradient-primary;
+    border-radius: v.$radius-card v.$radius-card 0 0;
+  }
+
+  &__title {
+    font-family: v.$font-primary;
+    font-weight: v.$font-weight-bold;
+    font-size: v.$font-size-xl;
+    color: v.$neutral-900;
+    text-align: center;
+    margin: 0;
+  }
+
+  // --------------------------------------------------------------------------
+  // FORMULARIO
+  // --------------------------------------------------------------------------
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: v.$spacing-3;
+    padding: v.$spacing-4;
+    overflow-y: auto;
+    flex: 1;
+    background-color: v.$color-surface;
+  }
+
+  // --------------------------------------------------------------------------
+  // SELECT PERSONALIZADO
+  // --------------------------------------------------------------------------
+  &__select-group {
+    display: flex;
+    flex-direction: column;
+    gap: v.$spacing-1;
+  }
+
+  &__select-label {
+    font-family: v.$font-primary;
+    font-size: v.$font-size-md;
+    font-weight: v.$font-weight-bold;
+    color: v.$neutral-900;
+  }
+
+  &__select {
+    height: 2.5rem;
+    padding: 0 v.$spacing-2;
+    background-color: v.$color-input-bg;
+    border: v.$border-thin solid v.$color-input-border;
+    border-radius: v.$radius-sm;
+    font-family: v.$font-primary;
+    font-size: v.$font-size-md;
+    color: v.$neutral-900;
+    cursor: pointer;
+    outline: none;
+
+    &:focus {
+      border-color: v.$color-primary;
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  // INPUT PERSONALIZADO (categoría libre)
+  // --------------------------------------------------------------------------
+  &__custom-input {
+    height: 2.5rem;
+    padding: 0 v.$spacing-2;
+    background-color: v.$color-input-bg;
+    border: v.$border-thin solid v.$color-input-border;
+    border-radius: v.$radius-sm;
+    font-family: v.$font-primary;
+    font-size: v.$font-size-md;
+    color: v.$neutral-900;
+    outline: none;
+    width: 100%;
+
+    &:focus {
+      border-color: v.$color-primary;
+    }
+
+    &::placeholder {
+      color: v.$color-placeholder;
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  // SEPARADOR
+  // --------------------------------------------------------------------------
+  &__separator {
+    border: none;
+    height: 1px;
+    background-color: v.$neutral-900;
+    opacity: 0.2;
+    margin: 0;
+    flex-shrink: 0;
+  }
+
+  // --------------------------------------------------------------------------
+  // FOOTER DE ACCIONES
+  // --------------------------------------------------------------------------
+  &__actions {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+// --------------------------------------------------------------------------
+// ANIMACIONES
+// --------------------------------------------------------------------------
+@keyframes backdrop-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(-1rem) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
