@@ -18,6 +18,8 @@ public class DocumentRequest {
     @NotNull(message = "El tipo de documento es obligatorio")
     private DocumentType type;
 
+    private String kind;
+
     @NotBlank(message = "El título es obligatorio")
     private String title;
 

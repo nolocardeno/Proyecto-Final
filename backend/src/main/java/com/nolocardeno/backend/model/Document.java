@@ -34,6 +34,9 @@ public class Document {
     @Column(nullable = false)
     private DocumentType type;
 
+    @Column(name = "kind")
+    private String kind;
+
     @Column(nullable = false)
     private String title;
 
