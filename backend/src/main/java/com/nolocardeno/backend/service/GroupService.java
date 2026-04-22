@@ -4,15 +4,20 @@ import com.nolocardeno.backend.dto.*;
 import com.nolocardeno.backend.exception.ResourceNotFoundException;
 import com.nolocardeno.backend.model.Document;
 import com.nolocardeno.backend.model.DocumentGroup;
+import com.nolocardeno.backend.model.DocumentHistory;
 import com.nolocardeno.backend.model.User;
+import com.nolocardeno.backend.model.enums.DocumentHistoryType;
 import com.nolocardeno.backend.model.enums.DocumentStatus;
+import com.nolocardeno.backend.repository.DocumentHistoryRepository;
 import com.nolocardeno.backend.repository.DocumentRepository;
 import com.nolocardeno.backend.repository.GroupRepository;
 import com.nolocardeno.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Stream;
@@ -24,6 +29,8 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
     private final DocumentRepository documentRepository;
+    private final DocumentHistoryRepository documentHistoryRepository;
+    private final FileStorageService fileStorageService;
 
     @Transactional(readOnly = true)
     public List<GroupResponse> getGroupsByUser(Long userId) {
@@ -83,7 +90,7 @@ public class GroupService {
     }
 
     @Transactional
-    public DocumentResponse addDocumentToGroup(Long userId, Long groupId, DocumentRequest request) {
+    public DocumentResponse addDocumentToGroup(Long userId, Long groupId, DocumentRequest request, MultipartFile file) {
         DocumentGroup group = findGroupByUser(userId, groupId);
 
         boolean isCreator = group.getCreator().getId().equals(userId);
@@ -97,6 +104,7 @@ public class GroupService {
         Document doc = Document.builder()
                 .user(user)
                 .type(request.getType())
+                .kind(request.getKind())
                 .title(request.getTitle())
                 .category(request.getCategory())
                 .storeName(request.getStoreName())
@@ -107,6 +115,14 @@ public class GroupService {
                 .status(DocumentStatus.ACTIVE)
                 .build();
 
+        if (file != null && !file.isEmpty()) {
+            try {
+                doc.setImagePath(fileStorageService.store(file));
+            } catch (IOException e) {
+                throw new RuntimeException("No se pudo guardar la imagen", e);
+            }
+        }
+
         if (doc.getExpiryDate() != null && doc.getExpiryDate().isBefore(LocalDate.now())) {
             doc.setStatus(DocumentStatus.EXPIRED);
         }
@@ -114,6 +130,14 @@ public class GroupService {
         doc = documentRepository.save(doc);
         group.getDocuments().add(doc);
         groupRepository.save(group);
+
+        DocumentHistory history = DocumentHistory.builder()
+                .document(doc)
+                .changedBy(user)
+                .changeType(DocumentHistoryType.CREATED)
+                .description("Documento creado")
+                .build();
+        documentHistoryRepository.save(history);
 
         return DocumentMapper.toResponse(doc);
     }
