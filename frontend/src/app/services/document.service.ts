@@ -45,4 +45,12 @@ export class DocumentService {
     formData.append('file', file);
     return this.http.post<DocumentResponse>(`${this.baseUrl}/${documentId}/image`, formData, { headers: this.headers });
   }
+
+  updateDocument(id: number, body: Partial<Record<string, unknown>>): Observable<DocumentResponse> {
+    return this.http.put<DocumentResponse>(`${this.baseUrl}/${id}`, body, { headers: this.headers });
+  }
+
+  deleteDocument(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}`, { headers: this.headers });
+  }
 }
