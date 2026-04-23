@@ -1,0 +1,71 @@
+<!-- SVG gradient defs -->
+<svg class="version-history__defs" aria-hidden="true">
+  <defs>
+    <linearGradient id="grad-history-icon" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="var(--color-primary)" />
+      <stop offset="100%" stop-color="var(--color-secondary)" />
+    </linearGradient>
+  </defs>
+</svg>
+
+<article class="version-history">
+  <header class="version-history__header">
+    <fa-icon class="version-history__header-icon" [icon]="faClockRotateLeft" aria-hidden="true" />
+    <hgroup class="version-history__header-text">
+      <h2 class="version-history__title">Historial de versiones</h2>
+      <p class="version-history__subtitle">
+        Registro cronológico de todas las modificaciones realizadas sobre este documento.
+      </p>
+    </hgroup>
+  </header>
+
+  <hr class="version-history__divider" />
+
+  @if (entries().length === 0) {
+    <p class="version-history__empty">No hay modificaciones registradas todavía.</p>
+  } @else {
+    <ol class="version-history__list" role="list">
+      @for (entry of entries(); track entry.id; let first = $first) {
+        <li class="version-history__item" [class.version-history__item--current]="first">
+          <!-- Timeline dot -->
+          <span class="version-history__dot" aria-hidden="true">
+            <fa-icon [icon]="getChangeIcon(entry.changeType)" />
+          </span>
+
+          <!-- Connector line (shown for all except last) -->
+          <span class="version-history__line" aria-hidden="true"></span>
+
+          <!-- Entry content -->
+          <article class="version-history__card">
+            <header class="version-history__card-header">
+              <h3 class="version-history__change-label">
+                {{ getChangeLabel(entry.changeType) }}
+              </h3>
+              @if (first) {
+                <span class="version-history__badge">
+                  <fa-icon [icon]="faCircleCheck" aria-hidden="true" />
+                  Versión actual
+                </span>
+              }
+            </header>
+
+            <p class="version-history__description">{{ entry.description }}</p>
+
+            <footer class="version-history__card-footer">
+              <span class="version-history__meta">
+                <fa-icon [icon]="faUser" aria-hidden="true" />
+                {{ entry.changedByName }}
+              </span>
+              <time
+                class="version-history__time"
+                [dateTime]="entry.changedAt"
+              >
+                {{ formatDateTime(entry.changedAt) }}
+              </time>
+            </footer>
+          </article>
+        </li>
+      }
+    </ol>
+  }
+</article>

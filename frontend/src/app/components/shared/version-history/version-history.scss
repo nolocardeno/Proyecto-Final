@@ -1,0 +1,247 @@
+@use '../../../../styles/00-settings/variables' as v;
+
+// --------------------------------------------------------------------------
+// HOST
+// --------------------------------------------------------------------------
+:host {
+  display: block;
+  height: 100%;
+}
+
+// --------------------------------------------------------------------------
+// CONTENEDOR PRINCIPAL
+// --------------------------------------------------------------------------
+.version-history {
+  background-color: v.$color-accent-secondary;
+  border: v.$border-thin solid v.$color-modal-border;
+  border-radius: v.$radius-card;
+  box-shadow: v.$shadow-card;
+  padding: v.$spacing-3;
+  display: flex;
+  flex-direction: column;
+  gap: v.$spacing-2;
+
+  // SVG gradient defs (oculto visualmente)
+  &__defs {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+
+  // --------------------------------------------------------------------------
+  // CABECERA
+  // --------------------------------------------------------------------------
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    gap: v.$spacing-2;
+  }
+
+  &__header-icon {
+    font-size: v.$font-size-md-lg;
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+
+    ::ng-deep svg path {
+      fill: url(#grad-history-icon);
+    }
+  }
+
+  &__header-text {
+    display: flex;
+    flex-direction: column;
+    gap: v.$spacing-half;
+  }
+
+  &__title {
+    font-family: v.$font-primary;
+    font-weight: v.$font-weight-bold;
+    font-size: v.$font-size-md-lg;
+    color: v.$neutral-900;
+    line-height: v.$line-height-tight;
+  }
+
+  &__subtitle {
+    font-family: v.$font-primary;
+    font-size: v.$font-size-sm;
+    color: v.$neutral-500;
+    line-height: v.$line-height-normal;
+  }
+
+  &__divider {
+    border: none;
+    border-top: v.$border-thin solid rgba(v.$neutral-900, 0.12);
+    margin: 0;
+  }
+
+  // --------------------------------------------------------------------------
+  // ESTADO VACÍO
+  // --------------------------------------------------------------------------
+  &__empty {
+    font-family: v.$font-primary;
+    font-size: v.$font-size-sm-md;
+    color: v.$neutral-500;
+    text-align: center;
+    padding: v.$spacing-4 0;
+  }
+
+  // --------------------------------------------------------------------------
+  // LISTA TIMELINE
+  // --------------------------------------------------------------------------
+  &__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  // --------------------------------------------------------------------------
+  // ÍTEM DE LA TIMELINE
+  // --------------------------------------------------------------------------
+  &__item {
+    display: grid;
+    grid-template-columns: 2rem 1px 1fr;
+    grid-template-rows: auto 1fr;
+    column-gap: v.$spacing-2;
+
+    // El dot ocupa la primera columna, primera fila
+    // La línea ocupa la segunda columna, segunda fila
+    // La card ocupa la tercera columna, ambas filas
+
+    &--current {
+      .version-history__dot {
+        background: v.$color-gradient-primary;
+        color: v.$neutral-50;
+        box-shadow: 0 0 0 0.25rem rgba(255, 154, 60, 0.2);
+      }
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  // DOT (icono circular en el eje de la timeline)
+  // --------------------------------------------------------------------------
+  &__dot {
+    grid-column: 1;
+    grid-row: 1;
+    width: 2rem;
+    height: 2rem;
+    border-radius: v.$radius-full;
+    background-color: v.$color-input-bg;
+    color: v.$neutral-500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: v.$font-size-sm;
+    flex-shrink: 0;
+    z-index: 1;
+  }
+
+  // --------------------------------------------------------------------------
+  // LÍNEA VERTICAL ENTRE ÍTEMS
+  // --------------------------------------------------------------------------
+  &__line {
+    grid-column: 2;
+    grid-row: 2;
+    width: v.$border-thin;
+    background-color: v.$color-modal-border;
+    justify-self: center;
+    min-height: v.$spacing-2;
+  }
+
+  // El último ítem no necesita línea inferior
+  &__item:last-child &__line {
+    display: none;
+  }
+
+  // --------------------------------------------------------------------------
+  // CARD DE CADA ENTRADA
+  // --------------------------------------------------------------------------
+  &__card {
+    grid-column: 3;
+    grid-row: 1 / 3;
+    background-color: v.$neutral-50;
+    border: v.$border-thin solid v.$color-modal-border;
+    border-radius: v.$radius-lg;
+    padding: v.$spacing-2;
+    margin-bottom: v.$spacing-2;
+    display: flex;
+    flex-direction: column;
+    gap: v.$spacing-1;
+  }
+
+  &__item:last-child &__card {
+    margin-bottom: 0;
+  }
+
+  &__card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: v.$spacing-1;
+    flex-wrap: wrap;
+  }
+
+  &__change-label {
+    font-family: v.$font-primary;
+    font-weight: v.$font-weight-semibold;
+    font-size: v.$font-size-sm-md;
+    color: v.$neutral-900;
+    line-height: v.$line-height-tight;
+  }
+
+  &__description {
+    font-family: v.$font-primary;
+    font-size: v.$font-size-sm;
+    color: v.$neutral-600;
+    line-height: v.$line-height-normal;
+    white-space: pre-line;
+  }
+
+  // --------------------------------------------------------------------------
+  // BADGE "Versión actual"
+  // --------------------------------------------------------------------------
+  &__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: v.$spacing-half;
+    background: v.$color-gradient-primary;
+    color: v.$neutral-50;
+    font-family: v.$font-primary;
+    font-size: v.$font-size-sm;
+    font-weight: v.$font-weight-semibold;
+    padding: 0.125rem v.$spacing-1;
+    border-radius: v.$radius-full;
+    white-space: nowrap;
+    cursor: default;
+    user-select: none;
+  }
+
+  // --------------------------------------------------------------------------
+  // PIE DE LA CARD: usuario + fecha
+  // --------------------------------------------------------------------------
+  &__card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: v.$spacing-1;
+    flex-wrap: wrap;
+    margin-top: v.$spacing-half;
+  }
+
+  &__meta {
+    display: inline-flex;
+    align-items: center;
+    gap: v.$spacing-half;
+    font-family: v.$font-primary;
+    font-size: v.$font-size-sm;
+    color: v.$neutral-500;
+  }
+
+  &__time {
+    font-family: v.$font-primary;
+    font-size: v.$font-size-sm;
+    color: v.$neutral-400;
+  }
+}
