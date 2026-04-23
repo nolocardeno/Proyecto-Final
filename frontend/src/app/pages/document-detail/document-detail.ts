@@ -33,6 +33,8 @@ import { DocumentStatusCardComponent } from '../../components/shared/document-st
 import { AlertsSectionComponent } from '../../components/shared/alerts-section/alerts-section';
 import { ExportSectionComponent } from '../../components/shared/export-section/export-section';
 import { EditDocumentModalComponent } from '../../components/shared/edit-document-modal/edit-document-modal';
+import { VersionHistoryComponent } from '../../components/shared/version-history/version-history';
+import { DocumentHistoryService, type DocumentHistoryEntry } from '../../services/document-history.service';
 
 // --------------------------------------------------------------------------
 // PÁGINA: DOCUMENT DETAIL
@@ -59,6 +61,7 @@ const STATUS_LABELS: Record<DocumentStatus, string> = {
     AlertsSectionComponent,
     ExportSectionComponent,
     EditDocumentModalComponent,
+    VersionHistoryComponent,
   ],
   templateUrl: './document-detail.html',
   styleUrl: './document-detail.scss',
@@ -69,6 +72,7 @@ export class DocumentDetailComponent implements OnInit {
   private readonly documentService = inject(DocumentService);
   private readonly documentAlertService = inject(DocumentAlertService);
   private readonly alertService = inject(AlertService);
+  private readonly documentHistoryService = inject(DocumentHistoryService);
   protected readonly authService = inject(AuthService);
 
   // Icons
@@ -112,6 +116,9 @@ export class DocumentDetailComponent implements OnInit {
   protected readonly activeAlerts = signal<DocumentAlertResponse[]>([]);
   protected alertToDelete = signal<DocumentAlertResponse | null>(null);
 
+  // History state
+  protected readonly historyEntries = signal<DocumentHistoryEntry[]>([]);
+
   // Document actions state
   protected readonly showDeleteDocConfirm = signal(false);
   protected readonly showEditDocModal = signal(false);
@@ -138,6 +145,7 @@ export class DocumentDetailComponent implements OnInit {
     this.documentService.getDocument(id).subscribe((doc) => {
       this.document.set(doc);
       this.loadAlerts(doc.id);
+      this.loadHistory(doc.id);
     });
   }
 
@@ -148,6 +156,13 @@ export class DocumentDetailComponent implements OnInit {
   private loadAlerts(documentId: number): void {
     this.documentAlertService.getAlerts(documentId).subscribe({
       next: (alerts) => this.activeAlerts.set(alerts),
+      error: () => {},
+    });
+  }
+
+  private loadHistory(documentId: number): void {
+    this.documentHistoryService.getHistory(documentId).subscribe({
+      next: (entries) => this.historyEntries.set(entries),
       error: () => {},
     });
   }
@@ -278,6 +293,7 @@ export class DocumentDetailComponent implements OnInit {
 
   protected onDocumentSaved(updated: DocumentResponse): void {
     this.document.set(updated);
+    this.loadHistory(updated.id);
     this.showEditDocModal.set(false);
   }
 

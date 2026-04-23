@@ -84,11 +84,11 @@
     }
 
     <!-- ================================================================
-         TAB: HISTORIAL DE VERSIONES (placeholder)
+         TAB: HISTORIAL DE VERSIONES
          ================================================================ -->
     @if (activeTab() === 'history') {
-      <section class="document-detail__content" role="tabpanel" id="panel-history">
-        <p class="document-detail__placeholder">Historial de versiones (próximamente)</p>
+      <section class="document-detail__content document-detail__content--history" role="tabpanel" id="panel-history">
+        <app-version-history [entries]="historyEntries()" />
       </section>
     }
   </section>

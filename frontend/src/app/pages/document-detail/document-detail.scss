@@ -28,6 +28,14 @@
   display: flex;
   gap: v.$spacing-3;
   align-items: flex-start;
+
+  &--history {
+    display: block;
+
+    app-version-history {
+      display: block;
+    }
+  }
 }
 
 // --------------------------------------------------------------------------
