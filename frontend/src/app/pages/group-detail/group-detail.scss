@@ -10,20 +10,25 @@
 }
 
 // --------------------------------------------------------------------------
-// CONTENEDOR PRINCIPAL (dos columnas)
+// CONTENEDOR PRINCIPAL (grid: header full-width + main/sidebar en columnas)
 // --------------------------------------------------------------------------
 .group-detail {
-  display: flex;
-  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 18rem;
+  grid-template-rows: auto 1fr;
   gap: v.$spacing-3;
   padding: v.$spacing-4;
+  flex: 1;
+
+  app-page-header {
+    grid-column: 1 / -1;
+  }
 }
 
 // --------------------------------------------------------------------------
 // COLUMNA PRINCIPAL (documentos)
 // --------------------------------------------------------------------------
 .group-detail__main {
-  flex: 1;
   display: flex;
   flex-direction: column;
   gap: v.$spacing-3;
@@ -52,6 +57,4 @@
   display: flex;
   flex-direction: column;
   gap: v.$spacing-3;
-  width: 18rem;
-  flex-shrink: 0;
 }

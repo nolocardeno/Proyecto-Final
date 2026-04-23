@@ -9,68 +9,73 @@
 @if (group(); as group) {
   <section class="group-detail">
     <!-- ------------------------------------------------------------------
-         CONTENIDO PRINCIPAL (izquierda)
+         PAGE HEADER (ancho completo)
          ------------------------------------------------------------------ -->
-    <main class="group-detail__main">
-      <!-- PAGE HEADER -->
-      <app-page-header
-        [title]="group.name"
-        [subtitle]="group.allCanAddDocuments ? 'Todos los miembros pueden añadir documentos...' : 'Solo el creador puede añadir documentos...'"
-        size="compact"
-      >
-        @if (group.allCanAddDocuments || group.creatorId === authService.user()?.userId) {
-          <app-button buttons variant="text" (click)="uploadModal.open(group.id)">
-            <fa-icon [icon]="faCirclePlus" aria-hidden="true" /> Añadir documento
-          </app-button>
-        }
-        <app-button buttons variant="text" (click)="goBack()">
-          <fa-icon [icon]="faArrowLeft" aria-hidden="true" /> Volver a los grupos
+    <app-page-header
+      [title]="group.name"
+      [subtitle]="group.allCanAddDocuments ? 'Todos los miembros pueden añadir documentos...' : 'Solo el creador puede añadir documentos...'"
+      size="compact"
+    >
+      <app-button buttons variant="text" (click)="goBack()">
+        <fa-icon [icon]="faArrowLeft" aria-hidden="true" /> Volver a Grupos
+      </app-button>
+      @if (group.allCanAddDocuments || group.creatorId === authService.user()?.userId) {
+        <app-button buttons variant="text" (click)="uploadModal.open(group.id)">
+          <fa-icon [icon]="faCirclePlus" aria-hidden="true" /> Añadir documento
         </app-button>
-      </app-page-header>
-
-      <!-- FILTROS (compactos) -->
-      <app-filter-bar
-        size="compact"
-        [counts]="filterCounts()"
-        [(activeFilter)]="activeFilter"
-      />
-
-      <!-- BUSCADOR -->
-      <app-search-bar
-        placeholder="Busca documentos..."
-        [(value)]="searchTerm"
-        (searchChange)="onSearch($event)"
-        size="compact"
-      />
-
-      <!-- CARDS DE DOCUMENTOS (2 columnas) -->
-      <section class="group-detail__cards">
-        @for (doc of filteredDocuments(); track doc.id) {
-          <app-document-card
-            [type]="getCardType(doc.type)"
-            [title]="doc.title"
-            [category]="doc.category ?? doc.type"
-            [entity]="doc.storeName ?? '—'"
-            [issueDate]="formatDate(doc.issueDate)"
-            [expiryDate]="formatDate(doc.expiryDate)"
-            [statusText]="getStatusText(doc.daysRemaining)"
-            [status]="doc.status"
-            [documentId]="doc.id"
-            [groupId]="group.id"
-          />
-        } @empty {
-          <p class="group-detail__empty">No hay documentos en este grupo.</p>
-        }
-      </section>
-    </main>
+      }
+    </app-page-header>
 
     <!-- ------------------------------------------------------------------
-         PANEL LATERAL (derecha)
+         CUERPO: columna principal + panel lateral
          ------------------------------------------------------------------ -->
-    <aside class="group-detail__sidebar">
-      <app-group-code-card [accessCode]="group.accessCode" />
-      <app-group-members-card [members]="group.members" [creatorId]="group.creatorId" />
-    </aside>
+      <!-- CONTENIDO PRINCIPAL (izquierda) -->
+      <main class="group-detail__main">
+        <!-- FILTROS (compactos) -->
+        <app-filter-bar
+          size="compact"
+          [counts]="filterCounts()"
+          [(activeFilter)]="activeFilter"
+        />
+
+        <!-- BUSCADOR -->
+        <app-search-bar
+          placeholder="Busca documentos..."
+          [(value)]="searchTerm"
+          (searchChange)="onSearch($event)"
+          size="compact"
+        />
+
+        <!-- CARDS DE DOCUMENTOS (2 columnas) -->
+        <section class="group-detail__cards">
+          @for (doc of filteredDocuments(); track doc.id) {
+            <app-document-card
+              [type]="getCardType(doc.type)"
+              [title]="doc.title"
+              [category]="doc.category ?? doc.type"
+              [entity]="doc.storeName ?? '—'"
+              [issueDate]="formatDate(doc.issueDate)"
+              [expiryDate]="formatDate(doc.expiryDate)"
+              [statusText]="getStatusText(doc.daysRemaining)"
+              [status]="doc.status"
+              [documentId]="doc.id"
+              [groupId]="group.id"
+            />
+          } @empty {
+            <p class="group-detail__empty">No hay documentos en este grupo.</p>
+          }
+        </section>
+      </main>
+
+      <!-- PANEL LATERAL (derecha) -->
+      <aside class="group-detail__sidebar">
+        <app-group-code-card [accessCode]="group.accessCode" />
+        <app-group-members-card [members]="group.members" [creatorId]="group.creatorId" />
+
+        @if (group.creatorId === authService.user()?.userId) {
+          <app-delete-group-card (deleteConfirmed)="onDeleteGroupConfirmed()" />
+        }
+      </aside>
   </section>
 }
 

@@ -14,8 +14,10 @@ import { DocumentCardComponent } from '../../components/shared/document-card/doc
 import { GroupCodeCardComponent } from '../../components/shared/group-code-card/group-code-card';
 import { GroupMembersCardComponent } from '../../components/shared/group-members-card/group-members-card';
 import { UploadDocumentModalComponent } from '../../components/shared/upload-document-modal/upload-document-modal';
+import { DeleteGroupCardComponent } from '../../components/shared/delete-group-card/delete-group-card';
 import { GroupService } from '../../services/group.service';
 import { AuthService } from '../../services/auth.service';
+import { AlertService } from '../../services/alert.service';
 import { UploadDocumentModalService } from '../../services/upload-document-modal.service';
 import { type GroupDetailResponse } from '../../models/group.model';
 import {
@@ -41,6 +43,7 @@ import {
     GroupCodeCardComponent,
     GroupMembersCardComponent,
     UploadDocumentModalComponent,
+    DeleteGroupCardComponent,
   ],
   templateUrl: './group-detail.html',
   styleUrl: './group-detail.scss',
@@ -50,6 +53,7 @@ export class GroupDetailComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly groupService = inject(GroupService);
   protected readonly authService = inject(AuthService);
+  private readonly alertService = inject(AlertService);
   protected readonly uploadModal = inject(UploadDocumentModalService);
 
   protected readonly faCirclePlus = faCirclePlus;
@@ -121,6 +125,14 @@ export class GroupDetailComponent implements OnInit {
 
   protected goBack(): void {
     this.router.navigate(['/groups']);
+  }
+
+  protected onDeleteGroupConfirmed(): void {
+    const groupId = Number(this.route.snapshot.paramMap.get('id'));
+    this.groupService.deleteGroup(groupId).subscribe(() => {
+      this.alertService.show('success', 'El grupo ha sido eliminado correctamente.');
+      this.router.navigate(['/groups']);
+    });
   }
 
   onNavigate(page: string): void {
