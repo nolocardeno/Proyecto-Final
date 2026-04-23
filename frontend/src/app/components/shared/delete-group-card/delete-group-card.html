@@ -1,0 +1,47 @@
+<!-- --------------------------------------------------------------------------
+     DELETE GROUP CARD: Aviso + botón que abre modal de confirmación
+     -------------------------------------------------------------------------- -->
+<!-- Hidden SVG gradient defs -->
+<svg class="delete-group-card__defs" aria-hidden="true">
+  <defs>
+    <linearGradient id="grad-delete-group-icon" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="var(--color-primary)" />
+      <stop offset="100%" stop-color="var(--color-secondary)" />
+    </linearGradient>
+  </defs>
+</svg>
+
+<section class="delete-group-card">
+  <header class="delete-group-card__header">
+    <fa-icon class="delete-group-card__header-icon" [icon]="faTrashCan" aria-hidden="true" />
+    <h3 class="delete-group-card__title">Eliminar grupo</h3>
+  </header>
+
+  <hr class="delete-group-card__divider" />
+
+  <p class="delete-group-card__warning">
+    Atención: Esta acción es irreversible.<br />
+    Se eliminarán el grupo y todos los datos asociados permanentemente.
+  </p>
+
+  <app-button
+    variant="primary"
+    size="full"
+    class="delete-group-card__action"
+    (click)="openConfirm()"
+  >
+    Eliminar permanentemente
+  </app-button>
+</section>
+
+<!-- Modal de confirmación -->
+@if (showConfirm) {
+  <app-confirm-modal
+    title="Eliminar grupo"
+    message="¿Estás seguro de que quieres eliminar este grupo? Se borrarán todos los datos asociados permanentemente y no podrás recuperarlos."
+    confirmLabel="Eliminar"
+    cancelLabel="Cancelar"
+    (confirmed)="onConfirm()"
+    (cancelled)="onCancel()"
+  />
+}
