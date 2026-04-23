@@ -68,7 +68,7 @@ public class DocumentAlertService {
 
     @Transactional
     public void deleteAlert(Long userId, Long documentId, Long alertId) {
-        Document document = validateDocumentAccess(userId, documentId);
+        validateDocumentAccess(userId, documentId);
         DocumentAlert alert = alertRepository.findById(alertId)
                 .orElseThrow(() -> new ResourceNotFoundException("Alerta no encontrada"));
 
