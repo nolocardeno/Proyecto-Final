@@ -13,21 +13,33 @@
 .group-members-card {
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  gap: v.$spacing-2;
   background-color: v.$color-accent-secondary;
   border: v.$border-thin solid v.$color-modal-border;
   border-radius: v.$radius-card;
   box-shadow: v.$shadow-card;
+  padding: v.$spacing-3;
 }
 
 // --------------------------------------------------------------------------
-// HEADER (zona superior con gradiente, igual que group-card)
+// HEADER (icono + título, sin fondo)
 // --------------------------------------------------------------------------
 .group-members-card__header {
   display: flex;
   align-items: center;
-  padding: 1rem 1.25rem;
-  background: v.$color-gradient-primary;
+  gap: v.$spacing-2;
+}
+
+// --------------------------------------------------------------------------
+// ICONO DEL HEADER (con gradiente)
+// --------------------------------------------------------------------------
+.group-members-card__header-icon {
+  font-size: v.$font-size-md-lg;
+  flex-shrink: 0;
+
+  ::ng-deep svg path {
+    fill: url(#grad-member-icon);
+  }
 }
 
 // --------------------------------------------------------------------------
@@ -42,6 +54,15 @@
 }
 
 // --------------------------------------------------------------------------
+// DIVISOR
+// --------------------------------------------------------------------------
+.group-members-card__divider {
+  border: none;
+  border-top: v.$border-thin solid rgba(v.$neutral-900, 0.12);
+  margin: 0;
+}
+
+// --------------------------------------------------------------------------
 // LISTA DE MIEMBROS
 // --------------------------------------------------------------------------
 .group-members-card__list {
@@ -49,7 +70,7 @@
   flex-direction: column;
   gap: v.$spacing-2;
   list-style: none;
-  padding: v.$spacing-2 v.$spacing-3;
+  padding: 0 0 v.$spacing-2;
   margin: 0;
   max-height: 30rem;
   overflow-y: auto;
@@ -72,7 +93,7 @@
   flex-shrink: 0;
 
   ::ng-deep svg path {
-    fill: url(#grad-crown);
+    fill: url(#grad-member-icon);
   }
 }
 

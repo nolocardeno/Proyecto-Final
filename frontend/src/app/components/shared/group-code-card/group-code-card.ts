@@ -3,6 +3,8 @@
 // --------------------------------------------------------------------------
 import { Component, input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { faKey } from '@fortawesome/free-solid-svg-icons';
 import { CopyButtonComponent } from '../copy-button/copy-button';
 import { FormFieldComponent } from '../form-field/form-field';
 
@@ -11,10 +13,11 @@ import { FormFieldComponent } from '../form-field/form-field';
 // --------------------------------------------------------------------------
 @Component({
   selector: 'app-group-code-card',
-  imports: [CopyButtonComponent, FormFieldComponent, FormsModule],
+  imports: [FaIconComponent, CopyButtonComponent, FormFieldComponent, FormsModule],
   templateUrl: './group-code-card.html',
   styleUrl: './group-code-card.scss',
 })
 export class GroupCodeCardComponent {
   accessCode = input.required<string>();
+  protected readonly faKey = faKey;
 }

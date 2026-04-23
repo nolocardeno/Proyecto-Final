@@ -14,21 +14,43 @@
 .group-code-card {
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  gap: v.$spacing-2;
   background-color: v.$color-accent-secondary;
   border: v.$border-thin solid v.$color-modal-border;
   border-radius: v.$radius-card;
   box-shadow: v.$shadow-card;
+  padding: v.$spacing-3;
 }
 
 // --------------------------------------------------------------------------
-// HEADER (gradiente igual que page-header)
+// SVG DEFS (oculto, solo define gradientes)
+// --------------------------------------------------------------------------
+.group-code-card__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+// --------------------------------------------------------------------------
+// HEADER (icono + título, sin fondo)
 // --------------------------------------------------------------------------
 .group-code-card__header {
   display: flex;
   align-items: center;
-  padding: 1rem 1.25rem;
-  background: v.$color-gradient-primary;
+  gap: v.$spacing-2;
+}
+
+// --------------------------------------------------------------------------
+// ICONO DEL HEADER (con gradiente)
+// --------------------------------------------------------------------------
+.group-code-card__header-icon {
+  font-size: v.$font-size-md-lg;
+  flex-shrink: 0;
+
+  ::ng-deep svg path {
+    fill: url(#grad-code-icon);
+  }
 }
 
 // --------------------------------------------------------------------------
@@ -43,13 +65,21 @@
 }
 
 // --------------------------------------------------------------------------
+// DIVISOR
+// --------------------------------------------------------------------------
+.group-code-card__divider {
+  border: none;
+  border-top: v.$border-thin solid rgba(v.$neutral-900, 0.12);
+  margin: 0;
+}
+
+// --------------------------------------------------------------------------
 // BODY (código + botón copiar)
 // --------------------------------------------------------------------------
 .group-code-card__body {
   display: flex;
   align-items: flex-end;
   gap: v.$spacing-1;
-  padding: v.$spacing-2 1.25rem;
 
   app-form-field {
     flex: 1;

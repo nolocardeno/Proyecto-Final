@@ -1,10 +1,22 @@
 <!-- --------------------------------------------------------------------------
      GROUP CODE CARD: Muestra el código de acceso del grupo con botón copiar
      -------------------------------------------------------------------------- -->
+<svg class="group-code-card__defs" aria-hidden="true">
+  <defs>
+    <linearGradient id="grad-code-icon" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="var(--color-primary)" />
+      <stop offset="100%" stop-color="var(--color-secondary)" />
+    </linearGradient>
+  </defs>
+</svg>
+
 <article class="group-code-card">
   <header class="group-code-card__header">
+    <fa-icon class="group-code-card__header-icon" [icon]="faKey" aria-hidden="true" />
     <h2 class="group-code-card__title">Código del grupo</h2>
   </header>
+
+  <hr class="group-code-card__divider" />
 
   <section class="group-code-card__body">
     <app-form-field
