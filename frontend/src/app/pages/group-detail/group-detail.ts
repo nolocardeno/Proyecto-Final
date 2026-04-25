@@ -1,7 +1,7 @@
 // --------------------------------------------------------------------------
 // IMPORTS
 // --------------------------------------------------------------------------
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faCirclePlus, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
@@ -10,6 +10,7 @@ import { PageHeaderComponent } from '../../components/shared/page-header/page-he
 import { ButtonComponent } from '../../components/shared/button/button';
 import { FilterBarComponent, type FilterType } from '../../components/shared/filter-bar/filter-bar';
 import { SearchBarComponent } from '../../components/shared/search-bar/search-bar';
+import { PaginationComponent } from '../../components/shared/pagination/pagination';
 import { DocumentCardComponent } from '../../components/shared/document-card/document-card';
 import { GroupCodeCardComponent } from '../../components/shared/group-code-card/group-code-card';
 import { GroupMembersCardComponent } from '../../components/shared/group-members-card/group-members-card';
@@ -39,6 +40,7 @@ import {
     ButtonComponent,
     FilterBarComponent,
     SearchBarComponent,
+    PaginationComponent,
     DocumentCardComponent,
     GroupCodeCardComponent,
     GroupMembersCardComponent,
@@ -102,6 +104,25 @@ export class GroupDetailComponent implements OnInit {
 
     return result;
   });
+
+  // --- Paginación ---
+  protected readonly paginationPageSize = 6;
+  protected readonly paginationPage = signal(1);
+
+  protected readonly pagedDocuments = computed(() => {
+    const docs = this.filteredDocuments();
+    const start = (this.paginationPage() - 1) * this.paginationPageSize;
+    return docs.slice(start, start + this.paginationPageSize);
+  });
+
+  constructor() {
+    // Reset a la primera página al cambiar filtro o búsqueda
+    effect(() => {
+      this.activeFilter();
+      this.searchTerm();
+      this.paginationPage.set(1);
+    });
+  }
 
   // --- Helpers accesibles desde el template ---
   protected readonly getCardType = getCardType;

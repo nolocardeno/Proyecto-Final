@@ -48,7 +48,7 @@
 
         <!-- CARDS DE DOCUMENTOS (2 columnas) -->
         <section class="group-detail__cards">
-          @for (doc of filteredDocuments(); track doc.id) {
+          @for (doc of pagedDocuments(); track doc.id) {
             <app-document-card
               [type]="getCardType(doc.type)"
               [title]="doc.title"
@@ -65,6 +65,13 @@
             <p class="group-detail__empty">No hay documentos en este grupo.</p>
           }
         </section>
+
+        <!-- PAGINACIÓN -->
+        <app-pagination
+          [totalItems]="filteredDocuments().length"
+          [pageSize]="paginationPageSize"
+          [(currentPage)]="paginationPage"
+        />
       </main>
 
       <!-- PANEL LATERAL (derecha) -->
