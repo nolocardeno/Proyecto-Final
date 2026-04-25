@@ -35,7 +35,7 @@
        CARDS DE GRUPOS
        ------------------------------------------------------------------ -->
   <section class="groups__cards">
-    @for (group of filteredGroups(); track group.id) {
+    @for (group of pagedGroups(); track group.id) {
       <app-group-card
         [name]="group.name"
         [memberCount]="group.memberCount"
@@ -49,6 +49,15 @@
       <p class="groups__empty">No se encontraron grupos.</p>
     }
   </section>
+
+  <!-- ------------------------------------------------------------------
+       PAGINACIÓN
+       ------------------------------------------------------------------ -->
+  <app-pagination
+    [totalItems]="filteredGroups().length"
+    [pageSize]="paginationPageSize"
+    [(currentPage)]="paginationPage"
+  />
 </section>
 
 <!-- --------------------------------------------------------------------------

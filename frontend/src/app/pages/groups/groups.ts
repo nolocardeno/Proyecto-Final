@@ -1,7 +1,7 @@
 // --------------------------------------------------------------------------
 // IMPORTS
 // --------------------------------------------------------------------------
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faCirclePlus, faUserPlus } from '@fortawesome/free-solid-svg-icons';
@@ -10,6 +10,7 @@ import { GroupCardComponent } from '../../components/shared/group-card/group-car
 import { PageHeaderComponent } from '../../components/shared/page-header/page-header';
 import { ButtonComponent } from '../../components/shared/button/button';
 import { SearchBarComponent } from '../../components/shared/search-bar/search-bar';
+import { PaginationComponent } from '../../components/shared/pagination/pagination';
 import { CreateGroupModalComponent } from '../../components/shared/create-group-modal/create-group-modal';
 import { JoinGroupModalComponent } from '../../components/shared/join-group-modal/join-group-modal';
 import { GroupService } from '../../services/group.service';
@@ -30,6 +31,7 @@ import { type GroupResponse } from '../../models/group.model';
     PageHeaderComponent,
     ButtonComponent,
     SearchBarComponent,
+    PaginationComponent,
     CreateGroupModalComponent,
     JoinGroupModalComponent,
   ],
@@ -51,6 +53,24 @@ export class GroupsComponent implements OnInit {
   protected readonly searchTerm = signal('');
 
   protected readonly filteredGroups = signal<GroupResponse[]>([]);
+
+  // --- Paginación ---
+  protected readonly paginationPageSize = 9;
+  protected readonly paginationPage = signal(1);
+
+  protected readonly pagedGroups = computed(() => {
+    const groups = this.filteredGroups();
+    const start = (this.paginationPage() - 1) * this.paginationPageSize;
+    return groups.slice(start, start + this.paginationPageSize);
+  });
+
+  constructor() {
+    // Reset a la primera página al cambiar la búsqueda
+    effect(() => {
+      this.searchTerm();
+      this.paginationPage.set(1);
+    });
+  }
 
   protected onSearch(term: string): void {
     this.searchTerm.set(term);
