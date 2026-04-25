@@ -1,7 +1,7 @@
 // --------------------------------------------------------------------------
 // IMPORTS
 // --------------------------------------------------------------------------
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
@@ -11,6 +11,7 @@ import { PageHeaderComponent } from '../../components/shared/page-header/page-he
 import { ButtonComponent } from '../../components/shared/button/button';
 import { FilterBarComponent, type FilterType } from '../../components/shared/filter-bar/filter-bar';
 import { SearchBarComponent } from '../../components/shared/search-bar/search-bar';
+import { PaginationComponent } from '../../components/shared/pagination/pagination';
 import { UploadDocumentModalComponent } from '../../components/shared/upload-document-modal/upload-document-modal';
 import { DocumentService } from '../../services/document.service';
 import { AuthService } from '../../services/auth.service';
@@ -27,7 +28,7 @@ import {
 // --------------------------------------------------------------------------
 @Component({
   selector: 'app-dashboard',
-  imports: [FaIconComponent, SidebarComponent, DocumentCardComponent, PageHeaderComponent, ButtonComponent, FilterBarComponent, SearchBarComponent, UploadDocumentModalComponent],
+  imports: [FaIconComponent, SidebarComponent, DocumentCardComponent, PageHeaderComponent, ButtonComponent, FilterBarComponent, SearchBarComponent, PaginationComponent, UploadDocumentModalComponent],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
@@ -49,6 +50,10 @@ export class DashboardComponent implements OnInit {
     documents: 0,
     expired: 0,
   });
+
+  // --- Paginación ---
+  protected readonly paginationPageSize = 9;
+  protected readonly paginationPage = signal(1);
 
   protected readonly filteredDocuments = computed(() => {
     const docs = this.documentos();
@@ -81,6 +86,21 @@ export class DashboardComponent implements OnInit {
 
     return result;
   });
+
+  protected readonly pagedDocuments = computed(() => {
+    const docs = this.filteredDocuments();
+    const start = (this.paginationPage() - 1) * this.paginationPageSize;
+    return docs.slice(start, start + this.paginationPageSize);
+  });
+
+  constructor() {
+    // Reset a la primera página al cambiar filtro o búsqueda
+    effect(() => {
+      this.activeFilter();
+      this.searchTerm();
+      this.paginationPage.set(1);
+    });
+  }
 
   protected onSearch(term: string): void {
     this.searchTerm.set(term);

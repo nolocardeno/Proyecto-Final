@@ -39,7 +39,7 @@
        CARDS DE DOCUMENTOS
        ------------------------------------------------------------------ -->
   <section class="dashboard__cards">
-    @for (doc of filteredDocuments(); track doc.id) {
+    @for (doc of pagedDocuments(); track doc.id) {
       <app-document-card
         [type]="getCardType(doc.type)"
         [title]="doc.title"
@@ -55,6 +55,15 @@
       <p class="dashboard__empty">No hay documentos para este filtro.</p>
     }
   </section>
+
+  <!-- ------------------------------------------------------------------
+       PAGINACIÓN
+       ------------------------------------------------------------------ -->
+  <app-pagination
+    [totalItems]="filteredDocuments().length"
+    [pageSize]="paginationPageSize"
+    [(currentPage)]="paginationPage"
+  />
 
 </section>
 
