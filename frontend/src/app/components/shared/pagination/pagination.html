@@ -1,0 +1,46 @@
+<!-- --------------------------------------------------------------------------
+     PAGINACIÓN: Botones anterior/siguiente + lista de páginas con elipsis
+     Siempre visible (incluso con una sola página)
+     -------------------------------------------------------------------------- -->
+<nav class="pagination" aria-label="Paginación">
+  <button
+    class="pagination__btn pagination__btn--nav"
+    type="button"
+    [disabled]="currentPage() === 1"
+    (click)="prev()"
+    aria-label="Página anterior"
+  >
+    <fa-icon [icon]="faChevronLeft" aria-hidden="true" />
+  </button>
+
+  <ol class="pagination__list">
+    @for (item of pages(); track $index) {
+      <li class="pagination__item">
+        @if (isPage(item)) {
+          <button
+            type="button"
+            class="pagination__btn"
+            [class.pagination__btn--active]="item === currentPage()"
+            [attr.aria-current]="item === currentPage() ? 'page' : null"
+            [attr.aria-label]="'Ir a la página ' + item"
+            (click)="goTo(item)"
+          >
+            {{ item }}
+          </button>
+        } @else {
+          <span class="pagination__ellipsis" aria-hidden="true">{{ ellipsis }}</span>
+        }
+      </li>
+    }
+  </ol>
+
+  <button
+    class="pagination__btn pagination__btn--nav"
+    type="button"
+    [disabled]="currentPage() === totalPages()"
+    (click)="next()"
+    aria-label="Página siguiente"
+  >
+    <fa-icon [icon]="faChevronRight" aria-hidden="true" />
+  </button>
+</nav>
