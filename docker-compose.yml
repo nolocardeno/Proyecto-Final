@@ -18,6 +18,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: scantral_dev
       MAIL_USERNAME: ${MAIL_USERNAME}
       MAIL_PASSWORD: ${MAIL_PASSWORD}
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY}
     volumes:
       - uploads:/app/uploads
     depends_on:
