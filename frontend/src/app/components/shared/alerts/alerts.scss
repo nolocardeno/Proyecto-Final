@@ -16,53 +16,61 @@
   pointer-events: none;
 
   // --------------------------------------------------------------------------
-  // ALERT ITEM
+  // ALERT ITEM (toast)
+  // Fondo neutro siempre igual; solo cambia el color del icono según el tipo.
   // --------------------------------------------------------------------------
   &__item {
     pointer-events: auto;
     display: flex;
     align-items: center;
-    gap: v.$spacing-1;
+    gap: v.$spacing-2;
     padding: 0.75rem v.$spacing-2;
+    background-color: #ffffff;
+    border: v.$border-thin solid v.$color-surface-border;
     border-radius: v.$radius-lg;
-    border-left: v.$border-thick solid transparent;
     box-shadow: v.$shadow-md;
-    animation: alert-in v.$transition-base forwards;
+    color: v.$color-text-secondary;
     font-family: v.$font-primary;
     font-size: v.$font-size-md;
+    animation: alert-in v.$transition-base forwards;
+  }
 
-    // --- Variantes por tipo ---
-    &--success {
+  // --------------------------------------------------------------------------
+  // ICON (badge circular con color según el tipo)
+  // --------------------------------------------------------------------------
+  &__icon-wrapper {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: v.$radius-full;
+
+    .alerts__item--success & {
       background-color: v.$color-success-light;
-      border-left-color: v.$color-success;
       color: v.$color-success-dark;
     }
 
-    &--error {
+    .alerts__item--error & {
       background-color: v.$color-error-light;
-      border-left-color: v.$color-error;
       color: v.$color-error-dark;
     }
 
-    &--warning {
+    .alerts__item--warning & {
       background-color: v.$color-warning-light;
-      border-left-color: v.$color-warning;
       color: v.$color-warning-dark;
     }
 
-    &--info {
+    .alerts__item--info & {
       background-color: v.$color-info-light;
-      border-left-color: v.$color-info;
       color: v.$color-info-dark;
     }
   }
 
-  // --------------------------------------------------------------------------
-  // ICON
-  // --------------------------------------------------------------------------
   &__icon {
-    font-size: 1.25rem;
-    flex-shrink: 0;
+    font-size: 1rem;
+    line-height: 1;
   }
 
   // --------------------------------------------------------------------------
@@ -70,6 +78,7 @@
   // --------------------------------------------------------------------------
   &__message {
     flex: 1;
+    color: v.$color-text-secondary;
     font-weight: v.$font-weight-medium;
     line-height: v.$line-height-normal;
   }
@@ -81,15 +90,17 @@
     background: none;
     border: none;
     cursor: pointer;
-    color: inherit;
-    opacity: 0.6;
+    color: v.$color-text-muted;
+    opacity: 0.7;
     padding: 0.25rem;
     display: flex;
     align-items: center;
-    transition: opacity v.$transition-fast;
+    border-radius: v.$radius-sm;
+    transition: opacity v.$transition-fast, background-color v.$transition-fast;
 
     &:hover {
       opacity: 1;
+      background-color: v.$color-surface;
     }
   }
 }

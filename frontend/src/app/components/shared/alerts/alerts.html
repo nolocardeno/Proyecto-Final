@@ -4,7 +4,9 @@
 <aside class="alerts">
   @for (alert of alertService.alerts(); track alert.id) {
     <output class="alerts__item" [class]="'alerts__item--' + alert.type">
-      <fa-icon class="alerts__icon" [icon]="icons[alert.type]" />
+      <span class="alerts__icon-wrapper">
+        <fa-icon class="alerts__icon" [icon]="icons[alert.type]" />
+      </span>
       <span class="alerts__message">{{ alert.message }}</span>
       <button
         class="alerts__close"
