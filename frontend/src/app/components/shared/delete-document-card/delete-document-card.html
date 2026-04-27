@@ -1,0 +1,47 @@
+<!-- --------------------------------------------------------------------------
+     DELETE DOCUMENT CARD: Aviso + botón que abre modal de confirmación
+     -------------------------------------------------------------------------- -->
+<!-- Hidden SVG gradient defs -->
+<svg class="delete-document-card__defs" aria-hidden="true">
+  <defs>
+    <linearGradient id="grad-delete-document-icon" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="var(--color-primary)" />
+      <stop offset="100%" stop-color="var(--color-secondary)" />
+    </linearGradient>
+  </defs>
+</svg>
+
+<section class="delete-document-card">
+  <header class="delete-document-card__header">
+    <fa-icon class="delete-document-card__header-icon" [icon]="faTrashCan" aria-hidden="true" />
+    <h3 class="delete-document-card__title">Eliminar documento</h3>
+  </header>
+
+  <hr class="delete-document-card__divider" />
+
+  <p class="delete-document-card__warning">
+    Atención: Esta acción es irreversible.<br />
+    Se eliminarán el documento y todos los datos asociados permanentemente.
+  </p>
+
+  <app-button
+    variant="primary"
+    size="full"
+    class="delete-document-card__action"
+    (click)="openConfirm()"
+  >
+    Eliminar permanentemente
+  </app-button>
+</section>
+
+<!-- Modal de confirmación -->
+@if (showConfirm) {
+  <app-confirm-modal
+    title="Eliminar documento"
+    message="¿Estás seguro de que quieres eliminar este documento? Se borrarán todos los datos asociados permanentemente y no podrás recuperarlos."
+    confirmLabel="Eliminar"
+    cancelLabel="Cancelar"
+    (confirmed)="onConfirm()"
+    (cancelled)="onCancel()"
+  />
+}
