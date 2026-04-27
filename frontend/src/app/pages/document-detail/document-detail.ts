@@ -9,7 +9,6 @@ import {
   faCircleInfo,
   faClockRotateLeft,
   faBell,
-  faTrash,
   faPenToSquare,
 } from '@fortawesome/free-solid-svg-icons';
 import { SidebarComponent, type SidebarPage } from '../../components/layout/sidebar/sidebar';
@@ -34,6 +33,7 @@ import { AlertsSectionComponent } from '../../components/shared/alerts-section/a
 import { ExportSectionComponent } from '../../components/shared/export-section/export-section';
 import { EditDocumentModalComponent } from '../../components/shared/edit-document-modal/edit-document-modal';
 import { VersionHistoryComponent } from '../../components/shared/version-history/version-history';
+import { DeleteDocumentCardComponent } from '../../components/shared/delete-document-card/delete-document-card';
 import { DocumentHistoryService, type DocumentHistoryEntry } from '../../services/document-history.service';
 
 // --------------------------------------------------------------------------
@@ -62,6 +62,7 @@ const STATUS_LABELS: Record<DocumentStatus, string> = {
     ExportSectionComponent,
     EditDocumentModalComponent,
     VersionHistoryComponent,
+    DeleteDocumentCardComponent,
   ],
   templateUrl: './document-detail.html',
   styleUrl: './document-detail.scss',
@@ -77,7 +78,6 @@ export class DocumentDetailComponent implements OnInit {
 
   // Icons
   protected readonly faArrowLeft = faArrowLeft;
-  protected readonly faTrash = faTrash;
   protected readonly faPenToSquare = faPenToSquare;
 
   protected readonly formatDate = formatDate;
@@ -120,7 +120,6 @@ export class DocumentDetailComponent implements OnInit {
   protected readonly historyEntries = signal<DocumentHistoryEntry[]>([]);
 
   // Document actions state
-  protected readonly showDeleteDocConfirm = signal(false);
   protected readonly showEditDocModal = signal(false);
 
   protected get customAlerts(): DocumentAlertResponse[] {
@@ -262,14 +261,9 @@ export class DocumentDetailComponent implements OnInit {
   // DOCUMENT DELETE
   // --------------------------------------------------------------------------
 
-  protected requestDeleteDocument(): void {
-    this.showDeleteDocConfirm.set(true);
-  }
-
   protected onConfirmDeleteDocument(): void {
     const doc = this.document();
     if (!doc) return;
-    this.showDeleteDocConfirm.set(false);
     this.documentService.deleteDocument(doc.id).subscribe({
       next: () => {
         this.alertService.show('success', 'Documento eliminado correctamente');
@@ -277,10 +271,6 @@ export class DocumentDetailComponent implements OnInit {
       },
       error: () => this.alertService.show('error', 'No se pudo eliminar el documento'),
     });
-  }
-
-  protected onCancelDeleteDocument(): void {
-    this.showDeleteDocConfirm.set(false);
   }
 
   // --------------------------------------------------------------------------

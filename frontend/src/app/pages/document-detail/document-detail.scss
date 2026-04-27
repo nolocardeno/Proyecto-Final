@@ -27,7 +27,7 @@
 .document-detail__content {
   display: flex;
   gap: v.$spacing-3;
-  align-items: flex-start;
+  align-items: stretch;
 
   &--history {
     display: block;
@@ -40,10 +40,38 @@
 
 // --------------------------------------------------------------------------
 // COLUMNA IZQUIERDA: Vista previa
+//
+// La columna se estira a la altura de la columna derecha. La card se posiciona
+// absoluta dentro para no contribuir a la altura del row, evitando así que
+// imágenes grandes empujen el alto.
 // --------------------------------------------------------------------------
 .document-detail__preview {
   flex: 1;
   min-width: 0;
+  position: relative;
+  align-self: stretch;
+
+  app-document-preview-card {
+    position: absolute;
+    inset: 0;
+    display: flex;
+  }
+
+  ::ng-deep .preview-card {
+    flex: 1;
+    min-height: 0;
+  }
+
+  ::ng-deep .preview-card__figure {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  ::ng-deep .preview-card__image {
+    max-width: 100%;
+    max-height: 100%;
+  }
 }
 
 .document-detail__preview-card {

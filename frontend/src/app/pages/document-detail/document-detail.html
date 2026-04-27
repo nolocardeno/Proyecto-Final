@@ -27,10 +27,6 @@
         <fa-icon [icon]="faPenToSquare" aria-hidden="true" />
         Editar
       </app-button>
-      <app-button buttons variant="text" (click)="requestDeleteDocument()" aria-label="Eliminar documento">
-        <fa-icon [icon]="faTrash" aria-hidden="true" />
-        Eliminar
-      </app-button>
     </app-page-header>
 
     <!-- TAB BAR -->
@@ -58,6 +54,7 @@
             [issueDate]="formatDate(doc.issueDate)"
             [expiryDate]="formatDate(doc.expiryDate)"
           />
+          <app-delete-document-card (deleteConfirmed)="onConfirmDeleteDocument()" />
         </main>
       </section>
     }
@@ -104,17 +101,6 @@
     cancelLabel="Cancelar"
     (confirmed)="onConfirmDelete()"
     (cancelled)="onCancelDelete()"
-  />
-}
-
-@if (showDeleteDocConfirm()) {
-  <app-confirm-modal
-    title="Eliminar documento"
-    message="¿Estás seguro de que quieres eliminar este documento? Esta acción no se puede deshacer."
-    confirmLabel="Eliminar"
-    cancelLabel="Cancelar"
-    (confirmed)="onConfirmDeleteDocument()"
-    (cancelled)="onCancelDeleteDocument()"
   />
 }
 
