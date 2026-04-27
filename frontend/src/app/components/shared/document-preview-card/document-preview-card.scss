@@ -43,9 +43,25 @@
 
   &__empty {
     @include m.flex-center;
+    flex: 1;
+    flex-direction: column;
+    gap: v.$spacing-3;
     padding: v.$spacing-4;
+    margin: 0;
     font-family: v.$font-primary;
-    font-size: v.$font-size-sm;
+    font-size: v.$font-size-md;
+    color: v.$neutral-500;
+    opacity: 0.6;
+  }
+
+  &__empty-icon {
+    font-size: v.$font-size-6xl;
+    color: v.$neutral-400;
+  }
+
+  &__empty-text {
+    font-family: v.$font-primary;
+    font-size: v.$font-size-md;
     color: v.$neutral-500;
   }
 }

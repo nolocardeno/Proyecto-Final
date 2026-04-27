@@ -13,6 +13,9 @@
       />
     </figure>
   } @else {
-    <p class="preview-card__empty">No hay imagen disponible.</p>
+    <figure class="preview-card__empty" aria-label="No hay imagen disponible">
+      <fa-icon class="preview-card__empty-icon" [icon]="faImage" aria-hidden="true" />
+      <figcaption class="preview-card__empty-text">No hay imagen disponible</figcaption>
+    </figure>
   }
 </article>
