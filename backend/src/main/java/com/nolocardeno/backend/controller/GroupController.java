@@ -6,6 +6,7 @@ import com.nolocardeno.backend.dto.GroupDetailResponse;
 import com.nolocardeno.backend.dto.GroupRequest;
 import com.nolocardeno.backend.dto.GroupResponse;
 import com.nolocardeno.backend.service.GroupService;
+import com.nolocardeno.backend.service.DocumentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ import java.util.Map;
 public class GroupController {
 
     private final GroupService groupService;
+    private final DocumentService documentService;
 
     @GetMapping
     public ResponseEntity<List<GroupResponse>> getAll(@RequestHeader("X-User-Id") Long userId) {
@@ -58,6 +60,15 @@ public class GroupController {
             @RequestPart(value = "file", required = false) MultipartFile file) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(groupService.addDocumentToGroup(userId, id, request, file));
+    }
+
+    @PostMapping(value = "/{id}/documents/extract", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<DocumentResponse> extractDocumentFromImage(
+            @RequestHeader("X-User-Id") Long userId,
+            @PathVariable Long id,
+            @RequestPart("file") MultipartFile file) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(documentService.createFromImage(userId, file, id));
     }
 
     @PostMapping
