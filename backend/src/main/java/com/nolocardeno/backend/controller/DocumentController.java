@@ -99,4 +99,12 @@ public class DocumentController {
             @RequestParam("file") MultipartFile file) {
         return ResponseEntity.ok(documentService.uploadDocumentImage(userId, id, file));
     }
+
+    @PostMapping(value = "/extract", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<DocumentResponse> extractFromImage(
+            @RequestHeader("X-User-Id") Long userId,
+            @RequestPart("file") MultipartFile file) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(documentService.createFromImage(userId, file));
+    }
 }
