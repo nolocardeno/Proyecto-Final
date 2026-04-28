@@ -248,7 +248,8 @@ export class UploadDocumentModalComponent {
     if (!file || this.loading()) return;
 
     this.loading.set(true);
-    this.documentService.extractFromImage(file).subscribe({
+    const groupId = this.modalService.groupId();
+    this.documentService.extractFromImage(file, groupId ?? undefined).subscribe({
       next: () => {
         this.alert.show('success', 'Documento creado desde imagen correctamente');
         this.documentCreated.emit();
