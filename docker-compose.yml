@@ -19,11 +19,31 @@ services:
       MAIL_USERNAME: ${MAIL_USERNAME}
       MAIL_PASSWORD: ${MAIL_PASSWORD}
       GOOGLE_API_KEY: ${GOOGLE_API_KEY}
+      OCR_SERVICE_URL: http://paddleocr:8001
     volumes:
       - uploads:/app/uploads
     depends_on:
       postgres:
         condition: service_healthy
+      paddleocr:
+        condition: service_healthy
+
+  paddleocr:
+    build: ./paddleocr-service
+    container_name: scantral-paddleocr
+    environment:
+      OCR_LANGUAGE: ${OCR_LANGUAGE:-latin}
+      OCR_USE_GPU: "false"
+    expose:
+      - "8001"
+    volumes:
+      # Persist downloaded PP-OCR model files (~16 MB) so they don't have to
+      # be re-downloaded from paddleocr.bj.bcebos.com every time the
+      # container is recreated. PaddleOCR caches models under $HOME/.paddleocr;
+      # the Dockerfile pins HOME=/app, so this is where the cache actually
+      # lives — mounting /root/.paddleocr would silently fail to persist.
+      - paddleocr_models:/app/.paddleocr
+    restart: unless-stopped
 
   postgres:
     image: postgres:17
@@ -45,3 +65,4 @@ services:
 volumes:
   pgdata:
   uploads:
+  paddleocr_models:
