@@ -11,6 +11,7 @@ import com.nolocardeno.backend.model.enums.DocumentType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -40,7 +41,6 @@ public class AIDocumentExtractor implements DocumentExtractor {
     private final String apiKey;
     private final String model;
     private final String apiUrl;
-    private final int timeoutMs;
 
     public AIDocumentExtractor(
             @Value("${scantral.ai.api-key:}") String apiKey,
@@ -51,8 +51,10 @@ public class AIDocumentExtractor implements DocumentExtractor {
         this.apiKey = apiKey;
         this.model = model;
         this.apiUrl = apiUrl;
-        this.timeoutMs = timeoutMs;
-        this.http = RestClient.builder().build();
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        factory.setConnectTimeout((int) Math.min(timeoutMs, 10_000));
+        factory.setReadTimeout(timeoutMs);
+        this.http = RestClient.builder().requestFactory(factory).build();
     }
 
     @Override

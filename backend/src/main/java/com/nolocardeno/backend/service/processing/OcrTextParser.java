@@ -332,7 +332,7 @@ public class OcrTextParser {
         }
         if (DNI_NUM.matcher(text).find() || n.contains("documento nacional")) return DocumentType.DNI;
         // ITV requires an explicit keyword OR a plate AND an ITV-related term.
-        if (ITV_KEYWORD.matcher(text).find())                                return DocumentType.ITV;
+        if (ITV_KEYWORD.matcher(text).find() || PLATE.matcher(text).find()) return DocumentType.ITV;
         if (n.contains("poliza") || n.contains("seguro"))                    return DocumentType.INSURANCE;
         if (n.contains("factura") || n.contains("invoice"))                  return DocumentType.INVOICE;
         // Receipt signals: keyword, total labels, IVA, euro sign, well-known retail chains.
@@ -748,7 +748,7 @@ public class OcrTextParser {
     private String findHolderName(String text, DocumentType type) {
         if (text == null || text.isBlank()) return null;
 
-        // Strategy 1 — MRZ. The opening "P<XXX" prefix may have lost its "<"
+        // Strategy 1 — MRZ. The opening "P<" + country-code prefix may have lost its "<"
         // through OCR noise (we've seen "PESPCARDENO<SANCHEZ<<MANOLO"), so
         // accept any "P[<]?[A-Z]{3}" then surnames "<<" given-names. We
         // intentionally don't pin the issuer to ESP because specimen
