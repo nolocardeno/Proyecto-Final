@@ -1,28 +1,54 @@
 @use '../../../../styles/00-settings/variables' as v;
+@use '../../../../styles/01-tools/mixins' as m;
 
 // --------------------------------------------------------------------------
-// HOST: Fijo en el viewport, siempre visible bajo el header
+// HOST: En desktop (lg+) es una columna fija a la izquierda.
+// En <lg actúa como drawer off-canvas: oculto por defecto, se muestra al
+// abrir mediante SidebarService (clase `.sidebar-host--open` aplicada al host).
 // --------------------------------------------------------------------------
 :host {
   position: fixed;
   top: v.$spacing-header;
   left: 0;
   height: calc(100vh - #{v.$spacing-header});
+  height: calc(100dvh - #{v.$spacing-header});
   width: v.$spacing-sidebar-width;
-  z-index: 1;
+  z-index: 20;
+
+  // --- DRAWER (mobile / tablet) ---
+  @include m.respond-down(lg) {
+    // Ocupa más ancho en móvil para mejor área táctil, capado a 16rem.
+    width: min(16rem, 80vw);
+    transform: translateX(-100%);
+    transition: transform v.$transition-base;
+    will-change: transform;
+  }
+
+  // Estado abierto del drawer
+  &.sidebar-host--open {
+    @include m.respond-down(lg) {
+      transform: translateX(0);
+    }
+  }
 }
 
 // --------------------------------------------------------------------------
 // SIDEBAR
 // --------------------------------------------------------------------------
 .sidebar {
+  position: relative;
+  z-index: 16;
   display: flex;
   flex-direction: column;
-  width: v.$spacing-sidebar-width;
+  width: 100%;
   height: 100%;
   background-color: v.$color-surface;
   border-right: v.$border-thin solid v.$color-surface-border;
   padding-block: v.$spacing-2;
+
+  @include m.respond-down(lg) {
+    box-shadow: v.$shadow-lg;
+  }
 }
 
 // --------------------------------------------------------------------------
@@ -30,4 +56,28 @@
 // --------------------------------------------------------------------------
 .sidebar__logout {
   margin-top: auto;
+}
+
+// --------------------------------------------------------------------------
+// BACKDROP — Capa oscura que cubre el resto de la página tras el drawer.
+// En desktop (lg+) nunca se muestra.
+// --------------------------------------------------------------------------
+.sidebar__backdrop {
+  display: none;
+  position: fixed;
+  inset: v.$spacing-header 0 0 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  transition: opacity v.$transition-base;
+  z-index: 15;
+  pointer-events: none;
+
+  @include m.respond-down(lg) {
+    display: block;
+  }
+
+  &--visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
 }

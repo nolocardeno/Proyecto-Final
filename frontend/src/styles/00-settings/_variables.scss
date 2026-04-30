@@ -121,11 +121,11 @@ $spacing-sidebar-width: 12.5rem; // 200px
 // --------------------------------------------------------------------------
 // BREAKPOINTS
 // --------------------------------------------------------------------------
-$breakpoint-xs: 20rem;   // 320px - móvil pequeño
-$breakpoint-sm: 40rem;   // 640px - Móvil grande
-$breakpoint-md: 48rem;   // 768px - Tablet
-$breakpoint-lg: 64rem;   // 1024px - Desktop
-$breakpoint-xl: 80rem;   // 1280px - Desktop grande
+$breakpoint-xs: 20rem;       // 320px  - Móvil pequeño
+$breakpoint-sm: 23.4375rem;  // 375px  - Móvil estándar
+$breakpoint-md: 48rem;       // 768px  - Tablet
+$breakpoint-lg: 64rem;       // 1024px - Desktop pequeño
+$breakpoint-xl: 80rem;       // 1280px - Desktop estándar
 
 // --------------------------------------------------------------------------
 // ELEVACIONES (SOMBRAS)

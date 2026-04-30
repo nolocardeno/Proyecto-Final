@@ -1,5 +1,22 @@
 <header class="header">
   <!-- --------------------------------------------------------------------------
+       BOTÓN HAMBURGUESA — Solo visible en <lg cuando hay sesión.
+       Controla el drawer del sidebar mediante SidebarService.
+       -------------------------------------------------------------------------- -->
+  @if (authService.isLoggedIn()) {
+    <button
+      type="button"
+      class="header__menu-toggle"
+      [attr.aria-expanded]="sidebar.isOpen()"
+      aria-controls="app-sidebar"
+      [attr.aria-label]="sidebar.isOpen() ? 'Cerrar menú' : 'Abrir menú'"
+      (click)="sidebar.toggle()"
+    >
+      <fa-icon [icon]="menuIcon()" />
+    </button>
+  }
+
+  <!-- --------------------------------------------------------------------------
        BRAND (Logo + Texto)
        -------------------------------------------------------------------------- -->
   <a [routerLink]="authService.isLoggedIn() ? '/dashboard' : '/'" class="header__brand">

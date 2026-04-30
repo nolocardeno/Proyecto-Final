@@ -1,4 +1,5 @@
 @use '../../../../styles/00-settings/variables' as v;
+@use '../../../../styles/01-tools/mixins' as m;
 
 // --------------------------------------------------------------------------
 // HEADER
@@ -8,14 +9,47 @@
   top: 0;
   left: 0;
   right: 0;
-  z-index: 2;
+  z-index: 30; // por encima del sidebar drawer + backdrop
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: v.$spacing-2;
   height: v.$spacing-header;
   padding-inline: v.$spacing-3;
   background-color: v.$color-surface;
   border-bottom: v.$border-thin solid v.$color-surface-border;
+
+  @include m.respond-down(md) {
+    padding-inline: v.$spacing-2;
+  }
+}
+
+// --------------------------------------------------------------------------
+// BOTÓN HAMBURGUESA — Solo visible <lg
+// --------------------------------------------------------------------------
+.header__menu-toggle {
+  display: none; // oculto por defecto (desktop)
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;   // 44px → touch target accesible
+  height: 2.75rem;
+  background: transparent;
+  border: none;
+  border-radius: v.$radius-md;
+  color: v.$neutral-900;
+  font-size: v.$font-size-lg;
+  cursor: pointer;
+  transition: background-color v.$transition-fast;
+
+  &:hover { background-color: v.$neutral-100; }
+  &:focus-visible {
+    outline: v.$border-medium solid v.$color-primary;
+    outline-offset: 0.125rem;
+  }
+
+  @include m.respond-down(lg) {
+    display: inline-flex;
+  }
 }
 
 // --------------------------------------------------------------------------
@@ -26,20 +60,42 @@
   align-items: center;
   gap: 0.25rem;
   text-decoration: none;
+  // En <lg, al haber hamburguesa a la izquierda, centramos el brand visualmente
+  // permitiéndole crecer y empujando el nav al extremo opuesto vía justify-content.
+  min-width: 0;
 }
 
 .header__logo {
-  width: 4.0625rem;  // 65px
-  height: 4.0625rem; // 65px
+  width: 4.0625rem;  // 65px (desktop)
+  height: 4.0625rem;
   object-fit: contain;
+
+  @include m.respond-down(lg) {
+    width: 3rem;     // 48px
+    height: 3rem;
+  }
+
+  @include m.respond-down(md) {
+    width: 2.5rem;   // 40px
+    height: 2.5rem;
+  }
 }
 
 .header__title {
   font-family: v.$font-primary;
-  font-size: v.$font-size-lg; // 1.5rem ≈ 24px
+  font-size: v.$font-size-lg; // 24px
   font-weight: v.$font-weight-bold;
   color: v.$neutral-900;
   text-decoration: none;
+
+  @include m.respond-down(md) {
+    font-size: v.$font-size-md-lg; // 20px
+  }
+
+  // En móviles muy pequeños ocultamos el texto del brand para dejar espacio al nav.
+  @include m.respond-down(sm) {
+    @include m.visually-hidden;
+  }
 }
 
 // --------------------------------------------------------------------------
@@ -49,6 +105,11 @@
   display: flex;
   align-items: center;
   gap: v.$spacing-2;
+  min-width: 0;
+
+  @include m.respond-down(sm) {
+    gap: v.$spacing-1;
+  }
 }
 
 .header__link {
@@ -56,13 +117,14 @@
   background: transparent;
   border: none;
   font-family: v.$font-primary;
-  font-size: v.$font-size-md; // 1rem ≈ 16px
+  font-size: v.$font-size-md;
   font-weight: v.$font-weight-bold;
   color: v.$neutral-900;
   text-decoration: none;
-  padding: 0.625rem; // 10px
-  border-radius: 1.875rem; // 30px
+  padding: 0.625rem;
+  border-radius: 1.875rem;
   cursor: pointer;
+  white-space: nowrap;
 
   &::after {
     content: '';
@@ -79,6 +141,11 @@
     width: 100%;
     left: 0;
     right: auto;
+  }
+
+  @include m.respond-down(md) {
+    padding: 0.5rem;
+    font-size: v.$font-size-sm-md; // 14px
   }
 }
 

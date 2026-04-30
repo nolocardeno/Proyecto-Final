@@ -1,7 +1,23 @@
 <!-- --------------------------------------------------------------------------
+     BACKDROP — Solo visible cuando el drawer está abierto en <lg.
+     En lg+ permanece display:none vía CSS.
+     -------------------------------------------------------------------------- -->
+<div
+  class="sidebar__backdrop"
+  [class.sidebar__backdrop--visible]="sidebarSvc.isOpen()"
+  (click)="closeDrawer()"
+  aria-hidden="true"
+></div>
+
+<!-- --------------------------------------------------------------------------
      SIDEBAR: Main lateral navigation
      -------------------------------------------------------------------------- -->
-<nav class="sidebar" aria-label="Main navigation">
+<nav
+  id="app-sidebar"
+  class="sidebar"
+  aria-label="Main navigation"
+  [attr.aria-hidden]="null"
+>
   <!-- ------------------------------------------------------------------
        NAVIGATION BUTTONS (stacked vertically)
        ------------------------------------------------------------------ -->

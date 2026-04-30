@@ -1,12 +1,17 @@
 @use '../../../styles/00-settings/variables' as v;
+@use '../../../styles/01-tools/mixins' as m;
 
 // --------------------------------------------------------------------------
 // HOST: Layout con Sidebar
+// El sidebar es drawer en <lg, por eso solo reservamos espacio en lg+.
 // --------------------------------------------------------------------------
 :host {
   display: flex;
   flex: 1;
-  margin-left: v.$spacing-sidebar-width;
+
+  @include m.respond-to(lg) {
+    margin-left: v.$spacing-sidebar-width;
+  }
 }
 
 // --------------------------------------------------------------------------
@@ -14,10 +19,20 @@
 // --------------------------------------------------------------------------
 .groups__contenido {
   flex: 1;
+  min-width: 0;
   padding: v.$spacing-4;
   display: flex;
   flex-direction: column;
   gap: v.$spacing-3;
+
+  @include m.respond-down(md) {
+    padding: v.$spacing-3;
+  }
+
+  @include m.respond-down(sm) {
+    padding: v.$spacing-2;
+    gap: v.$spacing-2;
+  }
 }
 
 // --------------------------------------------------------------------------
@@ -25,8 +40,17 @@
 // --------------------------------------------------------------------------
 .groups__cards {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: v.$spacing-3;
+
+  @include m.respond-down(lg) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include m.respond-down(md) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: v.$spacing-2;
+  }
 }
 
 .groups__empty {

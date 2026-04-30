@@ -1,4 +1,5 @@
 @use '../../../../styles/00-settings/variables' as v;
+@use '../../../../styles/01-tools/mixins' as m;
 
 // --------------------------------------------------------------------------
 // HOST
@@ -21,6 +22,10 @@
   box-shadow: v.$shadow-card;
   padding: v.$spacing-4;
 
+  @include m.respond-down(sm) {
+    padding: v.$spacing-3;
+  }
+
   // --------------------------------------------------------------------------
   // AVATAR
   // --------------------------------------------------------------------------
@@ -31,8 +36,8 @@
   }
 
   &__img {
-    width: 12.5rem;
-    height: 12.5rem;
+    width: clamp(8rem, 40vw, 12.5rem);
+    height: clamp(8rem, 40vw, 12.5rem);
     border-radius: v.$radius-full;
     border: v.$border-thick solid v.$color-primary;
     object-fit: cover;

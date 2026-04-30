@@ -7,17 +7,37 @@
 // --------------------------------------------------------------------------
 // RESPONSIVE — Media queries por breakpoint
 // --------------------------------------------------------------------------
+// `respond-to`   → mobile-first  (min-width). Aplica DESDE el breakpoint hacia arriba.
+// `respond-down` → desktop-first (max-width). Aplica HASTA el breakpoint (excluido).
+// `respond-between` → ventana cerrada [min, max).
+// Usar siempre los breakpoints definidos en _variables.scss (xs, sm, md, lg, xl).
+// --------------------------------------------------------------------------
+
+// Helper interno: devuelve el valor del breakpoint
+@function _bp($name) {
+  @if $name == xs { @return v.$breakpoint-xs; }
+  @else if $name == sm { @return v.$breakpoint-sm; }
+  @else if $name == md { @return v.$breakpoint-md; }
+  @else if $name == lg { @return v.$breakpoint-lg; }
+  @else if $name == xl { @return v.$breakpoint-xl; }
+  @else { @error "Breakpoint desconocido: #{$name}. Usa xs|sm|md|lg|xl."; }
+}
+
+// Mobile-first: aplica desde el breakpoint hacia arriba.
 @mixin respond-to($breakpoint) {
-  @if $breakpoint == xs {
-    @media (min-width: v.$breakpoint-xs) { @content; }
-  } @else if $breakpoint == sm {
-    @media (min-width: v.$breakpoint-sm) { @content; }
-  } @else if $breakpoint == md {
-    @media (min-width: v.$breakpoint-md) { @content; }
-  } @else if $breakpoint == lg {
-    @media (min-width: v.$breakpoint-lg) { @content; }
-  } @else if $breakpoint == xl {
-    @media (min-width: v.$breakpoint-xl) { @content; }
+  @media (min-width: _bp($breakpoint)) { @content; }
+}
+
+// Desktop-first: aplica hasta el breakpoint (estrictamente menor).
+// Se resta 0.02px para evitar solapamiento con `respond-to` (Bootstrap-style).
+@mixin respond-down($breakpoint) {
+  @media (max-width: calc(#{_bp($breakpoint)} - 0.02px)) { @content; }
+}
+
+// Rango cerrado-abierto: [min, max).
+@mixin respond-between($min, $max) {
+  @media (min-width: _bp($min)) and (max-width: calc(#{_bp($max)} - 0.02px)) {
+    @content;
   }
 }
 

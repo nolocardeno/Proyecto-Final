@@ -1,4 +1,5 @@
 @use '../../../styles/00-settings/variables' as v;
+@use '../../../styles/01-tools/mixins' as m;
 
 // ==========================================================================
 // PÁGINA LANDING PAGE
@@ -16,6 +17,14 @@
   justify-content: center;
   padding: v.$spacing-header v.$spacing-4 v.$spacing-8;
   overflow: hidden;
+
+  @include m.respond-down(md) {
+    padding: v.$spacing-7 v.$spacing-3 v.$spacing-6;
+  }
+
+  @include m.respond-down(sm) {
+    padding: v.$spacing-6 v.$spacing-2 v.$spacing-5;
+  }
 
   &::before {
     content: '';
@@ -35,11 +44,27 @@
 }
 
 .hero__titulo {
-  font-size: v.$font-size-6xl;
+  font-size: v.$font-size-6xl;     // 72px
   font-weight: v.$font-weight-bold;
   text-align: center;
   max-width: 68rem;
   line-height: v.$line-height-tight;
+
+  @include m.respond-down(xl) {
+    font-size: v.$font-size-5xl;   // 64px
+  }
+
+  @include m.respond-down(lg) {
+    font-size: v.$font-size-4xl;   // 56px
+  }
+
+  @include m.respond-down(md) {
+    font-size: v.$font-size-3xl;   // 48px
+  }
+
+  @include m.respond-down(sm) {
+    font-size: v.$font-size-2xl;   // 40px
+  }
 }
 
 .hero__titulo--gradiente {
@@ -57,6 +82,14 @@
   text-align: center;
   max-width: 41.9375rem;
   line-height: v.$line-height-normal;
+
+  @include m.respond-down(md) {
+    font-size: v.$font-size-md;
+  }
+
+  @include m.respond-down(sm) {
+    font-size: v.$font-size-sm-md;
+  }
 }
 
 .hero__cta {
@@ -75,6 +108,15 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  @include m.respond-down(md) {
+    min-height: 0;
+    padding: v.$spacing-6 v.$spacing-3;
+  }
+
+  @include m.respond-down(sm) {
+    padding: v.$spacing-5 v.$spacing-2;
+  }
 }
 
 .features__title {
@@ -83,15 +125,33 @@
   color: v.$neutral-900;
   text-align: center;
   margin-bottom: v.$spacing-5;
+
+  @include m.respond-down(md) {
+    font-size: v.$font-size-lg;
+    margin-bottom: v.$spacing-4;
+  }
 }
 
 .features__grid {
   display: grid;
-  grid-template-columns: repeat(3, auto);
+  // 3 cols en xl/lg, baja a 2 en md, 1 en sm.
+  // `auto-fit` con minmax garantiza adaptación incluso en breakpoints intermedios.
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
   row-gap: v.$spacing-4;
   column-gap: v.$spacing-5;
   justify-content: center;
   list-style: none;
+  width: 100%;
+  max-width: 66rem; // limita el ancho del grid en xl
+
+  @include m.respond-to(lg) {
+    grid-template-columns: repeat(3, minmax(0, 18rem));
+  }
+
+  @include m.respond-down(md) {
+    column-gap: v.$spacing-3;
+    row-gap: v.$spacing-3;
+  }
 }
 
 // --------------------------------------------------------------------------
@@ -103,6 +163,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  @include m.respond-down(md) {
+    padding: v.$spacing-6 v.$spacing-3 v.$spacing-8;
+  }
+
+  @include m.respond-down(sm) {
+    padding: v.$spacing-5 v.$spacing-2 v.$spacing-7;
+  }
 }
 
 .faq__titulo {
@@ -110,6 +178,11 @@
   font-weight: v.$font-weight-bold;
   text-align: center;
   margin-bottom: v.$spacing-5;
+
+  @include m.respond-down(md) {
+    font-size: v.$font-size-lg;
+    margin-bottom: v.$spacing-4;
+  }
 }
 
 .faq__lista {
@@ -119,6 +192,10 @@
   width: 100%;
   max-width: 66.375rem;
   list-style: none;
+
+  @include m.respond-down(md) {
+    gap: v.$spacing-2;
+  }
 }
 
 // --------------------------------------------------------------------------

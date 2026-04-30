@@ -1,4 +1,5 @@
 @use '../../../../styles/00-settings/variables' as v;
+@use '../../../../styles/01-tools/mixins' as m;
 
 // --------------------------------------------------------------------------
 // FORMULARIO REGISTRO
@@ -8,6 +9,16 @@
   flex-direction: column;
   padding: v.$spacing-4 3.375rem;
   gap: v.$spacing-4;
+
+  @include m.respond-down(md) {
+    padding: v.$spacing-3 v.$spacing-3;
+    gap: v.$spacing-3;
+  }
+
+  @include m.respond-down(sm) {
+    padding: v.$spacing-3 v.$spacing-2;
+    gap: v.$spacing-2;
+  }
 
   // --------------------------------------------------------------------------
   // SEPARADOR

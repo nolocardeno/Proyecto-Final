@@ -1,4 +1,5 @@
 @use '../../../../styles/00-settings/variables' as v;
+@use '../../../../styles/01-tools/mixins' as m;
 
 // --------------------------------------------------------------------------
 // HOST
@@ -14,10 +15,18 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: v.$spacing-2;
   background: v.$color-gradient-primary;
   border-radius: v.$radius-card;
   box-shadow: v.$shadow-card;
   padding: 1.25rem v.$spacing-3;
+  flex-wrap: wrap;
+
+  @include m.respond-down(md) {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: v.$spacing-3;
+  }
 }
 
 // --------------------------------------------------------------------------
@@ -27,6 +36,8 @@
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+  min-width: 0;
+  flex: 1;
 }
 
 .page-header__title {
@@ -35,6 +46,11 @@
   font-size: v.$font-size-lg;
   color: v.$neutral-900;
   line-height: v.$line-height-tight;
+  overflow-wrap: break-word;
+
+  @include m.respond-down(sm) {
+    font-size: v.$font-size-md-lg;
+  }
 }
 
 .page-header__subtitle {
@@ -42,6 +58,11 @@
   font-weight: v.$font-weight-medium;
   font-size: v.$font-size-md;
   color: v.$color-text-secondary;
+  overflow-wrap: break-word;
+
+  @include m.respond-down(sm) {
+    font-size: v.$font-size-sm-md;
+  }
 }
 
 // --------------------------------------------------------------------------
@@ -51,4 +72,9 @@
   display: flex;
   align-items: center;
   gap: v.$spacing-2;
+  flex-wrap: wrap;
+
+  @include m.respond-down(md) {
+    width: 100%;
+  }
 }

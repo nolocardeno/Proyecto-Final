@@ -6,10 +6,12 @@
 // --------------------------------------------------------------------------
 .feature-card {
   position: relative;
-  width: 20.625rem;
+  width: 100%;
+  max-width: 20.625rem;
   height: 12.375rem;
   perspective: 600px;
   cursor: pointer;
+  margin-inline: auto;
   transition:
     transform v.$transition-fast;
 

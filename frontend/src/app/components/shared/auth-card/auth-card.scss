@@ -1,4 +1,5 @@
 @use '../../../../styles/00-settings/variables' as v;
+@use '../../../../styles/01-tools/mixins' as m;
 
 // --------------------------------------------------------------------------
 // AUTH MODAL: Backdrop oscuro a pantalla completa
@@ -10,14 +11,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: v.$spacing-2;       // garantiza margen en móvil
   background-color: rgba(0, 0, 0, 0.5);
   animation: backdrop-in v.$transition-base;
+  overflow-y: auto;            // permite scroll si la card excede el viewport
 
   // --------------------------------------------------------------------------
   // TARJETA DEL MODAL
   // --------------------------------------------------------------------------
   &__card {
-    width: 26.625rem;
+    width: 100%;
+    max-width: 26.625rem;
     background-color: v.$color-surface;
     border: v.$border-thin solid v.$color-modal-border;
     border-radius: v.$radius-card;
@@ -32,6 +36,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    padding-inline: v.$spacing-2;
+
+    @include m.respond-down(sm) {
+      height: 4.5rem;
+    }
   }
 
   &__title {
@@ -40,6 +49,11 @@
     font-size: v.$font-size-xl;
     color: v.$neutral-900;
     margin: 0;
+    text-align: center;
+
+    @include m.respond-down(sm) {
+      font-size: v.$font-size-md-lg;
+    }
   }
 }
 

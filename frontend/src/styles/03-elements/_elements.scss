@@ -3,6 +3,7 @@
 // ==========================================================================
 
 @use '../00-settings/variables' as v;
+@use '../01-tools/mixins' as m;
 
 // --------------------------------------------------------------------------
 // DOCUMENTO
@@ -21,23 +22,48 @@ body {
   background-color: v.$color-page-bg;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  // Evita scroll horizontal accidental en mobile cuando un hijo se desborda.
+  // (Las páginas siguen pudiendo usar scroll vertical normalmente.)
+  overflow-x: hidden;
 }
 
 // --------------------------------------------------------------------------
-// ENCABEZADOS
+// ENCABEZADOS — Escala desktop-first; se reduce en breakpoints inferiores
+// para mantener jerarquía sin romper el layout.
 // --------------------------------------------------------------------------
 h1, h2, h3, h4, h5, h6 {
   font-weight: v.$font-weight-bold;
   line-height: v.$line-height-tight;
   color: v.$neutral-900;
+  // Permite que títulos largos rompan línea en lugar de causar overflow.
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
-h1 { font-size: v.$font-size-4xl; }
-h2 { font-size: v.$font-size-3xl; }
-h3 { font-size: v.$font-size-2xl; }
-h4 { font-size: v.$font-size-xl; }
-h5 { font-size: v.$font-size-lg; }
-h6 { font-size: v.$font-size-md; }
+h1 { font-size: v.$font-size-4xl; } // 56px
+h2 { font-size: v.$font-size-3xl; } // 48px
+h3 { font-size: v.$font-size-2xl; } // 40px
+h4 { font-size: v.$font-size-xl; }  // 32px
+h5 { font-size: v.$font-size-lg; }  // 24px
+h6 { font-size: v.$font-size-md; }  // 16px
+
+// Tablet: bajamos un escalón los títulos grandes.
+@include m.respond-down(lg) {
+  h1 { font-size: v.$font-size-3xl; } // 48px
+  h2 { font-size: v.$font-size-2xl; } // 40px
+  h3 { font-size: v.$font-size-xl; }  // 32px
+  h4 { font-size: v.$font-size-lg; }  // 24px
+}
+
+// Móvil: nuevo escalón hacia abajo para evitar desbordes.
+@include m.respond-down(md) {
+  h1 { font-size: v.$font-size-2xl; } // 40px
+  h2 { font-size: v.$font-size-xl; }  // 32px
+  h3 { font-size: v.$font-size-lg; }  // 24px
+  h4 { font-size: v.$font-size-md-lg; } // 20px
+  h5 { font-size: v.$font-size-md; }  // 16px
+}
 
 // --------------------------------------------------------------------------
 // TEXTO
