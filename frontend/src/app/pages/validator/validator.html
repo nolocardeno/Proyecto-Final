@@ -1,0 +1,43 @@
+<!-- --------------------------------------------------------------------------
+     PÁGINA VALIDADOR: Sidebar + Área de contenido
+     -------------------------------------------------------------------------- -->
+<app-sidebar
+  [currentPage]="currentPage()"
+  (onNavigate)="onNavigate($event)"
+/>
+
+<section class="validator__content">
+  <!-- ------------------------------------------------------------------
+       PAGE HEADER
+       ------------------------------------------------------------------ -->
+  <app-page-header
+    title="Validador de documentos oficiales"
+    subtitle="Comprueba si tus documentos oficiales están en vigor en una fecha específica..."
+  />
+
+  <!-- ------------------------------------------------------------------
+       VALIDATOR CARD
+       ------------------------------------------------------------------ -->
+  <app-validator-card (check)="onCheck($event)" />
+
+  <!-- ------------------------------------------------------------------
+       RESULTADOS
+       ------------------------------------------------------------------ -->
+  @if (hasChecked()) {
+    <section class="validator__results" aria-live="polite">
+      @for (result of results(); track result.document.id) {
+        <app-validator-result-card
+          [documentId]="result.document.id"
+          [type]="result.document.type"
+          [title]="result.document.title"
+          [expiryDate]="result.expiryDate"
+          [isValid]="result.isValid"
+        />
+      } @empty {
+        <p class="validator__empty">
+          No hay documentos oficiales registrados todavía.
+        </p>
+      }
+    </section>
+  }
+</section>
