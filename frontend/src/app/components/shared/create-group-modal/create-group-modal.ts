@@ -7,7 +7,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { AuthCardComponent } from '../../shared/auth-card/auth-card';
 import { ButtonComponent } from '../../shared/button/button';
 import { FormFieldComponent } from '../../shared/form-field/form-field';
-import { FormCheckboxComponent } from '../../shared/form-checkbox/form-checkbox';
+import { FormRadioComponent } from '../../shared/form-radio/form-radio';
 import { GroupService } from '../../../services/group.service';
 import { GroupModalService } from '../../../services/group-modal.service';
 import { AlertService } from '../../../services/alert.service';
@@ -22,7 +22,7 @@ import { AlertService } from '../../../services/alert.service';
     AuthCardComponent,
     ButtonComponent,
     FormFieldComponent,
-    FormCheckboxComponent,
+    FormRadioComponent,
   ],
   templateUrl: './create-group-modal.html',
   styleUrl: './create-group-modal.scss',
@@ -39,41 +39,27 @@ export class CreateGroupModalComponent {
 
   protected readonly createForm = this.fb.group({
     name: ['', [Validators.required, Validators.maxLength(50)]],
-    allCanAdd: [true],
-    onlyCreatorCanAdd: [false],
+    addPolicy: ['all' as 'all' | 'creator', [Validators.required]],
   });
 
   protected onModalClosed(): void {
     this.groupModal.close();
   }
 
-  protected onAllCanAddChange(): void {
-    const allCanAdd = this.createForm.get('allCanAdd')!.value;
-    if (allCanAdd) {
-      this.createForm.get('onlyCreatorCanAdd')!.setValue(false, { emitEvent: false });
-    }
-  }
-
-  protected onOnlyCreatorChange(): void {
-    const onlyCreator = this.createForm.get('onlyCreatorCanAdd')!.value;
-    if (onlyCreator) {
-      this.createForm.get('allCanAdd')!.setValue(false, { emitEvent: false });
-    }
-  }
-
   protected onSubmit(): void {
     if (!this.createForm.valid || this.loading) return;
 
     this.loading = true;
-    const { name, allCanAdd } = this.createForm.getRawValue();
+    const { name, addPolicy } = this.createForm.getRawValue();
+    const allCanAdd = addPolicy === 'all';
 
-    this.groupService.createGroup({ name: name!, allCanAddDocuments: allCanAdd! }).subscribe({
+    this.groupService.createGroup({ name: name!, allCanAddDocuments: allCanAdd }).subscribe({
       next: () => {
         this.alert.show('success', 'Grupo creado correctamente');
         this.groupModal.close();
         this.groupCreated.emit();
         this.loading = false;
-        this.createForm.reset({ name: '', allCanAdd: true, onlyCreatorCanAdd: false });
+        this.createForm.reset({ name: '', addPolicy: 'all' });
       },
       error: (err: HttpErrorResponse) => {
         const mensaje = err.error?.error ?? 'No se pudo crear el grupo. Inténtalo de nuevo';

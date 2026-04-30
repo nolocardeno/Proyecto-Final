@@ -15,18 +15,22 @@
       <p class="create-group__error">El nombre no puede superar los 50 caracteres</p>
     }
 
-    <app-form-checkbox
+    <app-form-radio
       label="Todos pueden añadir documentos"
-      checkboxId="create-group-all-can-add"
-      formControlName="allCanAdd"
-      (change)="onAllCanAddChange()"
+      radioId="create-group-all-can-add"
+      name="create-group-add-policy"
+      value="all"
+      [selectedValue]="createForm.controls.addPolicy.value"
+      (selected)="createForm.controls.addPolicy.setValue($any($event))"
     />
 
-    <app-form-checkbox
+    <app-form-radio
       label="Solo el creador puede añadir documentos"
-      checkboxId="create-group-only-creator"
-      formControlName="onlyCreatorCanAdd"
-      (change)="onOnlyCreatorChange()"
+      radioId="create-group-only-creator"
+      name="create-group-add-policy"
+      value="creator"
+      [selectedValue]="createForm.controls.addPolicy.value"
+      (selected)="createForm.controls.addPolicy.setValue($any($event))"
     />
 
     <hr class="create-group__separator" />
