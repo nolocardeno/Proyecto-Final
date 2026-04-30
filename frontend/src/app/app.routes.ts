@@ -36,6 +36,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'validator',
+    loadComponent: () =>
+      import('./pages/validator/validator').then(
+        (m) => m.ValidatorComponent,
+      ),
+  },
+  {
     path: 'documents/:id',
     loadComponent: () =>
       import('./pages/document-detail/document-detail').then(
