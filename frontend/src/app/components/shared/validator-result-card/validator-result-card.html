@@ -1,0 +1,67 @@
+<!-- --------------------------------------------------------------------------
+     VALIDATOR RESULT CARD: Documento oficial validado contra una fecha
+     -------------------------------------------------------------------------- -->
+
+<svg class="validator-result-card__defs" aria-hidden="true">
+  <defs>
+    <linearGradient id="grad-validator-result-card" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="var(--color-primary)" />
+      <stop offset="100%" stop-color="var(--color-secondary)" />
+    </linearGradient>
+  </defs>
+</svg>
+
+<article
+  class="validator-result-card"
+  [routerLink]="['/documents', documentId()]"
+>
+  <!-- HEADER: Título -->
+  <header class="validator-result-card__header">
+    <fa-icon
+      class="validator-result-card__type-icon"
+      [icon]="faFileLines"
+      aria-hidden="true"
+    />
+    <h3 class="validator-result-card__title">{{ title() }}</h3>
+  </header>
+
+  <!-- BODY: Fecha de expiración + Validez + Consejo -->
+  <section class="validator-result-card__body">
+    <p class="validator-result-card__row">
+      <fa-icon
+        class="validator-result-card__icon"
+        [icon]="faCalendarXmark"
+        aria-hidden="true"
+      />
+      <span>
+        <strong>Expiración: </strong>{{ expiryDate() }}
+      </span>
+    </p>
+
+    <hr class="validator-result-card__separator" />
+
+    <p
+      class="validator-result-card__validity"
+      [class.validator-result-card__validity--invalid]="!isValid()"
+    >
+      <fa-icon
+        class="validator-result-card__status-icon"
+        [class.validator-result-card__status-icon--invalid]="!isValid()"
+        [icon]="isValid() ? faCircleCheck : faCircleXmark"
+        aria-hidden="true"
+      />
+      <span>{{ isValid() ? 'Válido en la fecha seleccionada' : 'No válido en la fecha seleccionada' }}</span>
+    </p>
+
+    @if (tip()) {
+      <aside class="validator-result-card__tip" role="note">
+        <fa-icon
+          class="validator-result-card__tip-icon"
+          [icon]="faLightbulb"
+          aria-hidden="true"
+        />
+        <span>{{ tip() }}</span>
+      </aside>
+    }
+  </section>
+</article>
