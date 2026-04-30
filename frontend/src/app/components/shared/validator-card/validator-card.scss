@@ -1,0 +1,131 @@
+@use '../../../../styles/00-settings/variables' as v;
+@use '../../../../styles/01-tools/mixins' as m;
+
+// --------------------------------------------------------------------------
+// HOST
+// --------------------------------------------------------------------------
+:host {
+  display: block;
+}
+
+// --------------------------------------------------------------------------
+// VALIDATOR CARD
+// --------------------------------------------------------------------------
+.validator-card {
+  display: flex;
+  flex-direction: column;
+  gap: v.$spacing-3;
+  background-color: v.$color-accent-secondary;
+  border: v.$border-thin solid v.$color-modal-border;
+  border-radius: v.$radius-card;
+  box-shadow: v.$shadow-card;
+  padding: v.$spacing-4;
+}
+
+.validator-card__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.validator-card__header {
+  display: flex;
+  align-items: center;
+  gap: v.$spacing-1;
+}
+
+.validator-card__icon {
+  font-size: v.$font-size-md-lg;
+
+  ::ng-deep svg path {
+    fill: url(#grad-validator-icon);
+  }
+}
+
+.validator-card__label {
+  font-family: v.$font-primary;
+  font-weight: v.$font-weight-bold;
+  font-size: v.$font-size-md-lg;
+  color: v.$neutral-900;
+  line-height: v.$line-height-tight;
+  margin: 0;
+}
+
+.validator-card__divider {
+  border: none;
+  border-top: v.$border-thin solid rgba(v.$neutral-900, 0.12);
+  margin: 0;
+}
+
+// --------------------------------------------------------------------------
+// PICKER (Presets + Calendario)
+// --------------------------------------------------------------------------
+.validator-card__picker {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: v.$spacing-3;
+  flex-wrap: wrap;
+}
+
+// --------------------------------------------------------------------------
+// PRESETS (columna izquierda)
+// --------------------------------------------------------------------------
+.validator-card__presets {
+  display: flex;
+  flex-direction: column;
+  gap: v.$spacing-1;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 9rem;
+  flex-shrink: 0;
+}
+
+.validator-card__preset {
+  display: block;
+  width: 100%;
+  padding: v.$spacing-1 v.$spacing-2;
+  background-color: v.$color-input-bg;
+  border: v.$border-thin solid v.$color-input-border;
+  border-radius: v.$radius-card;
+  text-align: left;
+  font-family: v.$font-primary;
+  font-weight: v.$font-weight-semibold;
+  font-size: v.$font-size-sm-md;
+  color: v.$neutral-900;
+  cursor: pointer;
+  @include m.hover-elevation;
+
+  &--active {
+    background: v.$color-gradient-primary;
+    border-color: transparent;
+    color: v.$neutral-900;
+    box-shadow: v.$shadow-card;
+  }
+}
+
+// --------------------------------------------------------------------------
+// FOOTER (Fecha seleccionada + botón)
+// --------------------------------------------------------------------------
+.validator-card__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: v.$spacing-1;
+}
+
+.validator-card__selected {
+  font-family: v.$font-primary;
+  font-size: v.$font-size-sm-md;
+  color: v.$color-text-secondary;
+  margin: 0;
+  text-align: center;
+}
+
+.validator-card__selected-value {
+  color: v.$neutral-900;
+  font-weight: v.$font-weight-bold;
+  text-transform: capitalize;
+}

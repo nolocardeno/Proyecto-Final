@@ -1,0 +1,69 @@
+<!-- --------------------------------------------------------------------------
+     VALIDATOR CARD: Presets (izquierda) + Calendario inline (derecha) + Botón
+     -------------------------------------------------------------------------- -->
+<!-- SVG gradient used by the header icon -->
+<svg class="validator-card__defs" aria-hidden="true">
+  <defs>
+    <linearGradient id="grad-validator-icon" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="var(--color-primary)" />
+      <stop offset="100%" stop-color="var(--color-secondary)" />
+    </linearGradient>
+  </defs>
+</svg>
+
+<section class="validator-card">
+  <header class="validator-card__header">
+    <fa-icon class="validator-card__icon" [icon]="faCalendarCheck" aria-hidden="true" />
+    <h2 class="validator-card__label">Fecha para comprobar documentos</h2>
+  </header>
+
+  <hr class="validator-card__divider" />
+
+  <!-- ------------------------------------------------------------------
+       SELECTOR: Presets + Calendario
+       ------------------------------------------------------------------ -->
+  <section class="validator-card__picker">
+    <!-- PRESETS RÁPIDOS (columna izquierda) -->
+    <ul class="validator-card__presets" role="list">
+      @for (preset of presets; track preset.label) {
+        <li>
+          <button
+            class="validator-card__preset"
+            type="button"
+            [class.validator-card__preset--active]="isPresetActive(preset)"
+            [attr.aria-pressed]="isPresetActive(preset)"
+            (click)="applyPreset(preset)"
+          >
+            {{ preset.label }}
+          </button>
+        </li>
+      }
+    </ul>
+
+    <!-- CALENDARIO INLINE (columna derecha) -->
+    <app-calendar
+      [selectedDate]="selectedDate()"
+      (dateChange)="onDateChange($event)"
+    />
+  </section>
+
+  <!-- ------------------------------------------------------------------
+       FECHA SELECCIONADA + BOTÓN
+       ------------------------------------------------------------------ -->
+  <footer class="validator-card__actions">
+    <p class="validator-card__selected">
+      Fecha seleccionada:
+      <strong class="validator-card__selected-value">{{ formattedDate() || '—' }}</strong>
+    </p>
+
+    <app-button
+      variant="primary"
+      size="auth"
+      type="button"
+      [disabled]="!selectedDate()"
+      (click)="onCheck()"
+    >
+      Comprobar documentos
+    </app-button>
+  </footer>
+</section>
