@@ -121,6 +121,30 @@ public final class AIPromptBuilder {
                   ropa/textil, plazos legales para documentos oficiales). NUNCA
                   inventes una fecha que no esté en el documento.
 
+                Documentos oficiales españoles — mapeo de fechas (CRÍTICO):
+                - CARNET DE CONDUCIR (PERMISO DE CONDUCCIÓN, DRIVING_LICENSE):
+                  los campos están numerados según el estándar UE.
+                    * Campo "3" = FECHA DE NACIMIENTO del titular. NO es la
+                      fecha de emisión. NUNCA la uses como issueDate.
+                    * Campo "4a" = fecha de EXPEDICIÓN/EMISIÓN del permiso →
+                      issueDate.
+                    * Campo "4b" = fecha de CADUCIDAD/VALIDEZ del permiso →
+                      expiryDate.
+                    * Campo "4c" = autoridad expedidora (NO es fecha).
+                    * Campo "5"  = número de documento (DNI/NIE).
+                  Si solo encuentras una fecha y no puedes distinguir cuál es,
+                  prefiere dejar issueDate = null antes que confundirla con la
+                  fecha de nacimiento.
+                - DNI / NIE: la fecha que aparece bajo "VÁLIDO HASTA" o
+                  "FECHA DE CADUCIDAD" es expiryDate. La fecha bajo "FECHA DE
+                  NACIMIENTO" NUNCA es issueDate ni expiryDate. Si aparece
+                  "FECHA DE EXPEDICIÓN" o "EMISIÓN" → issueDate.
+                - PASAPORTE: "Date of issue / Fecha de expedición" → issueDate;
+                  "Date of expiry / Fecha de caducidad" → expiryDate;
+                  "Date of birth / Fecha de nacimiento" se ignora para fechas.
+                - ITV: la fecha de la última inspección → issueDate; la fecha
+                  hasta la que es válida → expiryDate.
+
                 issueDate (CRÍTICO para tickets/facturas/garantías):
                 - Para RECEIPT, INVOICE y WARRANTY, busca la fecha de compra
                   con MÁXIMA atención. Es el dato más importante del ticket
