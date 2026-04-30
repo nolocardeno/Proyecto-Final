@@ -1,0 +1,59 @@
+<!-- --------------------------------------------------------------------------
+     CALENDAR: Cabecera (mes + navegación) + cuadrícula de días
+     -------------------------------------------------------------------------- -->
+<section class="calendar" role="group" aria-label="Calendario">
+  <!-- ------------------------------------------------------------------
+       CABECERA: navegación + mes
+       ------------------------------------------------------------------ -->
+  <header class="calendar__header">
+    <button
+      class="calendar__nav"
+      type="button"
+      aria-label="Mes anterior"
+      (click)="previousMonth()"
+    >
+      <fa-icon [icon]="faChevronLeft" aria-hidden="true" />
+    </button>
+
+    <h2 class="calendar__title">{{ monthLabel() }}</h2>
+
+    <button
+      class="calendar__nav"
+      type="button"
+      aria-label="Mes siguiente"
+      (click)="nextMonth()"
+    >
+      <fa-icon [icon]="faChevronRight" aria-hidden="true" />
+    </button>
+  </header>
+
+  <!-- ------------------------------------------------------------------
+       CABECERA DE DÍAS DE LA SEMANA
+       ------------------------------------------------------------------ -->
+  <ul class="calendar__weekdays" aria-hidden="true">
+    @for (label of weekdays; track label) {
+      <li class="calendar__weekday">{{ label }}</li>
+    }
+  </ul>
+
+  <!-- ------------------------------------------------------------------
+       CUADRÍCULA DE DÍAS
+       ------------------------------------------------------------------ -->
+  <ul class="calendar__grid">
+    @for (day of days(); track day.date.getTime()) {
+      <li class="calendar__cell">
+        <button
+          class="calendar__day"
+          type="button"
+          [class.calendar__day--outside]="!day.inCurrentMonth"
+          [class.calendar__day--today]="day.isToday"
+          [class.calendar__day--selected]="day.isSelected"
+          [attr.aria-pressed]="day.isSelected"
+          (click)="selectDay(day)"
+        >
+          {{ day.day }}
+        </button>
+      </li>
+    }
+  </ul>
+</section>

@@ -1,0 +1,144 @@
+@use '../../../../styles/00-settings/variables' as v;
+
+// --------------------------------------------------------------------------
+// HOST
+// --------------------------------------------------------------------------
+:host {
+  display: inline-block;
+}
+
+// --------------------------------------------------------------------------
+// CALENDARIO
+// --------------------------------------------------------------------------
+.calendar {
+  display: flex;
+  flex-direction: column;
+  gap: v.$spacing-half;
+  background-color: v.$color-surface;
+  border: v.$border-thin solid v.$color-modal-border;
+  border-radius: v.$radius-card;
+  padding: v.$spacing-1;
+  width: 16rem;
+  max-width: 100%;
+}
+
+// --------------------------------------------------------------------------
+// CABECERA: navegación + mes
+// --------------------------------------------------------------------------
+.calendar__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: v.$spacing-1;
+}
+
+.calendar__title {
+  font-family: v.$font-primary;
+  font-weight: v.$font-weight-bold;
+  font-size: v.$font-size-sm-md;
+  color: v.$neutral-900;
+  text-transform: capitalize;
+  margin: 0;
+}
+
+.calendar__nav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: none;
+  border-radius: v.$radius-full;
+  background-color: v.$color-input-bg;
+  color: v.$neutral-900;
+  font-size: v.$font-size-xs;
+  cursor: pointer;
+  transition: background-color v.$transition-fast;
+
+  &:hover {
+    background-color: v.$color-input-border;
+  }
+}
+
+// --------------------------------------------------------------------------
+// DÍAS DE LA SEMANA
+// --------------------------------------------------------------------------
+.calendar__weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: v.$spacing-half;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.calendar__weekday {
+  font-family: v.$font-primary;
+  font-weight: v.$font-weight-semibold;
+  font-size: v.$font-size-xs;
+  color: v.$color-text-muted;
+  text-align: center;
+  padding-block: v.$spacing-half;
+}
+
+// --------------------------------------------------------------------------
+// CUADRÍCULA DE DÍAS
+// --------------------------------------------------------------------------
+.calendar__grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: v.$spacing-half;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.calendar__cell {
+  display: flex;
+  min-width: 0;
+}
+
+.calendar__day {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-width: 0;
+  aspect-ratio: 1 / 1;
+  border: none;
+  border-radius: v.$radius-sm;
+  background-color: transparent;
+  font-family: v.$font-primary;
+  font-weight: v.$font-weight-medium;
+  font-size: v.$font-size-xs;
+  color: v.$neutral-900;
+  cursor: pointer;
+  padding: 0;
+  transition:
+    background-color v.$transition-fast,
+    color v.$transition-fast,
+    transform v.$transition-fast;
+
+  &:hover {
+    background-color: v.$color-input-bg;
+  }
+
+  &--outside {
+    color: v.$color-placeholder;
+  }
+
+  &--today {
+    border: v.$border-thin solid v.$color-primary;
+  }
+
+  &--selected {
+    background: v.$color-gradient-primary;
+    color: v.$neutral-900;
+    font-weight: v.$font-weight-bold;
+    box-shadow: v.$shadow-card;
+  }
+
+  &--selected:hover {
+    background: v.$color-gradient-primary;
+  }
+}
