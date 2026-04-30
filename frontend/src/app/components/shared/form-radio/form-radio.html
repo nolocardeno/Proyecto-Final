@@ -1,0 +1,19 @@
+<!-- --------------------------------------------------------------------------
+     RADIO FORMULARIO: Radio button custom con punto degradado
+     -------------------------------------------------------------------------- -->
+<label class="radio" [attr.for]="radioId()">
+  <input
+    type="radio"
+    class="radio__input"
+    [id]="radioId()"
+    [name]="name()"
+    [value]="value()"
+    [checked]="checked()"
+    [disabled]="disabled()"
+    (change)="onSelect()"
+  />
+  <span class="radio__box" [class.radio__box--checked]="checked()">
+    <span class="radio__dot"></span>
+  </span>
+  <span class="radio__label">{{ label() }}</span>
+</label>
