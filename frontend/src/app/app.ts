@@ -11,6 +11,7 @@ import { LoginComponent } from './components/auth/login/login';
 import { RegisterComponent } from './components/auth/register/register';
 import { AuthModalService } from './services/auth-modal.service';
 import { AlertsComponent } from './components/shared/alerts/alerts';
+import { ThemeService } from './services/theme.service';
 
 // --------------------------------------------------------------------------
 // RUTAS QUE USAN LAYOUT CON SIDEBAR
@@ -36,6 +37,8 @@ const SIDEBAR_ROUTES = ['/dashboard', '/settings', '/groups'];
 export class App {
   private readonly router = inject(Router);
   protected readonly authModal = inject(AuthModalService);
+  // Inyectado para inicializar el tema (lee storage / prefers-color-scheme).
+  private readonly theme = inject(ThemeService);
 
   protected readonly footerVariant = toSignal(
     this.router.events.pipe(
