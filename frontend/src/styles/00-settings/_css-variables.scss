@@ -1,21 +1,116 @@
 // ==========================================================================
-// VARIABLES CSS PERSONALIZADAS (Custom Properties)
+// VARIABLES CSS PERSONALIZADAS — Tokens semánticos por tema
+// ==========================================================================
+// El tema se controla con `data-theme="dark"` en <html>.
+// Sass solo se usa como repositorio de valores fijos; los componentes
+// consumen estos tokens vía `var(--…)` para permitir el cambio en runtime.
 // ==========================================================================
 
 @use 'variables' as v;
 
+// --------------------------------------------------------------------------
+// TEMA CLARO (por defecto)
+// --------------------------------------------------------------------------
 :root {
+  // Marca (idéntica en ambos temas)
   --color-primary: #{v.$color-primary};
   --color-secondary: #{v.$color-secondary};
-  --color-input-bg: #{v.$color-input-bg};
-  --color-input-border: #{v.$color-input-border};
-  --color-modal-border: #{v.$color-modal-border};
   --color-focus-glow: #{v.$color-focus-glow};
+
+  // Superficies
+  --color-page-bg: #f4f1ec;
+  --color-surface: #f9f9f9;
+  --color-surface-border: #cacaca;
+  --color-modal-border: #eee9e9;
+
+  // Inputs
+  --color-input-bg: #e9e9e9;
+  --color-input-border: #c5c5c5;
+  --color-placeholder: #726d6d;
+
+  // Acento decorativo
+  --color-accent-primary: #b6b3b3;
+  --color-accent-secondary: #f9f9f9;
+  --color-gradient-accent: linear-gradient(to right, #f9f9f9, #b6b3b3);
+
+  // Texto
+  --color-text-primary: #171717;
+  --color-text-body: #262626;
+  --color-text-secondary: #545353;
+  --color-text-muted: #4a5565;
+  --color-text-faint: #737373;
+  --color-text-disabled: #a3a3a3;
+  --color-text-faded: rgba(0, 0, 0, 0.4);
+
+  // Bordes y separadores
+  --color-divider: rgba(0, 0, 0, 0.12);
+  --color-border-subtle: #e5e5e5;
+  --color-border-strong: #d4d4d4;
+
+  // Capas y código
+  --color-overlay: rgba(0, 0, 0, 0.85);
+  --color-backdrop: rgba(0, 0, 0, 0.45);
+  --color-code-bg: #f5f5f5;
+
+  // Sombras
+  --shadow-card: 0 0.3125rem 0.25rem rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 0.25rem 0.375rem rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 0.625rem 1.25rem rgba(0, 0, 0, 0.12);
+  --shadow-hover: 0 0.4375rem 0.375rem rgba(0, 0, 0, 0.35);
+  --shadow-active: 0 0.125rem 0.125rem rgba(0, 0, 0, 0.2);
+  --shadow-inset: inset 0 0.125rem 0.25rem rgba(0, 0, 0, 0.2);
+
+  // Estados semánticos (idénticos en ambos temas)
   --color-success: #{v.$color-success};
   --color-success-dark: #{v.$color-success-dark};
   --color-info: #{v.$color-info};
   --color-info-dark: #{v.$color-info-dark};
   --color-error: #{v.$color-error};
   --color-error-dark: #{v.$color-error-dark};
-  --shadow-card: #{v.$shadow-card};
+
+  color-scheme: light;
+}
+
+// --------------------------------------------------------------------------
+// TEMA OSCURO — Mantiene la identidad cálida (paleta marrón/ocre oscuro)
+// con contrastes WCAG AA frente a la paleta de marca naranja.
+// --------------------------------------------------------------------------
+[data-theme='dark'] {
+  --color-page-bg: #14110d;
+  --color-surface: #1f1c17;
+  --color-surface-border: #3a342c;
+  --color-modal-border: #3a342c;
+
+  --color-input-bg: #2a2620;
+  --color-input-border: #4a4338;
+  --color-placeholder: #a8a098;
+
+  --color-accent-primary: #5a544a;
+  --color-accent-secondary: #2e2922;
+  --color-gradient-accent: linear-gradient(to right, #2e2922, #5a544a);
+
+  --color-text-primary: #f4f1ec;
+  --color-text-body: #e5e1d8;
+  --color-text-secondary: #c2bcb1;
+  --color-text-muted: #b0a99c;
+  --color-text-faint: #8b857a;
+  --color-text-disabled: #6e6960;
+  --color-text-faded: rgba(244, 241, 236, 0.45);
+
+  --color-divider: rgba(244, 241, 236, 0.14);
+  --color-border-subtle: #3a342c;
+  --color-border-strong: #4a4338;
+
+  --color-overlay: rgba(0, 0, 0, 0.92);
+  --color-backdrop: rgba(0, 0, 0, 0.65);
+  --color-code-bg: #2a2620;
+
+  --shadow-card: 0 0.3125rem 0.5rem rgba(0, 0, 0, 0.6);
+  --shadow-md: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 0.625rem 1.5rem rgba(0, 0, 0, 0.55);
+  --shadow-hover: 0 0.4375rem 0.75rem rgba(0, 0, 0, 0.75);
+  --shadow-active: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.5);
+  --shadow-inset: inset 0 0.0625rem 0.1875rem rgba(0, 0, 0, 0.55);
+
+  color-scheme: dark;
 }
