@@ -16,8 +16,8 @@
   gap: v.$spacing-2;
   height: v.$spacing-header;
   padding-inline: v.$spacing-3;
-  background-color: v.$color-surface;
-  border-bottom: v.$border-thin solid v.$color-surface-border;
+  background-color: var(--color-surface);
+  border-bottom: v.$border-thin solid var(--color-surface-border);
 
   @include m.respond-down(md) {
     padding-inline: v.$spacing-2;
@@ -36,12 +36,12 @@
   background: transparent;
   border: none;
   border-radius: v.$radius-md;
-  color: v.$neutral-900;
+  color: var(--color-text-primary);
   font-size: v.$font-size-lg;
   cursor: pointer;
   transition: background-color v.$transition-fast;
 
-  &:hover { background-color: v.$neutral-100; }
+  &:hover { background-color: var(--color-code-bg); }
   &:focus-visible {
     outline: v.$border-medium solid v.$color-primary;
     outline-offset: 0.125rem;
@@ -85,7 +85,7 @@
   font-family: v.$font-primary;
   font-size: v.$font-size-lg; // 24px
   font-weight: v.$font-weight-bold;
-  color: v.$neutral-900;
+  color: var(--color-text-primary);
   text-decoration: none;
 
   @include m.respond-down(md) {
@@ -119,7 +119,7 @@
   font-family: v.$font-primary;
   font-size: v.$font-size-md;
   font-weight: v.$font-weight-bold;
-  color: v.$neutral-900;
+  color: var(--color-text-primary);
   text-decoration: none;
   padding: 0.625rem;
   border-radius: 1.875rem;

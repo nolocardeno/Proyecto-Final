@@ -55,7 +55,7 @@
   width: 100%;
   height: 100%;
   background: v.$color-gradient-primary;
-  color: v.$color-surface;
+  color: var(--color-surface);
   font-size: 0.8rem;
 }
 
@@ -73,8 +73,8 @@
 // DESBORDAMIENTO "+N"
 // --------------------------------------------------------------------------
 .avatar-stack__item--overflow {
-  background: v.$neutral-100;
-  color: v.$neutral-600;
+  background: var(--color-code-bg);
+  color: var(--color-text-faint);
   font-size: 0.6875rem;
   font-family: v.$font-primary;
   font-weight: v.$font-weight-semibold;

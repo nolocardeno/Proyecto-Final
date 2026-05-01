@@ -18,7 +18,7 @@
   gap: v.$spacing-2;
   background: v.$color-gradient-primary;
   border-radius: v.$radius-card;
-  box-shadow: v.$shadow-card;
+  box-shadow: var(--shadow-card);
   padding: 1.25rem v.$spacing-3;
   flex-wrap: wrap;
 
@@ -44,7 +44,7 @@
   font-family: v.$font-primary;
   font-weight: v.$font-weight-bold;
   font-size: v.$font-size-lg;
-  color: v.$neutral-900;
+  color: var(--color-text-primary);
   line-height: v.$line-height-tight;
   overflow-wrap: break-word;
 
@@ -57,7 +57,7 @@
   font-family: v.$font-primary;
   font-weight: v.$font-weight-medium;
   font-size: v.$font-size-md;
-  color: v.$color-text-secondary;
+  color: var(--color-text-secondary);
   overflow-wrap: break-word;
 
   @include m.respond-down(sm) {

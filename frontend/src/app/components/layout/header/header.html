@@ -33,6 +33,7 @@
        -------------------------------------------------------------------------- -->
   @if (authService.isLoggedIn()) {
     <nav class="header__nav">
+      <app-theme-toggle />
       <app-user-card
         variant="header"
         [username]="authService.user()!.name"
@@ -42,6 +43,7 @@
     </nav>
   } @else {
     <nav class="header__nav">
+      <app-theme-toggle />
       <a (click)="authModal.openLogin()" class="header__link">Iniciar sesión</a>
       <a (click)="authModal.openRegister()">
         <app-button variant="primary" size="md">Crear cuenta</app-button>

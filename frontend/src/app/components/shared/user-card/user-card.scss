@@ -27,7 +27,7 @@
     font-family: v.$font-primary;
     font-weight: v.$font-weight-bold;
     font-size: v.$font-size-sm-md;
-    color: v.$neutral-900;
+    color: var(--color-text-primary);
     line-height: v.$line-height-tight;
   }
 
@@ -35,7 +35,7 @@
     font-family: v.$font-primary;
     font-weight: v.$font-weight-regular;
     font-size: v.$font-size-sm;
-    color: v.$neutral-500;
+    color: var(--color-text-faint);
     line-height: v.$line-height-tight;
   }
 
@@ -45,7 +45,7 @@
   &__separator {
     width: v.$border-thin;
     height: 2rem;
-    background-color: v.$color-surface-border;
+    background-color: var(--color-surface-border);
     flex-shrink: 0;
     margin-right: v.$spacing-1;
   }
@@ -58,7 +58,7 @@
     height: 2.5rem;
     border-radius: v.$radius-full;
     border: v.$border-medium solid v.$color-primary;
-    box-shadow: v.$shadow-card;
+    box-shadow: var(--shadow-card);
     object-fit: cover;
     flex-shrink: 0;
 
@@ -67,7 +67,7 @@
       align-items: center;
       justify-content: center;
       background: v.$color-gradient-primary;
-      color: v.$color-surface;
+      color: var(--color-surface);
       font-size: v.$font-size-md;
     }
   }

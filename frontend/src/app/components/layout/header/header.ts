@@ -6,6 +6,7 @@ import { RouterLink } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faBars, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { ButtonComponent } from '../../shared/button/button';
+import { ThemeToggleComponent } from '../../shared/theme-toggle/theme-toggle';
 import { UserCardComponent } from '../../shared/user-card/user-card';
 import { AuthModalService } from '../../../services/auth-modal.service';
 import { AuthService } from '../../../services/auth.service';
@@ -16,7 +17,7 @@ import { SidebarService } from '../../../services/sidebar.service';
 // --------------------------------------------------------------------------
 @Component({
   selector: 'app-header',
-  imports: [RouterLink, ButtonComponent, UserCardComponent, FaIconComponent],
+  imports: [RouterLink, ButtonComponent, ThemeToggleComponent, UserCardComponent, FaIconComponent],
   templateUrl: './header.html',
   styleUrl: './header.scss',
 })

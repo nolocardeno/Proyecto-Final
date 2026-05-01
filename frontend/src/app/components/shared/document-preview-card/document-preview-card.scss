@@ -4,10 +4,10 @@
 .preview-card {
   display: flex;
   flex-direction: column;
-  background-color: v.$color-accent-secondary;
-  border: v.$border-thin solid v.$color-modal-border;
+  background-color: var(--color-accent-secondary);
+  border: v.$border-thin solid var(--color-modal-border);
   border-radius: v.$radius-card;
-  box-shadow: v.$shadow-card;
+  box-shadow: var(--shadow-card);
   overflow: hidden;
 
   &__header {
@@ -19,7 +19,7 @@
     font-family: v.$font-primary;
     font-weight: v.$font-weight-bold;
     font-size: v.$font-size-md;
-    color: v.$neutral-900;
+    color: var(--color-text-primary);
     line-height: v.$line-height-tight;
   }
 
@@ -50,18 +50,18 @@
     margin: 0;
     font-family: v.$font-primary;
     font-size: v.$font-size-md;
-    color: v.$neutral-500;
+    color: var(--color-text-faint);
     opacity: 0.6;
   }
 
   &__empty-icon {
     font-size: v.$font-size-6xl;
-    color: v.$neutral-400;
+    color: var(--color-text-disabled);
   }
 
   &__empty-text {
     font-family: v.$font-primary;
     font-size: v.$font-size-md;
-    color: v.$neutral-500;
+    color: var(--color-text-faint);
   }
 }

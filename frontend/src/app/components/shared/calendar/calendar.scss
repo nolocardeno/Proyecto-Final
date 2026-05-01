@@ -14,8 +14,8 @@
   display: flex;
   flex-direction: column;
   gap: v.$spacing-half;
-  background-color: v.$color-surface;
-  border: v.$border-thin solid v.$color-modal-border;
+  background-color: var(--color-surface);
+  border: v.$border-thin solid var(--color-modal-border);
   border-radius: v.$radius-card;
   padding: v.$spacing-1;
   width: 16rem;
@@ -36,7 +36,7 @@
   font-family: v.$font-primary;
   font-weight: v.$font-weight-bold;
   font-size: v.$font-size-sm-md;
-  color: v.$neutral-900;
+  color: var(--color-text-primary);
   text-transform: capitalize;
   margin: 0;
 }
@@ -49,14 +49,14 @@
   height: 1.25rem;
   border: none;
   border-radius: v.$radius-full;
-  background-color: v.$color-input-bg;
-  color: v.$neutral-900;
+  background-color: var(--color-input-bg);
+  color: var(--color-text-primary);
   font-size: v.$font-size-xs;
   cursor: pointer;
   transition: background-color v.$transition-fast;
 
   &:hover {
-    background-color: v.$color-input-border;
+    background-color: var(--color-input-border);
   }
 }
 
@@ -76,7 +76,7 @@
   font-family: v.$font-primary;
   font-weight: v.$font-weight-semibold;
   font-size: v.$font-size-xs;
-  color: v.$color-text-muted;
+  color: var(--color-text-muted);
   text-align: center;
   padding-block: v.$spacing-half;
 }
@@ -111,7 +111,7 @@
   font-family: v.$font-primary;
   font-weight: v.$font-weight-medium;
   font-size: v.$font-size-xs;
-  color: v.$neutral-900;
+  color: var(--color-text-primary);
   cursor: pointer;
   padding: 0;
   transition:
@@ -120,11 +120,11 @@
     transform v.$transition-fast;
 
   &:hover {
-    background-color: v.$color-input-bg;
+    background-color: var(--color-input-bg);
   }
 
   &--outside {
-    color: v.$color-placeholder;
+    color: var(--color-placeholder);
   }
 
   &--today {
@@ -133,9 +133,9 @@
 
   &--selected {
     background: v.$color-gradient-primary;
-    color: v.$neutral-900;
+    color: var(--color-text-primary);
     font-weight: v.$font-weight-bold;
-    box-shadow: v.$shadow-card;
+    box-shadow: var(--shadow-card);
   }
 
   &--selected:hover {

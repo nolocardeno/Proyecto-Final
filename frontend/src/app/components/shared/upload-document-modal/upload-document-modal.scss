@@ -21,10 +21,10 @@
     max-width: 95vw;
     max-height: 90vh;
     overflow-y: auto;
-    background-color: v.$color-surface;
-    border: v.$border-thin solid v.$color-modal-border;
+    background-color: var(--color-surface);
+    border: v.$border-thin solid var(--color-modal-border);
     border-radius: v.$radius-card;
-    box-shadow: v.$shadow-card;
+    box-shadow: var(--shadow-card);
     animation: card-in v.$transition-base;
   }
 
@@ -52,7 +52,7 @@
     font-family: v.$font-primary;
     font-weight: v.$font-weight-bold;
     font-size: v.$font-size-xl;
-    color: v.$neutral-900;
+    color: var(--color-text-primary);
     text-align: center;
     margin: 0;
   }
@@ -76,7 +76,7 @@
     font-family: v.$font-primary;
     font-weight: v.$font-weight-bold;
     font-size: v.$font-size-md;
-    color: v.$neutral-900;
+    color: var(--color-text-primary);
     cursor: pointer;
     padding: v.$spacing-1 0;
     transition: opacity v.$transition-fast;
@@ -103,7 +103,7 @@
     font-family: v.$font-primary;
     font-weight: v.$font-weight-bold;
     font-size: v.$font-size-md;
-    color: v.$neutral-900;
+    color: var(--color-text-primary);
     margin: 0;
   }
 
@@ -126,7 +126,7 @@
     border: none;
     height: v.$border-thin;
     width: 100%;
-    background-color: v.$neutral-900;
+    background-color: var(--color-text-primary);
     opacity: 0.2;
     margin: 0;
   }
@@ -176,7 +176,7 @@
     font-family: v.$font-primary;
     font-weight: v.$font-weight-bold;
     font-size: v.$font-size-md;
-    color: v.$neutral-900;
+    color: var(--color-text-primary);
   }
 
   // --------------------------------------------------------------------------
@@ -185,17 +185,17 @@
   &__custom-input {
     width: 100%;
     padding: v.$spacing-2 v.$spacing-3;
-    background-color: v.$color-input-bg;
+    background-color: var(--color-input-bg);
     border: v.$border-thin solid v.$neutral-200;
     border-radius: v.$radius-input;
     font-family: v.$font-primary;
     font-size: v.$font-size-md;
-    color: v.$neutral-900;
+    color: var(--color-text-primary);
     box-sizing: border-box;
     transition: border-color v.$transition-fast;
 
     &::placeholder {
-      color: v.$neutral-400;
+      color: var(--color-text-disabled);
     }
 
     &:focus {

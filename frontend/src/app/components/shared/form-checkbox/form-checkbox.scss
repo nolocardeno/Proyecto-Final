@@ -26,8 +26,8 @@
   &__box {
     width: 1.5rem;
     height: 1.5rem;
-    background-color: v.$color-input-bg;
-    border: v.$border-thin solid v.$color-input-border;
+    background-color: var(--color-input-bg);
+    border: v.$border-thin solid var(--color-input-border);
     border-radius: v.$radius-checkbox;
     display: flex;
     align-items: center;
@@ -75,6 +75,6 @@
     font-family: v.$font-primary;
     font-weight: v.$font-weight-bold;
     font-size: v.$font-size-md;
-    color: v.$neutral-900;
+    color: var(--color-text-primary);
   }
 }

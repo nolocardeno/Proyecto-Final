@@ -1,10 +1,10 @@
 @use '../../../../styles/00-settings/variables' as v;
 
 .info-card {
-  background-color: v.$color-accent-secondary;
-  border: v.$border-thin solid v.$color-modal-border;
+  background-color: var(--color-accent-secondary);
+  border: v.$border-thin solid var(--color-modal-border);
   border-radius: v.$radius-card;
-  box-shadow: v.$shadow-card;
+  box-shadow: var(--shadow-card);
   padding: v.$spacing-3;
 
   &__defs {
@@ -33,7 +33,7 @@
     font-family: v.$font-primary;
     font-weight: v.$font-weight-bold;
     font-size: v.$font-size-md-lg;
-    color: v.$neutral-900;
+    color: var(--color-text-primary);
     line-height: v.$line-height-tight;
   }
 
@@ -48,7 +48,7 @@
     flex-direction: column;
     gap: 0.125rem;
     padding: v.$spacing-1 0;
-    border-bottom: v.$border-thin solid v.$color-modal-border;
+    border-bottom: v.$border-thin solid var(--color-modal-border);
 
     &:first-child { padding-top: 0; }
     &:last-child  { border-bottom: none; padding-bottom: 0; }
@@ -58,7 +58,7 @@
     font-family: v.$font-primary;
     font-weight: v.$font-weight-semibold;
     font-size: v.$font-size-sm;
-    color: v.$neutral-500;
+    color: var(--color-text-faint);
     text-transform: uppercase;
     letter-spacing: 0.06em;
   }
@@ -67,6 +67,6 @@
     font-family: v.$font-primary;
     font-weight: v.$font-weight-regular;
     font-size: v.$font-size-sm;
-    color: v.$neutral-900;
+    color: var(--color-text-primary);
   }
 }

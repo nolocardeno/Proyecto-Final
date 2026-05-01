@@ -35,7 +35,7 @@
   align-items: center;
   justify-content: center;
   border-radius: v.$radius-card;
-  box-shadow: v.$shadow-card;
+  box-shadow: var(--shadow-card);
   backface-visibility: hidden;
   transition:
     transform v.$transition-slow,
@@ -54,7 +54,7 @@
 // FRONTAL
 // --------------------------------------------------------------------------
 .feature-card__front {
-  background: v.$color-gradient-accent;
+  background: var(--color-gradient-accent);
 }
 
 .feature-card--flipped .feature-card__front {
@@ -65,7 +65,7 @@
 // TRASERA
 // --------------------------------------------------------------------------
 .feature-card__back {
-  background: v.$color-gradient-accent;
+  background: var(--color-gradient-accent);
   transform: rotateY(-180deg);
   padding-inline: v.$spacing-3;
 }
@@ -79,14 +79,14 @@
 // --------------------------------------------------------------------------
 .feature-card__icon {
   font-size: 2.5rem;
-  color: v.$neutral-700;
+  color: var(--color-text-muted);
   margin-bottom: v.$spacing-1;
 }
 
 .feature-card__text {
   font-weight: v.$font-weight-bold;
   font-size: v.$font-size-md;
-  color: v.$neutral-800;
+  color: var(--color-text-body);
   text-align: center;
   max-width: 13.125rem;
 }
@@ -94,7 +94,7 @@
 .feature-card__description {
   font-weight: v.$font-weight-medium;
   font-size: v.$font-size-md;
-  color: v.$neutral-900;
+  color: var(--color-text-primary);
   text-align: center;
   line-height: v.$line-height-tight;
 }

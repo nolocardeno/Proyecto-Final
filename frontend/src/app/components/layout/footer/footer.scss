@@ -12,8 +12,8 @@
   gap: v.$spacing-2;
   min-height: v.$spacing-footer;
   padding: v.$spacing-2 v.$spacing-3;
-  background-color: v.$color-surface;
-  border-top: v.$border-thin solid v.$color-surface-border;
+  background-color: var(--color-surface);
+  border-top: v.$border-thin solid var(--color-surface-border);
 
   @include m.respond-to(sm) {
     gap: v.$spacing-3;
@@ -58,7 +58,7 @@
   font-family: v.$font-primary;
   font-size: v.$font-size-sm;
   font-weight: v.$font-weight-regular;
-  color: v.$neutral-800;
+  color: var(--color-text-body);
   white-space: nowrap;
 
   @include m.respond-to(sm) {
@@ -78,7 +78,7 @@
 .footer__divider {
   width: v.$border-thin;
   height: 2rem;
-  background-color: v.$color-surface-border;
+  background-color: var(--color-surface-border);
 
   @include m.respond-to(sm) {
     height: 2.1875rem; // 35px
@@ -107,14 +107,14 @@
   justify-content: center;
   width: 2.75rem;   // 44px touch target
   height: 2.75rem;
-  color: v.$neutral-700;
+  color: var(--color-text-muted);
   font-size: 1.5rem;
   transition:
     color v.$transition-fast,
     transform v.$transition-fast;
 
   &:hover {
-    color: v.$neutral-900;
+    color: var(--color-text-primary);
     transform: scale(1.15);
   }
 }

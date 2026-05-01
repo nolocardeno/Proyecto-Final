@@ -112,10 +112,10 @@
 .document-detail__preview-card {
   display: flex;
   flex-direction: column;
-  background-color: v.$color-accent-secondary;
-  border: v.$border-thin solid v.$color-modal-border;
+  background-color: var(--color-accent-secondary);
+  border: v.$border-thin solid var(--color-modal-border);
   border-radius: v.$radius-card;
-  box-shadow: v.$shadow-card;
+  box-shadow: var(--shadow-card);
   overflow: hidden;
 }
 
@@ -128,7 +128,7 @@
   font-family: v.$font-primary;
   font-weight: v.$font-weight-bold;
   font-size: v.$font-size-md;
-  color: v.$neutral-900;
+  color: var(--color-text-primary);
   line-height: v.$line-height-tight;
 }
 
@@ -157,7 +157,7 @@
   position: fixed;
   inset: 0;
   z-index: 1000;
-  background-color: rgba(v.$neutral-900, 0.85);
+  background-color: var(--color-overlay);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -186,7 +186,7 @@
   padding: v.$spacing-4;
   font-family: v.$font-primary;
   font-size: v.$font-size-sm;
-  color: v.$neutral-500;
+  color: var(--color-text-faint);
 }
 
 // --------------------------------------------------------------------------
@@ -209,10 +209,10 @@
 // CARD GENÉRICA (información)
 // --------------------------------------------------------------------------
 .document-detail__card {
-  background-color: v.$color-accent-secondary;
-  border: v.$border-thin solid v.$color-modal-border;
+  background-color: var(--color-accent-secondary);
+  border: v.$border-thin solid var(--color-modal-border);
   border-radius: v.$radius-card;
-  box-shadow: v.$shadow-card;
+  box-shadow: var(--shadow-card);
   padding: v.$spacing-3;
 }
 
@@ -245,7 +245,7 @@
   font-family: v.$font-primary;
   font-weight: v.$font-weight-bold;
   font-size: v.$font-size-md-lg;
-  color: v.$neutral-900;
+  color: var(--color-text-primary);
   line-height: v.$line-height-tight;
 }
 
@@ -263,7 +263,7 @@
   flex-direction: column;
   gap: 0.125rem;
   padding: v.$spacing-1 0;
-  border-bottom: v.$border-thin solid v.$color-modal-border;
+  border-bottom: v.$border-thin solid var(--color-modal-border);
 
   &:first-child {
     padding-top: 0;
@@ -279,7 +279,7 @@
   font-family: v.$font-primary;
   font-weight: v.$font-weight-semibold;
   font-size: v.$font-size-sm;
-  color: v.$neutral-500;
+  color: var(--color-text-faint);
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
@@ -288,17 +288,17 @@
   font-family: v.$font-primary;
   font-weight: v.$font-weight-regular;
   font-size: v.$font-size-sm;
-  color: v.$neutral-900;
+  color: var(--color-text-primary);
 }
 
 // --------------------------------------------------------------------------
 // CARD DE ESTADO
 // --------------------------------------------------------------------------
 .document-detail__status-card {
-  background-color: v.$color-accent-secondary;
-  border: v.$border-thin solid v.$color-modal-border;
+  background-color: var(--color-accent-secondary);
+  border: v.$border-thin solid var(--color-modal-border);
   border-radius: v.$radius-card;
-  box-shadow: v.$shadow-card;
+  box-shadow: var(--shadow-card);
   padding: v.$spacing-3;
 }
 
@@ -321,7 +321,7 @@
   border-radius: v.$radius-full;
   font-size: v.$font-size-md-lg;
   flex-shrink: 0;
-  color: v.$color-accent-secondary;
+  color: var(--color-accent-secondary);
 
   &--expired {
     background-color: v.$color-error;
@@ -342,7 +342,7 @@
   font-family: v.$font-primary;
   font-weight: v.$font-weight-bold;
   font-size: v.$font-size-md;
-  color: v.$neutral-900;
+  color: var(--color-text-primary);
   line-height: v.$line-height-tight;
 }
 
@@ -357,7 +357,7 @@
   }
 
   &--active {
-    color: v.$neutral-700;
+    color: var(--color-text-muted);
   }
 }
 
@@ -366,7 +366,7 @@
 // --------------------------------------------------------------------------
 .document-detail__divider {
   border: none;
-  border-top: v.$border-thin solid rgba(v.$neutral-900, 0.12);
+  border-top: v.$border-thin solid var(--color-divider);
   margin: 0 0 v.$spacing-2;
 }
 
@@ -390,14 +390,14 @@
   font-family: v.$font-primary;
   font-weight: v.$font-weight-regular;
   font-size: v.$font-size-sm;
-  color: v.$neutral-700;
+  color: var(--color-text-muted);
 }
 
 .document-detail__date-value {
   font-family: v.$font-primary;
   font-weight: v.$font-weight-bold;
   font-size: v.$font-size-sm;
-  color: v.$neutral-900;
+  color: var(--color-text-primary);
 }
 
 // --------------------------------------------------------------------------
@@ -406,7 +406,7 @@
 .document-detail__placeholder {
   font-family: v.$font-primary;
   font-size: v.$font-size-md;
-  color: v.$neutral-500;
+  color: var(--color-text-faint);
   padding: v.$spacing-4;
 }
 
@@ -474,7 +474,7 @@
 .document-detail__alerts-subtitle {
   font-family: v.$font-primary;
   font-size: v.$font-size-sm;
-  color: v.$neutral-500;
+  color: var(--color-text-faint);
   line-height: v.$line-height-normal;
 }
 
@@ -485,7 +485,7 @@
   font-family: v.$font-primary;
   font-weight: v.$font-weight-semibold;
   font-size: v.$font-size-sm;
-  color: v.$neutral-500;
+  color: var(--color-text-faint);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   margin-bottom: 0.25rem;
@@ -553,7 +553,7 @@
   height: 5.5rem;
   font-family: v.$font-primary;
   font-size: v.$font-size-sm;
-  color: v.$neutral-400;
+  color: var(--color-text-disabled);
   font-style: italic;
   white-space: nowrap;
 }
@@ -633,12 +633,12 @@
   width: 10rem;
   height: 2.625rem;
   padding: 0 v.$spacing-2;
-  background-color: v.$color-input-bg;
-  border: v.$border-thin solid v.$color-input-border;
+  background-color: var(--color-input-bg);
+  border: v.$border-thin solid var(--color-input-border);
   border-radius: v.$radius-input;
   font-family: v.$font-primary;
   font-size: v.$font-size-sm-md;
-  color: v.$neutral-900;
+  color: var(--color-text-primary);
   outline: none;
 
   &:focus {
@@ -647,7 +647,7 @@
   }
 
   &::placeholder {
-    color: v.$color-placeholder;
+    color: var(--color-placeholder);
   }
 }
 
@@ -662,23 +662,23 @@
   gap: v.$spacing-half;
   width: 5.5rem;
   height: 5.5rem;
-  background: v.$color-gradient-accent;
-  border: v.$border-thin solid v.$color-input-border;
+  background: var(--color-gradient-accent);
+  border: v.$border-thin solid var(--color-input-border);
   border-radius: v.$radius-card;
-  box-shadow: v.$shadow-card;
+  box-shadow: var(--shadow-card);
   cursor: pointer;
-  color: v.$neutral-700;
+  color: var(--color-text-muted);
   @include m.hover-elevation;
 
   &--active {
     background: v.$color-gradient-primary;
     border-color: transparent;
-    color: v.$neutral-900;
+    color: var(--color-text-primary);
 
     .document-detail__alert-btn-icon,
     .document-detail__alert-btn-days,
     .document-detail__alert-btn-label {
-      color: v.$neutral-900;
+      color: var(--color-text-primary);
       opacity: 1;
     }
   }
@@ -716,7 +716,7 @@
   gap: v.$spacing-1;
   font-family: v.$font-primary;
   font-size: v.$font-size-sm;
-  color: v.$neutral-500;
+  color: var(--color-text-faint);
   padding: v.$spacing-2;
   background-color: v.$color-warning-light;
   border: v.$border-thin solid v.$color-warning;
@@ -744,8 +744,8 @@
   gap: v.$spacing-2;
   width: 100%;
   padding: v.$spacing-1 v.$spacing-2;
-  background-color: v.$color-input-bg;
-  border: v.$border-thin solid v.$color-input-border;
+  background-color: var(--color-input-bg);
+  border: v.$border-thin solid var(--color-input-border);
   border-radius: v.$radius-card;
   cursor: pointer;
   text-align: left;
@@ -761,7 +761,7 @@
     font-size: v.$font-size-md-lg;
     flex-shrink: 0;
     background: v.$color-gradient-primary;
-    color: v.$color-accent-secondary;
+    color: var(--color-accent-secondary);
   }
 
   &-body {
@@ -776,13 +776,13 @@
     font-family: v.$font-primary;
     font-size: v.$font-size-sm-md;
     font-weight: v.$font-weight-semibold;
-    color: v.$neutral-900;
+    color: var(--color-text-primary);
   }
 
   &-desc {
     font-family: v.$font-primary;
     font-size: v.$font-size-sm;
-    color: v.$neutral-500;
+    color: var(--color-text-faint);
     @include m.truncate(1);
   }
 

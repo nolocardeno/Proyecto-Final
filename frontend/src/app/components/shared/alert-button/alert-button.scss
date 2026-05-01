@@ -9,23 +9,23 @@
   gap: v.$spacing-half;
   width: 5.5rem;
   height: 5.5rem;
-  background: v.$color-gradient-accent;
-  border: v.$border-thin solid v.$color-input-border;
+  background: var(--color-gradient-accent);
+  border: v.$border-thin solid var(--color-input-border);
   border-radius: v.$radius-card;
-  box-shadow: v.$shadow-card;
+  box-shadow: var(--shadow-card);
   cursor: pointer;
-  color: v.$neutral-700;
+  color: var(--color-text-muted);
   @include m.hover-elevation;
 
   &--active {
     background: v.$color-gradient-primary;
     border-color: transparent;
-    color: v.$neutral-900;
+    color: var(--color-text-primary);
 
     .alert-btn__icon,
     .alert-btn__days,
     .alert-btn__label {
-      color: v.$neutral-900;
+      color: var(--color-text-primary);
       opacity: 1;
     }
   }

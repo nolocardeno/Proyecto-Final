@@ -29,10 +29,10 @@
   width: 100%;
   min-height: 12.4375rem; // 199px
   overflow: hidden;
-  background-color: v.$color-accent-secondary;
-  border: v.$border-thin solid v.$color-modal-border;
+  background-color: var(--color-accent-secondary);
+  border: v.$border-thin solid var(--color-modal-border);
   border-radius: v.$radius-lg + 0.125rem; // 10px
-  box-shadow: v.$shadow-card;
+  box-shadow: var(--shadow-card);
   transition:
     transform v.$transition-fast,
     box-shadow v.$transition-fast;
@@ -99,13 +99,13 @@
   flex-shrink: 0;
   max-width: 40%;
   padding: 0.1875rem 0.5rem;
-  background: linear-gradient(to right, v.$color-accent-secondary, v.$color-accent-primary);
+  background: linear-gradient(to right, var(--color-accent-secondary), var(--color-accent-primary));
   border-radius: v.$radius-lg + 0.125rem; // 10px
-  box-shadow: v.$shadow-card;
+  box-shadow: var(--shadow-card);
   font-family: v.$font-primary;
   font-weight: v.$font-weight-bold;
   font-size: 0.8125rem; // 13px
-  color: v.$neutral-900;
+  color: var(--color-text-primary);
   text-align: center;
   text-transform: uppercase;
   white-space: nowrap;
@@ -120,7 +120,7 @@
   font-family: v.$font-primary;
   font-weight: v.$font-weight-bold;
   font-size: v.$font-size-md; // 16px
-  color: v.$neutral-900;
+  color: var(--color-text-primary);
   line-height: v.$line-height-tight;
   min-width: 0;
   @include m.truncate(1);
@@ -149,12 +149,12 @@
   font-family: v.$font-primary;
   font-size: v.$font-size-sm;
   font-weight: v.$font-weight-medium;
-  color: v.$color-text-secondary;
+  color: var(--color-text-secondary);
   min-width: 0;
 
   strong {
     font-weight: v.$font-weight-bold;
-    color: v.$neutral-900;
+    color: var(--color-text-primary);
     flex-shrink: 0;
   }
 
@@ -220,7 +220,7 @@
   font-family: v.$font-primary;
   font-weight: v.$font-weight-bold;
   font-size: 0.8125rem; // 13px
-  color: v.$neutral-900;
+  color: var(--color-text-primary);
 
   &--expired {
     color: v.$color-error;

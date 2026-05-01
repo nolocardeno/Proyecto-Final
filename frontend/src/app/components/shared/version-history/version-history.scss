@@ -12,10 +12,10 @@
 // CONTENEDOR PRINCIPAL
 // --------------------------------------------------------------------------
 .version-history {
-  background-color: v.$color-accent-secondary;
-  border: v.$border-thin solid v.$color-modal-border;
+  background-color: var(--color-accent-secondary);
+  border: v.$border-thin solid var(--color-modal-border);
   border-radius: v.$radius-card;
-  box-shadow: v.$shadow-card;
+  box-shadow: var(--shadow-card);
   padding: v.$spacing-3;
   display: flex;
   flex-direction: column;
@@ -58,20 +58,20 @@
     font-family: v.$font-primary;
     font-weight: v.$font-weight-bold;
     font-size: v.$font-size-md-lg;
-    color: v.$neutral-900;
+    color: var(--color-text-primary);
     line-height: v.$line-height-tight;
   }
 
   &__subtitle {
     font-family: v.$font-primary;
     font-size: v.$font-size-sm;
-    color: v.$neutral-500;
+    color: var(--color-text-faint);
     line-height: v.$line-height-normal;
   }
 
   &__divider {
     border: none;
-    border-top: v.$border-thin solid rgba(v.$neutral-900, 0.12);
+    border-top: v.$border-thin solid var(--color-divider);
     margin: 0;
   }
 
@@ -81,7 +81,7 @@
   &__empty {
     font-family: v.$font-primary;
     font-size: v.$font-size-sm-md;
-    color: v.$neutral-500;
+    color: var(--color-text-faint);
     text-align: center;
     padding: v.$spacing-4 0;
   }
@@ -128,8 +128,8 @@
     width: 2rem;
     height: 2rem;
     border-radius: v.$radius-full;
-    background-color: v.$color-input-bg;
-    color: v.$neutral-500;
+    background-color: var(--color-input-bg);
+    color: var(--color-text-faint);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -145,7 +145,7 @@
     grid-column: 2;
     grid-row: 2;
     width: v.$border-thin;
-    background-color: v.$color-modal-border;
+    background-color: var(--color-modal-border);
     justify-self: center;
     min-height: v.$spacing-2;
   }
@@ -161,8 +161,8 @@
   &__card {
     grid-column: 3;
     grid-row: 1 / 3;
-    background-color: v.$neutral-50;
-    border: v.$border-thin solid v.$color-modal-border;
+    background-color: var(--color-surface);
+    border: v.$border-thin solid var(--color-modal-border);
     border-radius: v.$radius-lg;
     padding: v.$spacing-2;
     margin-bottom: v.$spacing-2;
@@ -187,14 +187,14 @@
     font-family: v.$font-primary;
     font-weight: v.$font-weight-semibold;
     font-size: v.$font-size-sm-md;
-    color: v.$neutral-900;
+    color: var(--color-text-primary);
     line-height: v.$line-height-tight;
   }
 
   &__description {
     font-family: v.$font-primary;
     font-size: v.$font-size-sm;
-    color: v.$neutral-600;
+    color: var(--color-text-faint);
     line-height: v.$line-height-normal;
     white-space: pre-line;
   }
@@ -236,12 +236,12 @@
     gap: v.$spacing-half;
     font-family: v.$font-primary;
     font-size: v.$font-size-sm;
-    color: v.$neutral-500;
+    color: var(--color-text-faint);
   }
 
   &__time {
     font-family: v.$font-primary;
     font-size: v.$font-size-sm;
-    color: v.$neutral-400;
+    color: var(--color-text-disabled);
   }
 }

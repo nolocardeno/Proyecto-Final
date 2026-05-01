@@ -39,11 +39,11 @@
     min-width: 2.25rem;
     height: 2.25rem;
     padding-inline: v.$spacing-1;
-    background: v.$color-gradient-accent;
-    color: v.$neutral-900;
+    background: var(--color-gradient-accent);
+    color: var(--color-text-primary);
     border: none;
     border-radius: v.$radius-full;
-    box-shadow: v.$shadow-card;
+    box-shadow: var(--shadow-card);
     cursor: pointer;
     font-family: v.$font-primary;
     font-size: v.$font-size-sm-md;
@@ -92,7 +92,7 @@
     @include m.flex-center(row);
     min-width: 2.25rem;
     height: 2.25rem;
-    color: v.$color-text-secondary;
+    color: var(--color-text-secondary);
     font-size: v.$font-size-md;
     font-weight: v.$font-weight-bold;
     user-select: none;

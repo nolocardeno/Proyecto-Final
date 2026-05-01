@@ -65,10 +65,10 @@
 // CARD GENÉRICA
 // --------------------------------------------------------------------------
 .settings__card {
-  background-color: v.$color-accent-secondary;
-  border: v.$border-thin solid v.$color-modal-border;
+  background-color: var(--color-accent-secondary);
+  border: v.$border-thin solid var(--color-modal-border);
   border-radius: v.$radius-card;
-  box-shadow: v.$shadow-card;
+  box-shadow: var(--shadow-card);
   padding: v.$spacing-4;
   min-width: 0;
 

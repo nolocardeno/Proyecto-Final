@@ -19,10 +19,10 @@
   width: 100%;
   height: 3.125rem;
   padding: 0 v.$spacing-3;
-  background: v.$color-gradient-accent;
+  background: var(--color-gradient-accent);
   border: none;
   border-radius: v.$radius-input;
-  box-shadow: v.$shadow-card;
+  box-shadow: var(--shadow-card);
   cursor: pointer;
   font-family: v.$font-primary;
   @include m.hover-elevation;
@@ -34,7 +34,7 @@
 
   &__icon {
     font-size: v.$font-size-lg;
-    color: v.$neutral-900;
+    color: var(--color-text-primary);
     width: 2.125rem;
     flex-shrink: 0;
   }
@@ -42,6 +42,6 @@
   &__label {
     font-size: v.$font-size-md;
     font-weight: v.$font-weight-bold;
-    color: v.$neutral-900;
+    color: var(--color-text-primary);
   }
 }

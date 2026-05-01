@@ -15,11 +15,11 @@
   @include m.flex-center;
   width: 2.875rem;
   height: 2.875rem;
-  background: v.$color-gradient-accent;
+  background: var(--color-gradient-accent);
   border-radius: v.$radius-lg;
-  box-shadow: v.$shadow-card;
+  box-shadow: var(--shadow-card);
   cursor: pointer;
-  color: v.$neutral-900;
+  color: var(--color-text-primary);
   font-size: v.$font-size-md-lg;
   @include m.hover-elevation;
 

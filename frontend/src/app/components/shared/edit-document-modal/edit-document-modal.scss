@@ -23,10 +23,10 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    background-color: v.$color-surface;
-    border: v.$border-thin solid v.$color-modal-border;
+    background-color: var(--color-surface);
+    border: v.$border-thin solid var(--color-modal-border);
     border-radius: v.$radius-card;
-    box-shadow: v.$shadow-card;
+    box-shadow: var(--shadow-card);
     animation: card-in v.$transition-base;
   }
 
@@ -47,7 +47,7 @@
     font-family: v.$font-primary;
     font-weight: v.$font-weight-bold;
     font-size: v.$font-size-xl;
-    color: v.$neutral-900;
+    color: var(--color-text-primary);
     text-align: center;
     margin: 0;
   }
@@ -62,7 +62,7 @@
     padding: v.$spacing-4;
     overflow-y: auto;
     flex: 1;
-    background-color: v.$color-surface;
+    background-color: var(--color-surface);
   }
 
   // --------------------------------------------------------------------------
@@ -78,18 +78,18 @@
     font-family: v.$font-primary;
     font-size: v.$font-size-md;
     font-weight: v.$font-weight-bold;
-    color: v.$neutral-900;
+    color: var(--color-text-primary);
   }
 
   &__select {
     height: 2.5rem;
     padding: 0 v.$spacing-2;
-    background-color: v.$color-input-bg;
-    border: v.$border-thin solid v.$color-input-border;
+    background-color: var(--color-input-bg);
+    border: v.$border-thin solid var(--color-input-border);
     border-radius: v.$radius-sm;
     font-family: v.$font-primary;
     font-size: v.$font-size-md;
-    color: v.$neutral-900;
+    color: var(--color-text-primary);
     cursor: pointer;
     outline: none;
 
@@ -104,12 +104,12 @@
   &__custom-input {
     height: 2.5rem;
     padding: 0 v.$spacing-2;
-    background-color: v.$color-input-bg;
-    border: v.$border-thin solid v.$color-input-border;
+    background-color: var(--color-input-bg);
+    border: v.$border-thin solid var(--color-input-border);
     border-radius: v.$radius-sm;
     font-family: v.$font-primary;
     font-size: v.$font-size-md;
-    color: v.$neutral-900;
+    color: var(--color-text-primary);
     outline: none;
     width: 100%;
 
@@ -118,7 +118,7 @@
     }
 
     &::placeholder {
-      color: v.$color-placeholder;
+      color: var(--color-placeholder);
     }
   }
 
@@ -128,7 +128,7 @@
   &__separator {
     border: none;
     height: 1px;
-    background-color: v.$neutral-900;
+    background-color: var(--color-text-primary);
     opacity: 0.2;
     margin: 0;
     flex-shrink: 0;

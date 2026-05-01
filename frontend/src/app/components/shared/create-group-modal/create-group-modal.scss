@@ -37,7 +37,7 @@
   &__separator {
     border: none;
     height: v.$border-thin;
-    background-color: v.$neutral-900;
+    background-color: var(--color-text-primary);
     opacity: 0.2;
     margin: 0;
   }

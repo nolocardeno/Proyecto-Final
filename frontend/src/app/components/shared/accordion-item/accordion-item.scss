@@ -7,9 +7,9 @@
 .accordion-item {
   position: relative;
   border-radius: v.$radius-card;
-  box-shadow: v.$shadow-card;
+  box-shadow: var(--shadow-card);
   overflow: hidden;
-  background: v.$color-gradient-accent;
+  background: var(--color-gradient-accent);
   @include m.hover-elevation;
 
   // Capa de gradiente naranja para transición suave
@@ -51,7 +51,7 @@
   font-family: inherit;
   font-weight: v.$font-weight-bold;
   font-size: v.$font-size-md-lg;
-  color: v.$neutral-900;
+  color: var(--color-text-primary);
   text-align: left;
 }
 
@@ -78,7 +78,7 @@
   display: grid;
   grid-template-rows: 0fr;
   transition: grid-template-rows v.$transition-base;
-  background-color: v.$color-surface;
+  background-color: var(--color-surface);
 }
 
 .accordion-item__body--open {
@@ -94,6 +94,6 @@
   padding: v.$spacing-1 v.$spacing-3;
   font-weight: v.$font-weight-bold;
   font-size: v.$font-size-md;
-  color: v.$neutral-900;
+  color: var(--color-text-primary);
   line-height: v.$line-height-normal;
 }

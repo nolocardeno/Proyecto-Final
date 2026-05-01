@@ -56,5 +56,5 @@
 .groups__empty {
   font-family: v.$font-primary;
   font-size: v.$font-size-md;
-  color: v.$neutral-500;
+  color: var(--color-text-faint);
 }

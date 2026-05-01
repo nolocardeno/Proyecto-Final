@@ -40,12 +40,12 @@
     gap: v.$spacing-1;
     min-height: 8.75rem;
     padding: v.$spacing-2;
-    background-color: v.$color-accent-secondary;
-    border: v.$border-thin solid v.$color-modal-border;
+    background-color: var(--color-accent-secondary);
+    border: v.$border-thin solid var(--color-modal-border);
     border-radius: v.$radius-card;
-    box-shadow: v.$shadow-card;
+    box-shadow: var(--shadow-card);
     cursor: pointer;
-    color: v.$neutral-900;
+    color: var(--color-text-primary);
     font-family: v.$font-primary;
     transition:
       background v.$transition-base,
@@ -77,7 +77,7 @@
       background: linear-gradient(to right, v.$color-primary, v.$color-secondary);
 
       .filter-bar__icon {
-        color: v.$neutral-900;
+        color: var(--color-text-primary);
 
         ::ng-deep svg path {
           fill: v.$neutral-900;

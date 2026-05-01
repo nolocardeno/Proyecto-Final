@@ -21,21 +21,22 @@
 // --------------------------------------------------------------------------
 .btn--primary {
   background: v.$color-gradient-primary;
+  // Texto fijo oscuro: el gradiente de marca permanece claro en ambos temas.
   color: v.$neutral-900;
   border-radius: v.$radius-pill;
-  box-shadow: v.$shadow-card;
+  box-shadow: var(--shadow-card);
 }
 
 .btn--secondary {
   background: transparent;
-  color: v.$neutral-900;
+  color: var(--color-text-primary);
   border: v.$border-medium solid v.$color-primary;
   border-radius: v.$radius-pill;
 }
 
 .btn--ghost {
   background: transparent;
-  color: v.$neutral-900;
+  color: var(--color-text-primary);
   border-radius: v.$radius-pill;
 }
 
@@ -43,10 +44,10 @@
 // VARIANTE: HEADER TEXT (botón con texto para page-header)
 // --------------------------------------------------------------------------
 .btn--text {
-  background: v.$color-gradient-accent;
-  color: v.$neutral-900;
+  background: var(--color-gradient-accent);
+  color: var(--color-text-primary);
   border-radius: v.$radius-pill;
-  box-shadow: v.$shadow-card;
+  box-shadow: var(--shadow-card);
   height: v.$spacing-7;
   padding-inline: v.$spacing-3;
   font-size: v.$font-size-md;
@@ -57,10 +58,10 @@
 // VARIANTE: HEADER ICON (botón circular con icono para page-header)
 // --------------------------------------------------------------------------
 .btn--icon {
-  background: v.$color-gradient-accent;
-  color: v.$neutral-900;
+  background: var(--color-gradient-accent);
+  color: var(--color-text-primary);
   border-radius: v.$radius-full;
-  box-shadow: v.$shadow-card;
+  box-shadow: var(--shadow-card);
   width: v.$spacing-7;
   height: v.$spacing-7;
   padding: 0;
@@ -71,10 +72,10 @@
 // VARIANTE: CARD (botón embebido en tarjetas, 36px alto, ancho completo)
 // --------------------------------------------------------------------------
 .btn--card {
-  background: v.$color-gradient-accent;
-  color: v.$neutral-900;
+  background: var(--color-gradient-accent);
+  color: var(--color-text-primary);
   border-radius: v.$radius-pill;
-  box-shadow: v.$shadow-card;
+  box-shadow: var(--shadow-card);
   width: 100%;
   height: 2.25rem; // 36px
   font-size: v.$font-size-md;

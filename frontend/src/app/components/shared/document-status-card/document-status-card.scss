@@ -1,10 +1,10 @@
 @use '../../../../styles/00-settings/variables' as v;
 
 .status-card {
-  background-color: v.$color-accent-secondary;
-  border: v.$border-thin solid v.$color-modal-border;
+  background-color: var(--color-accent-secondary);
+  border: v.$border-thin solid var(--color-modal-border);
   border-radius: v.$radius-card;
-  box-shadow: v.$shadow-card;
+  box-shadow: var(--shadow-card);
   padding: v.$spacing-3;
 
   &__top {
@@ -23,7 +23,7 @@
     border-radius: v.$radius-full;
     font-size: v.$font-size-md-lg;
     flex-shrink: 0;
-    color: v.$color-accent-secondary;
+    color: var(--color-accent-secondary);
 
     &--expired { background-color: v.$color-error; }
     &--active  { background: v.$color-gradient-primary; }
@@ -39,7 +39,7 @@
     font-family: v.$font-primary;
     font-weight: v.$font-weight-bold;
     font-size: v.$font-size-md;
-    color: v.$neutral-900;
+    color: var(--color-text-primary);
     line-height: v.$line-height-tight;
   }
 
@@ -50,12 +50,12 @@
     line-height: v.$line-height-tight;
 
     &--expired { color: v.$color-error-dark; }
-    &--active  { color: v.$neutral-700; }
+    &--active  { color: var(--color-text-muted); }
   }
 
   &__divider {
     border: none;
-    border-top: v.$border-thin solid rgba(v.$neutral-900, 0.12);
+    border-top: v.$border-thin solid var(--color-divider);
     margin: 0 0 v.$spacing-2;
   }
 
@@ -76,13 +76,13 @@
     font-family: v.$font-primary;
     font-weight: v.$font-weight-regular;
     font-size: v.$font-size-sm;
-    color: v.$neutral-700;
+    color: var(--color-text-muted);
   }
 
   &__date-value {
     font-family: v.$font-primary;
     font-weight: v.$font-weight-bold;
     font-size: v.$font-size-sm;
-    color: v.$neutral-900;
+    color: var(--color-text-primary);
   }
 }

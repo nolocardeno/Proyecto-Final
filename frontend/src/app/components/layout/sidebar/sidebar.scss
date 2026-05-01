@@ -42,12 +42,12 @@
   flex-direction: column;
   width: 100%;
   height: 100%;
-  background-color: v.$color-surface;
-  border-right: v.$border-thin solid v.$color-surface-border;
+  background-color: var(--color-surface);
+  border-right: v.$border-thin solid var(--color-surface-border);
   padding-block: v.$spacing-2;
 
   @include m.respond-down(lg) {
-    box-shadow: v.$shadow-lg;
+    box-shadow: var(--shadow-lg);
   }
 }
 

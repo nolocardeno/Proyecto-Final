@@ -78,7 +78,7 @@
   margin-top: v.$spacing-3;
   font-size: v.$font-size-md-lg;
   font-weight: v.$font-weight-medium;
-  color: v.$color-text-muted;
+  color: var(--color-text-muted);
   text-align: center;
   max-width: 41.9375rem;
   line-height: v.$line-height-normal;
@@ -122,7 +122,7 @@
 .features__title {
   font-size: v.$font-size-xl;
   font-weight: v.$font-weight-bold;
-  color: v.$neutral-900;
+  color: var(--color-text-primary);
   text-align: center;
   margin-bottom: v.$spacing-5;
 
@@ -158,7 +158,7 @@
 // SECCIÓN PREGUNTAS FRECUENTES
 // --------------------------------------------------------------------------
 .faq {
-  background-color: v.$color-page-bg;
+  background-color: var(--color-page-bg);
   padding: v.$spacing-8 v.$spacing-4 v.$spacing-12;
   display: flex;
   flex-direction: column;

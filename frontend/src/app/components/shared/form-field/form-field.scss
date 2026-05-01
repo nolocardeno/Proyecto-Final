@@ -12,17 +12,17 @@
     font-family: v.$font-primary;
     font-weight: v.$font-weight-bold;
     font-size: v.$font-size-md;
-    color: v.$neutral-900;
+    color: var(--color-text-primary);
   }
 
   &__input {
     height: 2.875rem;
-    background-color: v.$color-input-bg;
-    border: v.$border-thin solid v.$color-input-border;
+    background-color: var(--color-input-bg);
+    border: v.$border-thin solid var(--color-input-border);
     border-radius: v.$radius-input;
     font-family: v.$font-primary;
     font-size: v.$font-size-md;
-    color: v.$neutral-900;
+    color: var(--color-text-primary);
     padding: 0 v.$spacing-2;
     outline: none;
     transition:

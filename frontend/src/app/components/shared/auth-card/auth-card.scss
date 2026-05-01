@@ -22,10 +22,10 @@
   &__card {
     width: 100%;
     max-width: 26.625rem;
-    background-color: v.$color-surface;
-    border: v.$border-thin solid v.$color-modal-border;
+    background-color: var(--color-surface);
+    border: v.$border-thin solid var(--color-modal-border);
     border-radius: v.$radius-card;
-    box-shadow: v.$shadow-card;
+    box-shadow: var(--shadow-card);
     overflow: hidden;
     animation: card-in v.$transition-base;
   }
@@ -47,7 +47,7 @@
     font-family: v.$font-primary;
     font-weight: v.$font-weight-bold;
     font-size: v.$font-size-xl;
-    color: v.$neutral-900;
+    color: var(--color-text-primary);
     margin: 0;
     text-align: center;
 

@@ -15,10 +15,10 @@
   display: flex;
   flex-direction: column;
   gap: v.$spacing-2;
-  background-color: v.$color-accent-secondary;
-  border: v.$border-thin solid v.$color-modal-border;
+  background-color: var(--color-accent-secondary);
+  border: v.$border-thin solid var(--color-modal-border);
   border-radius: v.$radius-card;
-  box-shadow: v.$shadow-card;
+  box-shadow: var(--shadow-card);
   padding: v.$spacing-3;
 }
 
@@ -60,7 +60,7 @@
   font-family: v.$font-primary;
   font-weight: v.$font-weight-bold;
   font-size: v.$font-size-md-lg;
-  color: v.$neutral-900;
+  color: var(--color-text-primary);
   line-height: v.$line-height-tight;
 }
 
@@ -69,7 +69,7 @@
 // --------------------------------------------------------------------------
 .group-code-card__divider {
   border: none;
-  border-top: v.$border-thin solid rgba(v.$neutral-900, 0.12);
+  border-top: v.$border-thin solid var(--color-divider);
   margin: 0;
 }
 

@@ -26,10 +26,10 @@
     gap: v.$spacing-2;
     padding: 0.75rem v.$spacing-2;
     background-color: #ffffff;
-    border: v.$border-thin solid v.$color-surface-border;
+    border: v.$border-thin solid var(--color-surface-border);
     border-radius: v.$radius-lg;
-    box-shadow: v.$shadow-md;
-    color: v.$color-text-secondary;
+    box-shadow: var(--shadow-md);
+    color: var(--color-text-secondary);
     font-family: v.$font-primary;
     font-size: v.$font-size-md;
     animation: alert-in v.$transition-base forwards;
@@ -78,7 +78,7 @@
   // --------------------------------------------------------------------------
   &__message {
     flex: 1;
-    color: v.$color-text-secondary;
+    color: var(--color-text-secondary);
     font-weight: v.$font-weight-medium;
     line-height: v.$line-height-normal;
   }
@@ -90,7 +90,7 @@
     background: none;
     border: none;
     cursor: pointer;
-    color: v.$color-text-muted;
+    color: var(--color-text-muted);
     opacity: 0.7;
     padding: 0.25rem;
     display: flex;
@@ -100,7 +100,7 @@
 
     &:hover {
       opacity: 1;
-      background-color: v.$color-surface;
+      background-color: var(--color-surface);
     }
   }
 }
