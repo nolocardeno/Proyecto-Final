@@ -1,0 +1,72 @@
+@use '../../../../styles/00-settings/variables' as v;
+@use '../../../../styles/01-tools/mixins' as m;
+
+// --------------------------------------------------------------------------
+// HOST
+// --------------------------------------------------------------------------
+:host {
+  display: inline-flex;
+}
+
+// --------------------------------------------------------------------------
+// THEME TOGGLE — Switch deslizante claro/oscuro
+// --------------------------------------------------------------------------
+$track-width: 2.75rem;     // 44px
+$track-height: 1.5rem;     // 24px
+$thumb-size: 1.125rem;     // 18px
+$thumb-offset: 0.1875rem;  // 3px
+$thumb-travel: $track-width - $thumb-size - ($thumb-offset * 2);
+
+.theme-toggle {
+  position: relative;
+  display: inline-block;
+  width: $track-width;
+  height: $track-height;
+  padding: 0;
+  background-color: var(--color-surface-border);
+  border: none;
+  border-radius: v.$radius-full;
+  box-shadow: var(--shadow-inset);
+  cursor: pointer;
+  transition: background-color v.$transition-base;
+
+  &:hover {
+    background-color: var(--color-border-strong);
+  }
+
+  &:focus-visible {
+    outline: v.$border-medium solid v.$color-primary;
+    outline-offset: v.$border-medium;
+  }
+}
+
+// --------------------------------------------------------------------------
+// THUMB — círculo con gradiente naranja que contiene el icono activo
+// --------------------------------------------------------------------------
+.theme-toggle__thumb {
+  @include m.flex-center;
+  position: absolute;
+  top: $thumb-offset;
+  left: $thumb-offset;
+  width: $thumb-size;
+  height: $thumb-size;
+  background: v.$color-gradient-primary;
+  border-radius: v.$radius-full;
+  box-shadow: var(--shadow-md);
+  transition: transform v.$transition-base;
+}
+
+.theme-toggle--on .theme-toggle__thumb {
+  transform: translateX($thumb-travel);
+}
+
+// --------------------------------------------------------------------------
+// ICONO — dentro del thumb
+// --------------------------------------------------------------------------
+.theme-toggle__icon {
+  display: inline-flex;
+  font-size: 0.625rem; // 10px
+  line-height: 1;
+  color: v.$neutral-900;
+  pointer-events: none;
+}

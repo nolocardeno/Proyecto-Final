@@ -1,0 +1,14 @@
+<button
+  type="button"
+  role="switch"
+  class="theme-toggle"
+  [class.theme-toggle--on]="theme.isDark()"
+  [attr.aria-checked]="theme.isDark()"
+  [attr.aria-label]="label()"
+  [title]="label()"
+  (click)="theme.toggle()"
+>
+  <span class="theme-toggle__thumb" aria-hidden="true">
+    <fa-icon [icon]="icon()" class="theme-toggle__icon" />
+  </span>
+</button>
