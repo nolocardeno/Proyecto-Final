@@ -86,9 +86,9 @@
 // CARD — Estilo base para tarjetas
 // --------------------------------------------------------------------------
 @mixin card($padding: v.$spacing-3) {
-  background-color: v.$color-surface;
+  background-color: var(--color-surface);
   border-radius: v.$radius-lg;
-  box-shadow: v.$shadow-md;
+  box-shadow: var(--shadow-md);
   padding: $padding;
 }
 
@@ -111,11 +111,11 @@
 
   &:hover {
     transform: translateY(v.$hover-translate);
-    box-shadow: v.$hover-shadow;
+    box-shadow: var(--shadow-hover);
   }
 
   &:active {
     transform: translateY(v.$active-translate);
-    box-shadow: v.$active-shadow;
+    box-shadow: var(--shadow-active);
   }
 }
