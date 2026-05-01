@@ -66,12 +66,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: v.$spacing-4 3.375rem v.$spacing-3;
+    padding: v.$spacing-4 v.$spacing-3 v.$spacing-3;
     gap: v.$spacing-3;
-
-    @include m.respond-down(md) {
-      padding: v.$spacing-3 v.$spacing-3 v.$spacing-3;
-    }
 
     @include m.respond-down(sm) {
       padding: v.$spacing-3 v.$spacing-2;
