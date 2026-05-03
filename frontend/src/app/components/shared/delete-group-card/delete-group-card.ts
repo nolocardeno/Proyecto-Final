@@ -10,6 +10,11 @@ import { ConfirmModalComponent } from '../confirm-modal/confirm-modal';
 // --------------------------------------------------------------------------
 // COMPONENTE: DELETE GROUP CARD (Card + modal de confirmación)
 // --------------------------------------------------------------------------
+
+/**
+ * Tarjeta para eliminar un grupo. Abre un `ConfirmModal` antes de
+ * emitir el evento `deleteConfirmed` al padre.
+ */
 @Component({
   selector: 'app-delete-group-card',
   imports: [FaIconComponent, ButtonComponent, ConfirmModalComponent],
@@ -20,17 +25,21 @@ export class DeleteGroupCardComponent {
   protected readonly faTrashCan = faTrashCan;
   protected showConfirm = false;
 
+  /** Emitido cuando el usuario confirma la eliminación del grupo. */
   deleteConfirmed = output<void>();
 
+  /** Muestra el modal de confirmación. */
   protected openConfirm(): void {
     this.showConfirm = true;
   }
 
+  /** Cierra el modal y emite `deleteConfirmed`. */
   protected onConfirm(): void {
     this.showConfirm = false;
     this.deleteConfirmed.emit();
   }
 
+  /** Cierra el modal sin eliminar. */
   protected onCancel(): void {
     this.showConfirm = false;
   }

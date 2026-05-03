@@ -18,6 +18,12 @@ export type SidebarPage =
 // --------------------------------------------------------------------------
 // COMPONENTE: SIDEBAR
 // --------------------------------------------------------------------------
+
+/**
+ * Menú lateral. En escritorio está fijo; en móvil actúa como drawer
+ * controlado por `SidebarService`. Renderiza un `SidebarButtonComponent`
+ * por cada sección y emite `onNavigate` al seleccionar una opción.
+ */
 @Component({
   selector: 'app-sidebar',
   imports: [SidebarButtonComponent],
@@ -30,15 +36,18 @@ export type SidebarPage =
 export class SidebarComponent {
   protected readonly sidebarSvc = inject(SidebarService);
 
+  /** Identificador de la página actualmente activa. */
   currentPage = input<SidebarPage>('Default');
+  /** Emitido al hacer clic en una opción del menú. */
   onNavigate = output<string>();
 
+  /** Cierra el drawer (sólo tiene efecto en <lg) y emite `onNavigate`. */
   navigate(page: string): void {
-    // Cierra el drawer (sólo tiene efecto en <lg) tras seleccionar una opción.
     this.sidebarSvc.close();
     this.onNavigate.emit(page);
   }
 
+  /** Cierra el drawer sin navegar. */
   closeDrawer(): void {
     this.sidebarSvc.close();
   }

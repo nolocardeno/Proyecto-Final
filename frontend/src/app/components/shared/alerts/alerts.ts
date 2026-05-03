@@ -15,6 +15,12 @@ import {
 // --------------------------------------------------------------------------
 // COMPONENTE: ALERTS CONTAINER
 // --------------------------------------------------------------------------
+
+/**
+ * Contenedor global de notificaciones (toasts). Renderiza la lista
+ * reactiva de alertas expuesta por `AlertService` y permite cerrarlas
+ * manualmente.
+ */
 @Component({
   selector: 'app-alerts',
   imports: [FaIconComponent],
@@ -24,6 +30,7 @@ import {
 export class AlertsComponent {
   protected readonly alertService = inject(AlertService);
 
+  /** Mapa tipo → icono FontAwesome. */
   protected readonly icons = {
     success: faCircleCheck,
     error: faCircleXmark,

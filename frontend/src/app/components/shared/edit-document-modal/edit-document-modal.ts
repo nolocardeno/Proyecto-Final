@@ -33,6 +33,13 @@ const KIND_MAP: Record<DocumentType, DocKind> = {
 // --------------------------------------------------------------------------
 // COMPONENTE: EDIT DOCUMENT MODAL
 // --------------------------------------------------------------------------
+
+/**
+ * Modal de edición de un documento ya existente. Reconstruye el tipo
+ * y la categoría a partir del documento de entrada usando los mapas
+ * `KIND_MAP` y, mediante Reactive Forms con validadores, permite
+ * actualizar título, fechas y opcionalmente la imagen asociada.
+ */
 @Component({
   selector: 'app-edit-document-modal',
   imports: [ReactiveFormsModule, ButtonComponent, FormFieldComponent, FilePickerComponent],

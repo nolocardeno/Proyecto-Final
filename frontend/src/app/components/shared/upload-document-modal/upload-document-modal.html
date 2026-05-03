@@ -203,7 +203,7 @@
            PASO 4: Formulario manual
            ============================================================ -->
       @if (currentStep() === 'form') {
-        <form class="upload-modal__form" [formGroup]="docForm" (ngSubmit)="onSubmit()">
+        <form #formContainer class="upload-modal__form" [formGroup]="docForm" (ngSubmit)="onSubmit()">
           <app-form-field
             label="Nombre / Descripción"
             type="text"

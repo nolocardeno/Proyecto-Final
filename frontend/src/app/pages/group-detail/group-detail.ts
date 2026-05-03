@@ -31,6 +31,14 @@ import {
 // --------------------------------------------------------------------------
 // PÁGINA: GROUP DETAIL
 // --------------------------------------------------------------------------
+
+/**
+ * Página de detalle de un grupo compartido.
+ *
+ * Carga en paralelo la información del grupo y sus documentos llamando al
+ * `GroupService` y mantiene el estado en signals. Permite filtrar, buscar,
+ * paginar, subir nuevos documentos y eliminar el grupo.
+ */
 @Component({
   selector: 'app-group-detail',
   imports: [

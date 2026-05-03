@@ -16,6 +16,19 @@ import { AlertService } from '../../../services/alert.service';
 // --------------------------------------------------------------------------
 // COMPONENTE: MODAL LOGIN
 // --------------------------------------------------------------------------
+
+/**
+ * Modal de inicio de sesión.
+ *
+ * Características DWEC más relevantes:
+ *  - Reactive Forms con validadores predefinidos `Validators.required`
+ *    y `Validators.email`.
+ *  - Captura del evento `submit` del formulario y validación previa.
+ *  - Persistencia opcional del email mediante `localStorage`
+ *    («recuérdame»).
+ *  - Comunicación asíncrona con el backend a través del `AuthService`
+ *    (Observable de RxJS) y manejo de éxito/error con `subscribe`.
+ */
 @Component({
   selector: 'app-login',
   imports: [
@@ -35,16 +48,20 @@ export class LoginComponent implements OnInit {
   private readonly authModal = inject(AuthModalService);
   private readonly alert = inject(AlertService);
 
+  /** Clave en `localStorage` donde se guarda el email recordado. */
   private readonly REMEMBER_ME_KEY = 'scantral_remembered_email';
 
+  /** Indica si hay una petición de login en curso (deshabilita el botón). */
   protected loading = false;
 
+  /** Formulario reactivo con los validadores predefinidos del lenguaje. */
   protected readonly loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required]],
     rememberMe: [false],
   });
 
+  /** Si existía un email recordado, lo precarga en el formulario. */
   ngOnInit(): void {
     const rememberedEmail = localStorage.getItem(this.REMEMBER_ME_KEY);
     if (rememberedEmail) {
@@ -52,6 +69,10 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  /**
+   * Manejador del evento `submit`. Valida el formulario, llama al servicio
+   * de autenticación y reacciona a éxito/error mostrando una alerta.
+   */
   protected onSubmit(): void {
     if (!this.loginForm.valid || this.loading) return;
 
@@ -60,6 +81,7 @@ export class LoginComponent implements OnInit {
 
     this.authService.login({ email: email!, password: password! }).subscribe({
       next: (res) => {
+        // Guarda u olvida el email según el checkbox «recuérdame».
         if (rememberMe) {
           localStorage.setItem(this.REMEMBER_ME_KEY, email!);
         } else {

@@ -3,11 +3,11 @@
      -------------------------------------------------------------------------- -->
 <label class="file-picker">
   <span class="file-picker__button">Seleccionar archivo</span>
-  <span class="file-picker__name">{{ fileName || 'Ningún archivo seleccionado' }}</span>
+  <span class="file-picker__name">{{ fileName() || 'Ningún archivo seleccionado' }}</span>
   <input
     class="file-picker__input"
     type="file"
-    accept="image/*"
+    [attr.accept]="accept()"
     (change)="onFileChange($event)"
   />
 </label>

@@ -18,6 +18,8 @@ import {
 // --------------------------------------------------------------------------
 // TIPOS
 // --------------------------------------------------------------------------
+
+/** Resultado de comprobar la validez de un documento en una fecha dada. */
 interface ValidatorResult {
   document: DocumentResponse;
   isValid: boolean;
@@ -27,6 +29,13 @@ interface ValidatorResult {
 // --------------------------------------------------------------------------
 // PÁGINA: VALIDADOR DE DOCUMENTOS OFICIALES
 // --------------------------------------------------------------------------
+
+/**
+ * Página que permite al usuario seleccionar una fecha (por ejemplo, la de
+ * un viaje) y comprobar de un vistazo qué documentos oficiales seguirán
+ * vigentes ese día. Los resultados se calculan reactivamente con
+ * `computed` a partir de la fecha y la lista de documentos.
+ */
 @Component({
   selector: 'app-validator',
   imports: [
@@ -48,6 +57,7 @@ export class ValidatorComponent {
   protected readonly documents = signal<DocumentResponse[]>([]);
   protected readonly hasChecked = computed(() => this.checkedDate() !== null);
 
+  /** Lista reactiva de resultados, recalculada al cambiar la fecha o los documentos. */
   protected readonly results = computed<ValidatorResult[]>(() => {
     const date = this.checkedDate();
     if (!date) return [];
@@ -60,6 +70,7 @@ export class ValidatorComponent {
       }));
   });
 
+  /** Manejador de la navegación del sidebar. */
   onNavigate(page: string): void {
     if (page === 'Validator') return;
     if (page === 'Logout') {
@@ -70,6 +81,10 @@ export class ValidatorComponent {
     this.router.navigate(['/' + page.toLowerCase()]);
   }
 
+  /**
+   * Manejador del botón «Comprobar». Recupera los documentos del usuario
+   * y guarda la fecha objetivo, lo que dispara el recálculo de `results`.
+   */
   protected onCheck(date: Date): void {
     this.documentService.getDocuments().subscribe((documents) => {
       this.documents.set(documents);
@@ -80,6 +95,8 @@ export class ValidatorComponent {
   // ------------------------------------------------------------------------
   // HELPERS
   // ------------------------------------------------------------------------
+
+  /** Devuelve `true` si el documento sigue vigente en la fecha dada. */
   private isDocumentValid(doc: DocumentResponse, date: Date): boolean {
     if (!doc.expiryDate) return true; // Sin fecha de expiración → siempre válido
     const expiry = new Date(doc.expiryDate);

@@ -8,12 +8,26 @@ import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons
 // --------------------------------------------------------------------------
 // CONSTANTES
 // --------------------------------------------------------------------------
+
+/** Carácter usado para indicar páginas omitidas. */
 const ELLIPSIS = '…';
+
+/** Cada ítem renderizado puede ser un número de página o una elipsis. */
 type PageItem = number | typeof ELLIPSIS;
 
 // --------------------------------------------------------------------------
 // COMPONENTE: PAGINATION (Reutilizable)
 // --------------------------------------------------------------------------
+
+/**
+ * Paginador reutilizable.
+ *
+ * Calcula reactivamente con `computed()` el número total de páginas y
+ * la lista de ítems a renderizar (incluidas las elipsis) a partir del
+ * total de elementos, el tamaño de página y el número de páginas
+ * adyacentes a mostrar. Además preserva la posición de scroll al
+ * cambiar de página mediante `requestAnimationFrame`.
+ */
 @Component({
   selector: 'app-pagination',
   imports: [FaIconComponent],
@@ -21,9 +35,13 @@ type PageItem = number | typeof ELLIPSIS;
   styleUrl: './pagination.scss',
 })
 export class PaginationComponent {
+  /** Número total de elementos a paginar. */
   totalItems = input.required<number>();
+  /** Tamaño de cada página. */
   pageSize = input<number>(9);
+  /** Número de páginas mostradas a cada lado de la actual. */
   siblingCount = input<number>(1);
+  /** Página actualmente seleccionada (two-way binding via `model()`). */
   currentPage = model<number>(1);
 
   protected readonly faChevronLeft = faChevronLeft;
@@ -82,10 +100,12 @@ export class PaginationComponent {
     });
   }
 
+  /** Type-guard usado en la plantilla para distinguir números de elipsis. */
   protected isPage(item: PageItem): item is number {
     return typeof item === 'number';
   }
 
+  /** Navega a la página indicada preservando la posición de scroll. */
   protected goTo(page: number): void {
     const clamped = Math.min(Math.max(1, page), this.totalPages());
     if (clamped === this.currentPage()) {
@@ -103,10 +123,12 @@ export class PaginationComponent {
     });
   }
 
+  /** Navega a la página anterior. */
   protected prev(): void {
     this.goTo(this.currentPage() - 1);
   }
 
+  /** Navega a la página siguiente. */
   protected next(): void {
     this.goTo(this.currentPage() + 1);
   }

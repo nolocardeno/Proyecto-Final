@@ -29,6 +29,13 @@ const CALENDAR_CELLS = 42; // 6 filas x 7 columnas
 // --------------------------------------------------------------------------
 // COMPONENTE: CALENDAR (Calendario inline reutilizable)
 // --------------------------------------------------------------------------
+
+/**
+ * Calendario inline reutilizable. Calcula reactivamente con
+ * `computed()` la rejilla de 6×7 días alrededor del mes en curso y
+ * mantiene la vista sincronizada con la fecha seleccionada externa
+ * mediante un `effect`.
+ */
 @Component({
   selector: 'app-calendar',
   imports: [FaIconComponent],
@@ -36,14 +43,17 @@ const CALENDAR_CELLS = 42; // 6 filas x 7 columnas
   styleUrl: './calendar.scss',
 })
 export class CalendarComponent {
+  /** Fecha seleccionada (controlada por el padre). */
   selectedDate = input<Date | null>(null);
 
+  /** Emitido al elegir un día. */
   dateChange = output<Date>();
 
   protected readonly faChevronLeft = faChevronLeft;
   protected readonly faChevronRight = faChevronRight;
   protected readonly weekdays = WEEKDAY_LABELS;
 
+  /** Mes mostrado en la vista (cambia con los botones de navegación). */
   private readonly viewDate = signal<Date>(this.startOfMonth(new Date()));
 
   constructor() {
@@ -62,11 +72,13 @@ export class CalendarComponent {
     });
   }
 
+  /** Etiqueta del mes actualmente visible («junio 2025»). */
   protected readonly monthLabel = computed(() => {
     const d = this.viewDate();
     return `${MONTH_LABELS[d.getMonth()]} ${d.getFullYear()}`;
   });
 
+  /** Lista de 42 días a renderizar (rejilla 6×7). */
   protected readonly days = computed<CalendarDay[]>(() => {
     const view = this.viewDate();
     const selected = this.selectedDate();
@@ -87,16 +99,19 @@ export class CalendarComponent {
     });
   });
 
+  /** Navega al mes anterior. */
   protected previousMonth(): void {
     const d = this.viewDate();
     this.viewDate.set(new Date(d.getFullYear(), d.getMonth() - 1, 1));
   }
 
+  /** Navega al mes siguiente. */
   protected nextMonth(): void {
     const d = this.viewDate();
     this.viewDate.set(new Date(d.getFullYear(), d.getMonth() + 1, 1));
   }
 
+  /** Selecciona un día y, si pertenece a otro mes, salta a él. */
   protected selectDay(day: CalendarDay): void {
     if (!day.inCurrentMonth) {
       this.viewDate.set(this.startOfMonth(day.date));
@@ -107,20 +122,24 @@ export class CalendarComponent {
   // ------------------------------------------------------------------------
   // HELPERS DE FECHA
   // ------------------------------------------------------------------------
+  /** Devuelve la fecha al inicio del día (00:00). */
   private startOfDay(date: Date): Date {
     return new Date(date.getFullYear(), date.getMonth(), date.getDate());
   }
 
+  /** Devuelve el primer día del mes correspondiente. */
   private startOfMonth(date: Date): Date {
     return new Date(date.getFullYear(), date.getMonth(), 1);
   }
 
+  /** Suma `amount` días a una fecha sin mutar la original. */
   private addDays(date: Date, amount: number): Date {
     const next = new Date(date);
     next.setDate(next.getDate() + amount);
     return next;
   }
 
+  /** Devuelve `true` si dos fechas representan el mismo día. */
   private isSameDay(a: Date, b: Date): boolean {
     return (
       a.getFullYear() === b.getFullYear() &&

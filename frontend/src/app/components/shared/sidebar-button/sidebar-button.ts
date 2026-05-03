@@ -44,6 +44,12 @@ const ICONS: Record<SidebarButtonType, IconDefinition> = {
 // --------------------------------------------------------------------------
 // COMPONENTE: SIDEBAR BUTTON
 // --------------------------------------------------------------------------
+
+/**
+ * Botón del menú lateral. Recibe un identificador `type` y deriva la
+ * etiqueta y el icono correspondientes a partir de los mapas
+ * `LABELS` e `ICONS` mediante `computed()`.
+ */
 @Component({
   selector: 'app-sidebar-button',
   imports: [FaIconComponent],
@@ -51,9 +57,13 @@ const ICONS: Record<SidebarButtonType, IconDefinition> = {
   styleUrl: './sidebar-button.scss',
 })
 export class SidebarButtonComponent {
+  /** Identificador de la opción del menú. */
   type = input.required<SidebarButtonType>();
+  /** Indica si el botón está marcado como activo (ruta actual). */
   active = input(false);
 
+  /** Etiqueta visible derivada del tipo. */
   protected readonly label = computed(() => LABELS[this.type()]);
+  /** Icono derivado del tipo. */
   protected readonly icon = computed(() => ICONS[this.type()]);
 }

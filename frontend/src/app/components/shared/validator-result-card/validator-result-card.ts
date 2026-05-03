@@ -34,6 +34,12 @@ const DOCUMENT_TIPS: Partial<Record<DocumentType, string>> = {
 // COMPONENTE: VALIDATOR RESULT CARD
 // Versión reducida de DocumentCard centrada en validez para una fecha concreta.
 // --------------------------------------------------------------------------
+
+/**
+ * Tarjeta de resultado del validador. Muestra de forma compacta si
+ * un documento sigue siendo válido para una fecha concreta y, si el
+ * tipo dispone de consejo asociado, lo añade en `tip`.
+ */
 @Component({
   selector: 'app-validator-result-card',
   imports: [FaIconComponent, RouterLink],
@@ -41,10 +47,15 @@ const DOCUMENT_TIPS: Partial<Record<DocumentType, string>> = {
   styleUrl: './validator-result-card.scss',
 })
 export class ValidatorResultCardComponent {
+  /** Id del documento (para el enlace al detalle). */
   documentId = input.required<number>();
+  /** Tipo de documento (DNI, pasaporte…). */
   type = input.required<DocumentType>();
+  /** Título del documento. */
   title = input.required<string>();
+  /** Fecha de expiración formateada. */
   expiryDate = input.required<string>();
+  /** Indica si el documento es válido para la fecha consultada. */
   isValid = input.required<boolean>();
 
   protected readonly faFileLines = faFileLines;
@@ -53,5 +64,6 @@ export class ValidatorResultCardComponent {
   protected readonly faCircleXmark = faCircleXmark;
   protected readonly faLightbulb = faLightbulb;
 
+  /** Consejo asociado al tipo del documento (si existe). */
   protected readonly tip = computed(() => DOCUMENT_TIPS[this.type()] ?? null);
 }

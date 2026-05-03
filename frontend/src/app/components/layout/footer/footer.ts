@@ -13,6 +13,12 @@ import {
 // --------------------------------------------------------------------------
 // COMPONENTE: FOOTER
 // --------------------------------------------------------------------------
+
+/**
+ * Pie de página global con redes sociales y año actual dinámico.
+ * Soporta dos variantes: por defecto (centrada en la landing) y
+ * `with-sidebar` (alineada a la derecha del contenido principal).
+ */
 @Component({
   selector: 'app-footer',
   imports: [FaIconComponent],
@@ -20,7 +26,9 @@ import {
   styleUrl: './footer.scss',
 })
 export class FooterComponent {
+  /** Variante visual del footer. */
   variant = input<'default' | 'with-sidebar'>('default');
+  /** Año actual mostrado en el copyright. */
   readonly currentYear = new Date().getFullYear();
 
   // --- Iconos Font Awesome (solo los necesarios) ---

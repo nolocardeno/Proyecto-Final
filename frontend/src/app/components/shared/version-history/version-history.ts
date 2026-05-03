@@ -31,6 +31,11 @@ const CHANGE_TYPE_CONFIG: Record<
   DATES_UPDATED:  { label: 'Actualización de fechas',      icon: faCalendarDays },
 };
 
+/**
+ * Componente que renderiza el historial de cambios de un documento
+ * como una línea temporal vertical, con icono y etiqueta específicos
+ * por tipo de cambio (creado, actualizado, renovado, etc.).
+ */
 @Component({
   selector: 'app-version-history',
   imports: [FaIconComponent],
@@ -38,20 +43,24 @@ const CHANGE_TYPE_CONFIG: Record<
   styleUrl: './version-history.scss',
 })
 export class VersionHistoryComponent {
+  /** Lista de entradas del historial ordenadas cronológicamente. */
   entries = input.required<DocumentHistoryEntry[]>();
 
   protected readonly faClockRotateLeft = faClockRotateLeft;
   protected readonly faUser = faUser;
   protected readonly faCircleCheck = faCircleCheck;
 
+  /** Devuelve la etiqueta legible asociada a un tipo de cambio. */
   protected getChangeLabel(type: DocumentHistoryType): string {
     return CHANGE_TYPE_CONFIG[type]?.label ?? type;
   }
 
+  /** Devuelve el icono asociado a un tipo de cambio. */
   protected getChangeIcon(type: DocumentHistoryType): IconProp {
     return CHANGE_TYPE_CONFIG[type]?.icon ?? faPenToSquare;
   }
 
+  /** Formatea una fecha ISO en formato español con hora. */
   protected formatDateTime(dateTime: string): string {
     const date = new Date(dateTime);
     return new Intl.DateTimeFormat('es-ES', {

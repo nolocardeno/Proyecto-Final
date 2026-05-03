@@ -15,6 +15,13 @@ import { SidebarService } from '../../../services/sidebar.service';
 // --------------------------------------------------------------------------
 // COMPONENTE: HEADER
 // --------------------------------------------------------------------------
+
+/**
+ * Cabecera global de la aplicación. Contiene la marca, el switch de
+ * tema, el botón de hamburguesa que controla el drawer del sidebar y
+ * la tarjeta de usuario / botones de autenticación según el estado de
+ * sesión.
+ */
 @Component({
   selector: 'app-header',
   imports: [RouterLink, ButtonComponent, ThemeToggleComponent, UserCardComponent, FaIconComponent],
@@ -29,6 +36,7 @@ export class HeaderComponent {
   // Iconos del botón hamburguesa (cambia según el estado del drawer)
   protected readonly faBars = faBars;
   protected readonly faXmark = faXmark;
+  /** Icono que muestra el botón hamburguesa según el estado del drawer. */
   protected readonly menuIcon = computed(() =>
     this.sidebar.isOpen() ? this.faXmark : this.faBars,
   );

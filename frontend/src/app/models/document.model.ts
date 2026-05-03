@@ -2,6 +2,7 @@
 // TIPOS DE DOCUMENTO (espejo del backend)
 // --------------------------------------------------------------------------
 
+/** Tipos de documento soportados por la aplicación. */
 export type DocumentType =
   | 'DNI'
   | 'PASSPORT'
@@ -13,11 +14,17 @@ export type DocumentType =
   | 'INVOICE'
   | 'OTHER';
 
+/** Estado de un documento en relación a su fecha de caducidad. */
 export type DocumentStatus = 'ACTIVE' | 'EXPIRING_SOON' | 'EXPIRED' | 'RENEWED';
 
 // --------------------------------------------------------------------------
 // RESPUESTA DEL BACKEND
 // --------------------------------------------------------------------------
+
+/**
+ * Estructura de un documento devuelta por el backend.
+ * Mantenida en sincronía con el DTO Java `DocumentResponse`.
+ */
 export interface DocumentResponse {
   id: number;
   type: DocumentType;
@@ -40,6 +47,8 @@ export interface DocumentResponse {
 // --------------------------------------------------------------------------
 // MAPA: DocumentType → card visual variant
 // --------------------------------------------------------------------------
+
+/** Asocia cada tipo de documento con su variante visual (ticket vs documento). */
 const CARD_TYPE_MAP: Record<DocumentType, 'ticket' | 'document'> = {
   RECEIPT: 'ticket',
   WARRANTY: 'ticket',
@@ -55,16 +64,20 @@ const CARD_TYPE_MAP: Record<DocumentType, 'ticket' | 'document'> = {
 // --------------------------------------------------------------------------
 // HELPERS
 // --------------------------------------------------------------------------
+
+/** Devuelve la variante visual ('ticket' | 'document') de un tipo de documento. */
 export function getCardType(type: DocumentType): 'ticket' | 'document' {
   return CARD_TYPE_MAP[type];
 }
 
+/** Convierte una fecha ISO `YYYY-MM-DD` al formato local `DD-MM-YYYY`. */
 export function formatDate(date: string | null): string {
   if (!date) return '—';
   const [year, month, day] = date.split('-');
   return `${day}-${month}-${year}`;
 }
 
+/** Genera el texto descriptivo del estado a partir de los días restantes. */
 export function getStatusText(daysRemaining: number | null): string {
   if (daysRemaining === null) return 'Sin expiración';
   if (daysRemaining < 0) {

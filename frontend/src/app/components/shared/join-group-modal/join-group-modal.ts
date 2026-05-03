@@ -14,6 +14,11 @@ import { AlertService } from '../../../services/alert.service';
 // --------------------------------------------------------------------------
 // COMPONENTE: JOIN GROUP MODAL
 // --------------------------------------------------------------------------
+
+/**
+ * Modal para unirse a un grupo existente mediante un código de acceso.
+ * Usa Reactive Forms y notifica al padre al unirse correctamente.
+ */
 @Component({
   selector: 'app-join-group-modal',
   imports: [
@@ -31,18 +36,22 @@ export class JoinGroupModalComponent {
   private readonly joinGroupModal = inject(JoinGroupModalService);
   private readonly alert = inject(AlertService);
 
+  /** Emitido al unirse al grupo correctamente. */
   groupJoined = output<void>();
 
   protected loading = false;
 
+  /** Formulario reactivo con validador de obligatoriedad del código. */
   protected readonly joinForm = this.fb.group({
     accessCode: ['', [Validators.required]],
   });
 
+  /** Cierra el modal. */
   protected onModalClosed(): void {
     this.joinGroupModal.close();
   }
 
+  /** Envía el código al backend para unirse al grupo. */
   protected onSubmit(): void {
     if (!this.joinForm.valid || this.loading) return;
 

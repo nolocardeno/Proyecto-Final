@@ -26,6 +26,17 @@ import {
 // --------------------------------------------------------------------------
 // PÁGINA: DASHBOARD
 // --------------------------------------------------------------------------
+
+/**
+ * Página principal del usuario autenticado.
+ *
+ * Muestra todos sus documentos con búsqueda, filtros, paginación y acceso
+ * al modal de subida. Demuestra:
+ *  - Comunicación asíncrona con el backend (RxJS).
+ *  - Reactividad con `signal` / `computed` / `effect` para actualizar
+ *    dinámicamente el DOM según filtros y término de búsqueda.
+ *  - Manejo de eventos de navegación y de UI.
+ */
 @Component({
   selector: 'app-dashboard',
   imports: [FaIconComponent, SidebarComponent, DocumentCardComponent, PageHeaderComponent, ButtonComponent, FilterBarComponent, SearchBarComponent, PaginationComponent, UploadDocumentModalComponent],
@@ -94,7 +105,8 @@ export class DashboardComponent implements OnInit {
   });
 
   constructor() {
-    // Reset a la primera página al cambiar filtro o búsqueda
+    // `effect` reinicia la paginación a la primera página cada vez que
+    // cambia el filtro o el término de búsqueda (lectura reactiva de signals).
     effect(() => {
       this.activeFilter();
       this.searchTerm();
@@ -102,6 +114,7 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  /** Manejador del evento de la barra de búsqueda. */
   protected onSearch(term: string): void {
     this.searchTerm.set(term);
   }
@@ -115,6 +128,7 @@ export class DashboardComponent implements OnInit {
     this.loadDocuments();
   }
 
+  /** Solicita la lista de documentos al backend y actualiza los signals. */
   protected loadDocuments(): void {
     this.documentService.getDocuments().subscribe((docs) => {
       this.documentos.set(docs);
@@ -122,6 +136,7 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  /** Recalcula los contadores de cada categoría mostrados en la barra de filtros. */
   private updateFilterCounts(docs: DocumentResponse[]): void {
     const tickets = docs.filter((d) => getCardType(d.type) === 'ticket').length;
     const documents = docs.filter((d) => getCardType(d.type) === 'document').length;
@@ -135,6 +150,7 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  /** Manejador de la navegación del sidebar. Cierra sesión o redirige. */
   onNavigate(page: string): void {
     if (page === 'Logout') {
       this.authService.logout();

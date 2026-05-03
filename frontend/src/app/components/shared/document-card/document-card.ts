@@ -32,6 +32,13 @@ const ICONS: Record<DocumentVariant, IconDefinition> = {
 // --------------------------------------------------------------------------
 // COMPONENTE: DOCUMENT CARD
 // --------------------------------------------------------------------------
+
+/**
+ * Tarjeta resumen de un documento usada en los listados. Recibe los
+ * campos via `input()` y calcula el icono y el estado de caducidad con
+ * `computed()`. Si se proporciona `documentId`, hace de enlace de
+ * navegación al detalle a través de `RouterLink`.
+ */
 @Component({
   selector: 'app-document-card',
   imports: [FaIconComponent, RouterLink],
@@ -39,15 +46,25 @@ const ICONS: Record<DocumentVariant, IconDefinition> = {
   styleUrl: './document-card.scss',
 })
 export class DocumentCardComponent {
+  /** Variante visual del documento. */
   type = input<DocumentVariant>('ticket');
+  /** Título principal mostrado en la tarjeta. */
   title = input.required<string>();
+  /** Categoría corta (DNI, Pasaporte, etc.). */
   category = input.required<string>();
+  /** Comercio o entidad emisora. */
   entity = input.required<string>();
+  /** Fecha de emisión formateada. */
   issueDate = input.required<string>();
+  /** Fecha de expiración formateada. */
   expiryDate = input.required<string>();
+  /** Texto del estado (etiqueta visible). */
   statusText = input.required<string>();
+  /** Estado lógico (afecta al estilo y al icono). */
   status = input.required<DocumentStatus>();
+  /** Id del documento (habilita la navegación). */
   documentId = input<number>();
+  /** Id del grupo si la tarjeta se renderiza dentro de un grupo. */
   groupId = input<number>();
 
   // --- Iconos Font Awesome ---

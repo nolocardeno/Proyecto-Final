@@ -15,6 +15,12 @@ import { AlertService } from '../../../services/alert.service';
 // --------------------------------------------------------------------------
 // COMPONENTE: CREATE GROUP MODAL
 // --------------------------------------------------------------------------
+
+/**
+ * Modal para crear un nuevo grupo. Usa Reactive Forms con validadores
+ * de longitud, envía la petición a `GroupService` y muestra una alerta
+ * tras confirmar.
+ */
 @Component({
   selector: 'app-create-group-modal',
   imports: [
@@ -33,19 +39,23 @@ export class CreateGroupModalComponent {
   private readonly groupModal = inject(GroupModalService);
   private readonly alert = inject(AlertService);
 
+  /** Emitido al crear el grupo correctamente. */
   groupCreated = output<void>();
 
   protected loading = false;
 
+  /** Formulario reactivo con validadores de obligatoriedad y longitud. */
   protected readonly createForm = this.fb.group({
     name: ['', [Validators.required, Validators.maxLength(50)]],
     addPolicy: ['all' as 'all' | 'creator', [Validators.required]],
   });
 
+  /** Cierra el modal cuando lo solicita el `AuthCardComponent`. */
   protected onModalClosed(): void {
     this.groupModal.close();
   }
 
+  /** Envía la petición al backend si el formulario es válido. */
   protected onSubmit(): void {
     if (!this.createForm.valid || this.loading) return;
 

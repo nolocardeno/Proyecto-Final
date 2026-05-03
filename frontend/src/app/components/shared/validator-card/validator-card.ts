@@ -33,6 +33,13 @@ const FORMATTED_DATE_OPTIONS: Intl.DateTimeFormatOptions = {
 // COMPONENTE: VALIDATOR CARD
 // Presets rápidos + calendario inline + botón de comprobación.
 // --------------------------------------------------------------------------
+
+/**
+ * Tarjeta del validador. Permite seleccionar una fecha mediante presets
+ * rápidos («Hoy», «+6 meses», etc.) o un calendario inline. La fecha
+ * formateada se calcula con `computed()` y se emite a través del
+ * output `check` al pulsar el botón.
+ */
 @Component({
   selector: 'app-validator-card',
   imports: [ButtonComponent, CalendarComponent, FaIconComponent],
@@ -42,8 +49,10 @@ const FORMATTED_DATE_OPTIONS: Intl.DateTimeFormatOptions = {
 export class ValidatorCardComponent {
   protected readonly presets = DATE_PRESETS;
   protected readonly faCalendarCheck = faCalendarCheck;
+  /** Fecha actualmente seleccionada en el calendario o presets. */
   protected readonly selectedDate = signal<Date | null>(null);
 
+  /** Fecha formateada en español (vacía si no hay selección). */
   protected readonly formattedDate = computed(() => {
     const date = this.selectedDate();
     if (!date) return '';
@@ -53,16 +62,20 @@ export class ValidatorCardComponent {
     ).format(date);
   });
 
+  /** Emitido al pulsar «Comprobar» con la fecha seleccionada. */
   readonly check = output<Date>();
 
+  /** Actualiza la fecha cuando el usuario navega por el calendario. */
   protected onDateChange(date: Date): void {
     this.selectedDate.set(date);
   }
 
+  /** Aplica un preset rápido sumando los meses indicados. */
   protected applyPreset(preset: DatePreset): void {
     this.selectedDate.set(this.computePresetDate(preset));
   }
 
+  /** Determina si un preset coincide exactamente con la fecha seleccionada. */
   protected isPresetActive(preset: DatePreset): boolean {
     const selected = this.selectedDate();
     if (!selected) return false;
@@ -74,12 +87,14 @@ export class ValidatorCardComponent {
     );
   }
 
+  /** Emite la fecha seleccionada por el output `check`. */
   protected onCheck(): void {
     const date = this.selectedDate();
     if (!date) return;
     this.check.emit(date);
   }
 
+  /** Calcula la fecha equivalente a un preset (hoy + N meses). */
   private computePresetDate(preset: DatePreset): Date {
     const today = new Date();
     return new Date(
