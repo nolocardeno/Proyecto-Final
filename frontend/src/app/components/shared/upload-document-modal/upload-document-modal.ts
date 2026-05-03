@@ -2,7 +2,7 @@
 // IMPORTS
 // --------------------------------------------------------------------------
 import { Component, HostListener, inject, output, signal, computed } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
   faPenToSquare,
@@ -16,12 +16,15 @@ import {
   faArrowRotateLeft,
   faShieldHalved,
 } from '@fortawesome/free-solid-svg-icons';
+import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 import { type IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { ButtonComponent } from '../button/button';
 import { FormFieldComponent } from '../form-field/form-field';
 import { FilePickerComponent } from '../file-picker/file-picker';
 import { ProgressBarComponent } from '../progress-bar/progress-bar';
 import { OptionButtonComponent } from '../option-button/option-button';
+import { FormCheckboxComponent } from '../form-checkbox/form-checkbox';
 import { DocumentService } from '../../../services/document.service';
 import { UploadDocumentModalService } from '../../../services/upload-document-modal.service';
 import { AlertService } from '../../../services/alert.service';
@@ -88,11 +91,14 @@ const TICKET_TYPE_MAP: Record<string, DocumentType> = {
   selector: 'app-upload-document-modal',
   imports: [
     ReactiveFormsModule,
+    FormsModule,
+    FaIconComponent,
     ButtonComponent,
     FormFieldComponent,
     FilePickerComponent,
     ProgressBarComponent,
     OptionButtonComponent,
+    FormCheckboxComponent,
   ],
   templateUrl: './upload-document-modal.html',
   styleUrl: './upload-document-modal.scss',
@@ -114,7 +120,11 @@ export class UploadDocumentModalComponent {
   protected readonly selectedTicketCategory = signal<string | null>(null);
   protected readonly customTicketCategory = signal('');
   protected readonly imageFile = signal<File | null>(null);
+  protected readonly useAi = signal(false);
   protected readonly loading = signal(false);
+
+  // --- Iconos ---
+  protected readonly faGoogle = faGoogle;
 
   // --- Progreso ---
   protected readonly progress = computed(() => PROGRESS_MAP[this.currentStep()]);
@@ -249,7 +259,7 @@ export class UploadDocumentModalComponent {
 
     this.loading.set(true);
     const groupId = this.modalService.groupId();
-    this.documentService.extractFromImage(file, groupId ?? undefined).subscribe({
+    this.documentService.extractFromImage(file, this.useAi(), groupId ?? undefined).subscribe({
       next: () => {
         this.alert.show('success', 'Documento creado desde imagen correctamente');
         this.documentCreated.emit();
@@ -344,6 +354,7 @@ export class UploadDocumentModalComponent {
     this.selectedTicketCategory.set(null);
     this.customTicketCategory.set('');
     this.imageFile.set(null);
+    this.useAi.set(false);
     this.loading.set(false);
     this.docForm.reset({ title: '', storeName: '', issueDate: '', expiryDate: '' });
   }

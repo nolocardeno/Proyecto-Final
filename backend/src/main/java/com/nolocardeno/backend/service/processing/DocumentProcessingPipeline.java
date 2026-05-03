@@ -37,6 +37,10 @@ public class DocumentProcessingPipeline {
     private double reviewThreshold;
 
     public ProcessDocumentResponse process(MultipartFile file) {
+        return process(file, false);
+    }
+
+    public ProcessDocumentResponse process(MultipartFile file, boolean useAi) {
         validator.validate(file);
 
         byte[] bytes;
@@ -53,7 +57,7 @@ public class DocumentProcessingPipeline {
             throw new IllegalStateException("No se pudo almacenar la imagen", e);
         }
 
-        ExtractionResult raw = dispatcher.dispatch(bytes, file.getContentType());
+        ExtractionResult raw = dispatcher.dispatch(bytes, file.getContentType(), useAi);
         ExtractionResult normalized = normalizer.normalize(raw);
         List<RuleOutcome> outcomes = rulesEngine.evaluate(normalized);
 

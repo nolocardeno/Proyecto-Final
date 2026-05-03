@@ -39,9 +39,10 @@ export class DocumentService {
     return this.http.post<DocumentResponse>(url, formData, { headers: this.headers });
   }
 
-  extractFromImage(file: File, groupId?: number): Observable<DocumentResponse> {
+  extractFromImage(file: File, useAi: boolean, groupId?: number): Observable<DocumentResponse> {
     const formData = new FormData();
     formData.append('file', file);
+    formData.append('useAi', String(useAi));
     const url = groupId
       ? `/api/groups/${groupId}/documents/extract`
       : `${this.baseUrl}/extract`;

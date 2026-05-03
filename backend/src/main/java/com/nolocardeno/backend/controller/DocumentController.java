@@ -103,8 +103,9 @@ public class DocumentController {
     @PostMapping(value = "/extract", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<DocumentResponse> extractFromImage(
             @RequestHeader("X-User-Id") Long userId,
-            @RequestPart("file") MultipartFile file) {
+            @RequestPart("file") MultipartFile file,
+            @RequestParam(value = "useAi", defaultValue = "false") boolean useAi) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(documentService.createFromImage(userId, file));
+                .body(documentService.createFromImage(userId, file, null, useAi));
     }
 }

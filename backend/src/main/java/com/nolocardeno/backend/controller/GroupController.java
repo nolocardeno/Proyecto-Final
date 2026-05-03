@@ -66,9 +66,10 @@ public class GroupController {
     public ResponseEntity<DocumentResponse> extractDocumentFromImage(
             @RequestHeader("X-User-Id") Long userId,
             @PathVariable Long id,
-            @RequestPart("file") MultipartFile file) {
+            @RequestPart("file") MultipartFile file,
+            @RequestParam(value = "useAi", defaultValue = "false") boolean useAi) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(documentService.createFromImage(userId, file, id));
+                .body(documentService.createFromImage(userId, file, id, useAi));
     }
 
     @PostMapping

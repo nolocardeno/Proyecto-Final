@@ -52,6 +52,24 @@
           <span class="upload-modal__file-label">Imagen</span>
           <app-file-picker (fileSelected)="onImageSelected($event)" />
         </label>
+
+        <section class="upload-modal__ai-toggle">
+          <header class="upload-modal__ai-toggle-header">
+            <app-form-checkbox
+              checkboxId="upload-doc-use-ai"
+              label="Extraer datos con IA (Google Gemini)"
+              [ngModel]="useAi()"
+              (ngModelChange)="useAi.set($event)"
+            />
+            <fa-icon class="upload-modal__ai-icon" [icon]="faGoogle" />
+          </header>
+          <p class="upload-modal__ai-notice">
+            Si activas esta opción, la imagen se enviará a Google Gemini para procesar los datos.
+            Esto puede mejorar la precisión, pero el contenido compartido no será totalmente privado
+            y quedará sujeto a las políticas del proveedor. Por defecto se utiliza el OCR local.
+          </p>
+        </section>
+
         <footer class="upload-modal__actions">
           <hr class="upload-modal__separator" />
           <app-button

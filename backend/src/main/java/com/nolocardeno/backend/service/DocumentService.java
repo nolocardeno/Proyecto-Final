@@ -111,7 +111,7 @@ public class DocumentService {
      */
     @Transactional
     public DocumentResponse createFromImage(Long userId, MultipartFile file) {
-        return createFromImage(userId, file, null);
+        return createFromImage(userId, file, null, false);
     }
 
     /**
@@ -122,6 +122,11 @@ public class DocumentService {
      */
     @Transactional
     public DocumentResponse createFromImage(Long userId, MultipartFile file, Long groupId) {
+        return createFromImage(userId, file, groupId, false);
+    }
+
+    @Transactional
+    public DocumentResponse createFromImage(Long userId, MultipartFile file, Long groupId, boolean useAi) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
 
@@ -141,7 +146,7 @@ public class DocumentService {
             }
         }
 
-        ProcessDocumentResponse result = processingPipeline.process(file);
+        ProcessDocumentResponse result = processingPipeline.process(file, useAi);
         ExtractionResult data = result.data();
 
         if (data == null || result.status() == ExtractionStatus.FAILED) {
@@ -149,7 +154,7 @@ public class DocumentService {
             if (result.source() == null) {
                 reason = "no se pudo procesar la imagen (ni IA ni OCR disponibles).";
             } else if (result.source() == ExtractionSource.OCR) {
-                reason = "el OCR no pudo leer texto de la imagen. Asegúrate de que la imagen está enfocada y legible, o configura GOOGLE_API_KEY para usar la IA.";
+                reason = "el OCR no pudo leer texto de la imagen. Asegúrate de que la imagen está enfocada y legible, o activa la extracción con IA.";
             } else {
                 reason = "la IA no devolvió datos válidos.";
             }

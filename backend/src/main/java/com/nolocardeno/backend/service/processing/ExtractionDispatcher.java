@@ -6,12 +6,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 /**
- * Decides between the primary AI extractor and the OCR fallback.
+ * Decides between the OCR extractor (default) and the optional AI extractor.
  *
- * Policy: the AI extractor (Gemini) is always preferred. OCR is only
- * activated when the AI fails outright — either by throwing an exception
- * or by returning {@link ExtractionStatus#FAILED}. Low-confidence results
- * from the AI are still returned as-is so the reviewer UI can surface them.
+ * Policy: OCR is the primary extractor. The AI extractor (Gemini) is only
+ * used when the caller opts in by setting {@code useAi=true}; in that case
+ * AI is tried first and OCR acts as a fallback when AI fails.
  */
 @Service
 @Slf4j
@@ -28,15 +27,15 @@ public class ExtractionDispatcher {
         this.ocrExtractor = ocrExtractor;
     }
 
-    public ExtractionResult dispatch(byte[] image, String mime) {
-        ExtractionResult aiResult = tryAi(image, mime);
-
-        if (aiResult != null && aiResult.status() != ExtractionStatus.FAILED) {
-            return aiResult;
+    public ExtractionResult dispatch(byte[] image, String mime, boolean useAi) {
+        if (useAi) {
+            ExtractionResult aiResult = tryAi(image, mime);
+            if (aiResult != null && aiResult.status() != ExtractionStatus.FAILED) {
+                return aiResult;
+            }
+            log.info("AI extraction unavailable (status={}). Falling back to OCR.",
+                    aiResult == null ? "null" : aiResult.status());
         }
-
-        log.info("AI extraction unavailable (status={}). Activating OCR fallback.",
-                aiResult == null ? "null" : aiResult.status());
         return ocrExtractor.extract(image, mime);
     }
 

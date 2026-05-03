@@ -180,6 +180,38 @@
   }
 
   // --------------------------------------------------------------------------
+  // SELECTOR DE EXTRACCIÓN CON IA
+  // --------------------------------------------------------------------------
+  &__ai-toggle {
+    display: flex;
+    flex-direction: column;
+    gap: v.$spacing-1;
+    padding: v.$spacing-2 v.$spacing-3;
+    background-color: var(--color-input-bg);
+    border: v.$border-thin solid v.$neutral-200;
+    border-radius: v.$radius-input;
+  }
+
+  &__ai-toggle-header {
+    display: flex;
+    align-items: center;
+    gap: v.$spacing-1;
+  }
+
+  &__ai-icon {
+    font-size: v.$font-size-md-lg;
+    color: v.$color-primary;
+  }
+
+  &__ai-notice {
+    margin: 0;
+    font-family: v.$font-primary;
+    font-size: v.$font-size-sm;
+    line-height: v.$line-height-normal;
+    color: var(--color-text-secondary);
+  }
+
+  // --------------------------------------------------------------------------
   // INPUT DE CATEGORÍA PERSONALIZADA
   // --------------------------------------------------------------------------
   &__custom-input {
