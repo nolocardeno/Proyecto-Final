@@ -1,43 +1,48 @@
-# Scantral — PaddleOCR sidecar
+# Scantral — Sidecar PaddleOCR
 
-Lightweight Python microservice that exposes [PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR)
-(PP-OCRv4) over HTTP. Replaces the legacy Tesseract / Tess4J fallback used by
-the Spring backend when the primary AI extractor (Gemini) is unavailable.
+Microservicio Python ligero que expone [PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR)
+(PP-OCRv4) por HTTP. Sustituye al fallback legacy de Tesseract / Tess4J utilizado por
+el backend Spring cuando el extractor IA primario (Gemini) no está disponible.
 
-## Why PaddleOCR
+## Índice
 
-- Modern (PP-OCRv4 / v5), much higher accuracy than Tesseract on receipts and
-  ID cards.
-- CPU-friendly: no GPU required for the typical document-card workload.
-- Multilingual (`lang=latin` covers Spanish + English in a single recognizer).
-- Deterministic plain-text output → reuses the existing `OcrTextParser`
-  heuristics on the Java side untouched.
+- [Por qué PaddleOCR](#por-qué-paddleocr)
+- [API](#api)
+- [Configuración](#configuración)
+- [Ejecución en solitario](#ejecución-en-solitario)
 
-> LightOnOCR was evaluated and discarded: it is a 1B-parameter vision-language
-> transformer that overlaps with what Gemini already does, and needs a GPU
-> to be practical. PaddleOCR is the right shape for a *fallback*: lightweight,
-> deterministic, offline.
+## Por qué PaddleOCR
+
+- Moderno (PP-OCRv4 / v5), con mucha mayor precisión que Tesseract en tickets y DNIs.
+- Eficiente en CPU: no requiere GPU para la carga de trabajo habitual con documentos.
+- Multilingüe (`lang=latin` cubre español + inglés en un único reconocedor).
+- Salida en texto plano determinista → reutiliza las heurísticas existentes de `OcrTextParser`
+  en el lado Java sin modificaciones.
+
+> LightOnOCR fue evaluado y descartado: es un transformer visión-lenguaje de 1B parámetros
+> que solapa con lo que Gemini ya hace y necesita GPU para ser práctico. PaddleOCR encaja
+> mejor como *fallback*: ligero, determinista y sin conexión.
 
 ## API
 
-| Method | Path     | Description                                              |
-|--------|----------|----------------------------------------------------------|
-| GET    | `/health` | Liveness + active language / GPU flag.                  |
-| POST   | `/ocr`    | Multipart `file` upload → `{ text, lines[], averageConfidence }`. |
+| Método | Ruta      | Descripción                                                          |
+|--------|-----------|----------------------------------------------------------------------|
+| GET    | `/health` | Comprobación de vida + idioma activo / flag GPU.                     |
+| POST   | `/ocr`    | Subida multipart `file` → `{ text, lines[], averageConfidence }`.    |
 
-## Configuration
+## Configuración
 
-| Env var       | Default | Notes                                                |
-|---------------|---------|------------------------------------------------------|
-| `OCR_LANGUAGE`| `latin` | PaddleOCR `lang` code: `latin`, `es`, `en`, `ch`, ...|
-| `OCR_USE_GPU` | `false` | Enable only on machines with CUDA + paddlepaddle-gpu.|
+| Variable      | Por defecto | Notas                                                      |
+|---------------|-------------|------------------------------------------------------------|
+| `OCR_LANGUAGE`| `latin`     | Código de idioma PaddleOCR: `latin`, `es`, `en`, `ch`, … |
+| `OCR_USE_GPU` | `false`     | Activar solo en máquinas con CUDA + paddlepaddle-gpu.      |
 
-## Run standalone
+## Ejecución en solitario
 
 ```bash
 docker build -t scantral-paddleocr .
 docker run --rm -p 8001:8001 scantral-paddleocr
-curl -F "file=@some-receipt.jpg" http://localhost:8001/ocr
+curl -F "file=@un-ticket.jpg" http://localhost:8001/ocr
 ```
 
-In the full stack it is wired up automatically by `docker-compose.yml`.
+En el stack completo se conecta automáticamente a través de `docker-compose.yml`.

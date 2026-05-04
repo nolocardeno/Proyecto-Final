@@ -5,6 +5,31 @@ aplicación: usuarios, documentos personales y compartidos, alertas de
 caducidad, extracción de datos por OCR + IA, grupos con código de acceso,
 dashboard y panel de administración.
 
+## Índice
+
+- [Stack](#stack)
+- [Arquitectura](#arquitectura)
+  - [Estructura de paquetes](#estructura-de-paquetes)
+- [Modelo de datos](#modelo-de-datos)
+  - [Diagrama entidad-relación](#diagrama-entidad-relación)
+  - [Diccionario de datos](#diccionario-de-datos)
+  - [Enumeraciones](#enumeraciones)
+  - [Esquema](#esquema)
+- [Seguridad](#seguridad)
+  - [Autenticación](#autenticación)
+  - [Autorización con roles](#autorización-con-roles)
+  - [Endpoints públicos](#endpoints-públicos)
+  - [Logout y revocación de tokens](#logout-y-revocación-de-tokens)
+  - [Rate limiting](#rate-limiting)
+  - [Otros detalles](#otros-detalles)
+- [API REST](#api-rest)
+  - [Filtrado y paginación](#filtrado-y-paginación)
+  - [Endpoints](#endpoints)
+  - [Códigos de respuesta](#códigos-de-respuesta)
+  - [Documentación interactiva](#documentación-interactiva)
+- [Tests y cobertura](#tests-y-cobertura)
+- [Configuración y ejecución](#configuración-y-ejecución)
+
 ## Stack
 
 | Capa          | Tecnología                                                       |

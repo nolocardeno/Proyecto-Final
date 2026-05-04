@@ -1,5 +1,20 @@
 # 1. Introducción, objetivos y antecedentes
 
+## Índice
+
+- [1.1. Origen de la idea y motivación del proyecto](#11-origen-de-la-idea-y-motivación-del-proyecto)
+- [1.2. Expectativas y objetivos específicos](#12-expectativas-y-objetivos-específicos)
+  - [Objetivos funcionales](#objetivos-funcionales)
+  - [Objetivos avanzados](#objetivos-avanzados)
+  - [Objetivos técnicos](#objetivos-técnicos)
+  - [Expectativas del proyecto](#expectativas-del-proyecto)
+- [1.3. Análisis comparativo breve de aplicaciones similares](#13-análisis-comparativo-breve-de-aplicaciones-similares)
+  - [ReceiptSafe](#receiptsafe)
+  - [SlipCrate](#slipcrate)
+  - [TrackWarranty](#trackwarranty)
+  - [Tabla comparativa](#tabla-comparativa)
+  - [Conclusiones del análisis](#conclusiones-del-análisis)
+
 ## 1.1. Origen de la idea y motivación del proyecto
 
 La idea de **Scantral** surge a partir de la observación de un problema cotidiano que afecta a una gran cantidad de personas: la dificultad para mantener organizada la documentación personal y los justificantes de compra. En el día a día es habitual perder tickets, olvidar cuándo caduca un documento oficial o descubrir demasiado tarde que la garantía de un producto ya ha expirado. Estas situaciones, aunque pequeñas en apariencia, generan molestias administrativas e incluso pérdidas económicas que en muchos casos podrían evitarse con una mejor gestión.
