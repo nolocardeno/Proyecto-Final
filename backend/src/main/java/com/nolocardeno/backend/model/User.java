@@ -1,5 +1,6 @@
 package com.nolocardeno.backend.model;
 
+import com.nolocardeno.backend.model.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -32,6 +33,11 @@ public class User {
 
     @Column(name = "profile_image_path")
     private String profileImagePath;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 16)
+    @Builder.Default
+    private Role role = Role.USER;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

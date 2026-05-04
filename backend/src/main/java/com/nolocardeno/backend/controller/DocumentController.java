@@ -4,12 +4,19 @@ import com.nolocardeno.backend.dto.DocumentHistoryResponse;
 import com.nolocardeno.backend.dto.DocumentRequest;
 import com.nolocardeno.backend.dto.DocumentResponse;
 import com.nolocardeno.backend.dto.RenewalHistoryResponse;
+import com.nolocardeno.backend.model.enums.DocumentStatus;
+import com.nolocardeno.backend.model.enums.DocumentType;
+import com.nolocardeno.backend.security.CustomUserDetails;
 import com.nolocardeno.backend.service.DocumentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,89 +30,108 @@ public class DocumentController {
 
     private final DocumentService documentService;
 
-    // TODO: obtener userId del token JWT (Sprint 5). Por ahora se pasa como header temporal.
-
     @GetMapping
-    public ResponseEntity<List<DocumentResponse>> getAll(@RequestHeader("X-User-Id") Long userId) {
-        return ResponseEntity.ok(documentService.getDocumentsByUser(userId));
+    public ResponseEntity<List<DocumentResponse>> getAll(@AuthenticationPrincipal CustomUserDetails principal) {
+        return ResponseEntity.ok(documentService.getDocumentsByUser(principal.getId()));
+    }
+
+    /**
+     * Búsqueda paginada con filtros opcionales.
+     *
+     * <p>Ejemplos:
+     * <pre>
+     *   GET /api/documents/search?page=0&size=20&sort=expiryDate,asc
+     *   GET /api/documents/search?status=EXPIRING_SOON&type=DNI
+     *   GET /api/documents/search?q=carrefour
+     * </pre>
+     */
+    @GetMapping("/search")
+    public ResponseEntity<Page<DocumentResponse>> search(
+            @AuthenticationPrincipal CustomUserDetails principal,
+            @RequestParam(required = false) DocumentStatus status,
+            @RequestParam(required = false) DocumentType type,
+            @RequestParam(required = false) String q,
+            @PageableDefault(size = 20) Pageable pageable) {
+        return ResponseEntity.ok(
+                documentService.searchDocuments(principal.getId(), status, type, q, pageable));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<DocumentResponse> getById(
-            @RequestHeader("X-User-Id") Long userId,
+            @AuthenticationPrincipal CustomUserDetails principal,
             @PathVariable Long id) {
-        return ResponseEntity.ok(documentService.getDocument(userId, id));
+        return ResponseEntity.ok(documentService.getDocument(principal.getId(), id));
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<DocumentResponse> create(
-            @RequestHeader("X-User-Id") Long userId,
+            @AuthenticationPrincipal CustomUserDetails principal,
             @RequestPart("data") @Valid DocumentRequest request,
             @RequestPart(value = "file", required = false) MultipartFile file) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(documentService.createDocument(userId, request, file));
+                .body(documentService.createDocument(principal.getId(), request, file));
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<DocumentResponse> update(
-            @RequestHeader("X-User-Id") Long userId,
+            @AuthenticationPrincipal CustomUserDetails principal,
             @PathVariable Long id,
             @RequestPart("data") @Valid DocumentRequest request,
             @RequestPart(value = "file", required = false) MultipartFile file) {
-        return ResponseEntity.ok(documentService.updateDocument(userId, id, request, file));
+        return ResponseEntity.ok(documentService.updateDocument(principal.getId(), id, request, file));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
-            @RequestHeader("X-User-Id") Long userId,
+            @AuthenticationPrincipal CustomUserDetails principal,
             @PathVariable Long id) {
-        documentService.deleteDocument(userId, id);
+        documentService.deleteDocument(principal.getId(), id);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{id}/renew")
     public ResponseEntity<DocumentResponse> renew(
-            @RequestHeader("X-User-Id") Long userId,
+            @AuthenticationPrincipal CustomUserDetails principal,
             @PathVariable Long id,
             @RequestParam LocalDate newExpiryDate) {
-        return ResponseEntity.ok(documentService.renewDocument(userId, id, newExpiryDate));
+        return ResponseEntity.ok(documentService.renewDocument(principal.getId(), id, newExpiryDate));
     }
 
     @GetMapping("/{id}/renewals")
     public ResponseEntity<List<RenewalHistoryResponse>> getRenewalHistory(
-            @RequestHeader("X-User-Id") Long userId,
+            @AuthenticationPrincipal CustomUserDetails principal,
             @PathVariable Long id) {
-        return ResponseEntity.ok(documentService.getRenewalHistory(userId, id));
+        return ResponseEntity.ok(documentService.getRenewalHistory(principal.getId(), id));
     }
 
     @GetMapping("/{id}/history")
     public ResponseEntity<List<DocumentHistoryResponse>> getHistory(
-            @RequestHeader("X-User-Id") Long userId,
+            @AuthenticationPrincipal CustomUserDetails principal,
             @PathVariable Long id) {
-        return ResponseEntity.ok(documentService.getDocumentHistory(userId, id));
+        return ResponseEntity.ok(documentService.getDocumentHistory(principal.getId(), id));
     }
 
     @PostMapping("/check-duplicates")
     public ResponseEntity<List<DocumentResponse>> checkDuplicates(
-            @RequestHeader("X-User-Id") Long userId,
+            @AuthenticationPrincipal CustomUserDetails principal,
             @Valid @RequestBody DocumentRequest request) {
-        return ResponseEntity.ok(documentService.checkDuplicates(userId, request));
+        return ResponseEntity.ok(documentService.checkDuplicates(principal.getId(), request));
     }
 
     @PostMapping("/{id}/image")
     public ResponseEntity<DocumentResponse> uploadImage(
-            @RequestHeader("X-User-Id") Long userId,
+            @AuthenticationPrincipal CustomUserDetails principal,
             @PathVariable Long id,
             @RequestParam("file") MultipartFile file) {
-        return ResponseEntity.ok(documentService.uploadDocumentImage(userId, id, file));
+        return ResponseEntity.ok(documentService.uploadDocumentImage(principal.getId(), id, file));
     }
 
     @PostMapping(value = "/extract", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<DocumentResponse> extractFromImage(
-            @RequestHeader("X-User-Id") Long userId,
+            @AuthenticationPrincipal CustomUserDetails principal,
             @RequestPart("file") MultipartFile file,
             @RequestParam(value = "useAi", defaultValue = "false") boolean useAi) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(documentService.createFromImage(userId, file, null, useAi));
+                .body(documentService.createFromImage(principal.getId(), file, null, useAi));
     }
 }

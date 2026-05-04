@@ -28,7 +28,7 @@ export class GroupService {
   /** Cabeceras con el identificador del usuario autenticado. */
   private get headers(): HttpHeaders {
     const userId = this.authService.user()?.userId ?? 0;
-    return new HttpHeaders({ 'X-User-Id': String(userId) });
+    return new HttpHeaders();
   }
 
   /** Lista todos los grupos del usuario. */

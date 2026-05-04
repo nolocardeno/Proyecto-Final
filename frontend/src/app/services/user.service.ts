@@ -33,7 +33,7 @@ export class UserService {
   private readonly baseUrl = '/api/users';
 
   // TODO: get userId from auth system (Sprint 5). Temporary: userId = 3
-  private readonly headers = new HttpHeaders({ 'X-User-Id': '3' });
+  private readonly headers = new HttpHeaders();
 
   /** Devuelve los datos completos del usuario indicado. */
   getUser(userId: number): Observable<AuthResponse> {

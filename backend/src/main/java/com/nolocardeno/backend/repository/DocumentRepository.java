@@ -4,13 +4,14 @@ import com.nolocardeno.backend.model.Document;
 import com.nolocardeno.backend.model.enums.DocumentStatus;
 import com.nolocardeno.backend.model.enums.DocumentType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public interface DocumentRepository extends JpaRepository<Document, Long> {
+public interface DocumentRepository extends JpaRepository<Document, Long>, JpaSpecificationExecutor<Document> {
 
     List<Document> findByUserIdOrderByCreatedAtDesc(Long userId);
 

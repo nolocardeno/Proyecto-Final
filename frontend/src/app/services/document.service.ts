@@ -20,7 +20,7 @@ import { AuthService } from './auth.service';
  *  - `multipart/form-data` (mediante `FormData` + `Blob`) para crear/editar
  *    documentos que pueden incluir imagen adjunta.
  *
- * Todas las peticiones se autentican con la cabecera `X-User-Id` derivada
+ * Todas las peticiones van autenticadas vía el interceptor JWT
  * del usuario actual del `AuthService`.
  */
 @Injectable({ providedIn: 'root' })
@@ -32,7 +32,7 @@ export class DocumentService {
   /** Cabeceras HTTP con el id del usuario autenticado (0 si no hay sesión). */
   private get headers(): HttpHeaders {
     const userId = this.authService.user()?.userId ?? 0;
-    return new HttpHeaders({ 'X-User-Id': String(userId) });
+    return new HttpHeaders();
   }
 
   /** Recupera todos los documentos del usuario. */

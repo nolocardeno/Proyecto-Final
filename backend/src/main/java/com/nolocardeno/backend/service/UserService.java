@@ -129,6 +129,7 @@ public class UserService {
                 .email(user.getEmail())
                 .name(user.getName())
                 .profileImagePath(user.getProfileImagePath())
+                .role(user.getRole().name())
                 .build();
     }
 

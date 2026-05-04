@@ -20,8 +20,12 @@ import com.nolocardeno.backend.repository.DocumentRepository;
 import com.nolocardeno.backend.repository.GroupRepository;
 import com.nolocardeno.backend.repository.RenewalHistoryRepository;
 import com.nolocardeno.backend.repository.UserRepository;
+import com.nolocardeno.backend.repository.spec.DocumentSpecifications;
 import com.nolocardeno.backend.service.processing.DocumentProcessingPipeline;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -59,6 +63,32 @@ public class DocumentService {
         return docs.stream()
                 .map(DocumentMapper::toResponse)
                 .toList();
+    }
+
+    /**
+     * Búsqueda paginada con filtros opcionales sobre los documentos del
+     * usuario. Cualquier filtro {@code null}/blanco se ignora.
+     *
+     * @param userId   propietario de los documentos
+     * @param status   estado exacto a filtrar (o {@code null})
+     * @param type     tipo exacto a filtrar (o {@code null})
+     * @param q        texto a buscar en {@code title} y {@code storeName}
+     * @param pageable paginación y ordenación
+     */
+    @Transactional
+    public Page<DocumentResponse> searchDocuments(Long userId,
+                                                  DocumentStatus status,
+                                                  DocumentType type,
+                                                  String q,
+                                                  Pageable pageable) {
+        Specification<Document> spec = Specification.where(DocumentSpecifications.ownedBy(userId))
+                .and(DocumentSpecifications.hasStatus(status))
+                .and(DocumentSpecifications.hasType(type))
+                .and(DocumentSpecifications.textMatches(q));
+        return documentRepository.findAll(spec, pageable).map(doc -> {
+            updateDocumentStatus(doc);
+            return DocumentMapper.toResponse(doc);
+        });
     }
 
     @Transactional

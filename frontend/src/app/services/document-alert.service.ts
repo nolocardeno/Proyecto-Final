@@ -36,7 +36,7 @@ export class DocumentAlertService {
   /** Cabeceras con el id del usuario autenticado. */
   private get headers(): HttpHeaders {
     const userId = this.authService.user()?.userId ?? 0;
-    return new HttpHeaders({ 'X-User-Id': String(userId) });
+    return new HttpHeaders();
   }
 
   /** Construye la URL base del recurso de alertas para un documento. */
