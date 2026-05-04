@@ -1,25 +1,39 @@
 services:
   frontend:
     build: ./frontend
+    image: scantral-frontend
     container_name: scantral-frontend
+    # Único puerto publicado al host: el front actúa como reverse proxy del
+    # backend (ver frontend/nginx.conf), por lo que no hace falta exponer
+    # ningún otro servicio.
     ports:
       - "4200:80"
     depends_on:
       - backend
+    networks:
+      - scantral-net
+    restart: unless-stopped
 
   backend:
     build: ./backend
+    image: scantral-backend
     container_name: scantral-backend
-    ports:
-      - "8080:8080"
+    # No `ports:` → sólo accesible internamente vía la red `scantral-net`.
+    # El front lo proxy-pasa en /api y /uploads.
+    expose:
+      - "8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/scantral
-      SPRING_DATASOURCE_USERNAME: scantral
-      SPRING_DATASOURCE_PASSWORD: scantral_dev
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-scantral}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-scantral}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-scantral_dev}
+      JWT_SECRET: ${JWT_SECRET:-dev-only-change-me-please-32-bytes-minimum-secret-key-1234567890}
+      JWT_EXPIRATION_MS: ${JWT_EXPIRATION_MS:-86400000}
       MAIL_USERNAME: ${MAIL_USERNAME}
       MAIL_PASSWORD: ${MAIL_PASSWORD}
       GOOGLE_API_KEY: ${GOOGLE_API_KEY}
+      AI_MODEL: ${AI_MODEL:-gemini-2.5-flash-lite}
       OCR_SERVICE_URL: http://paddleocr:8001
+      OCR_TIMEOUT_MS: ${OCR_TIMEOUT_MS:-30000}
     volumes:
       - uploads:/app/uploads
     depends_on:
@@ -27,9 +41,13 @@ services:
         condition: service_healthy
       paddleocr:
         condition: service_healthy
+    networks:
+      - scantral-net
+    restart: unless-stopped
 
   paddleocr:
     build: ./paddleocr-service
+    image: scantral-paddleocr
     container_name: scantral-paddleocr
     environment:
       OCR_LANGUAGE: ${OCR_LANGUAGE:-latin}
@@ -43,24 +61,35 @@ services:
       # the Dockerfile pins HOME=/app, so this is where the cache actually
       # lives — mounting /root/.paddleocr would silently fail to persist.
       - paddleocr_models:/app/.paddleocr
+    networks:
+      - scantral-net
     restart: unless-stopped
 
   postgres:
     image: postgres:17
     container_name: scantral-db
     environment:
-      POSTGRES_DB: scantral
-      POSTGRES_USER: scantral
-      POSTGRES_PASSWORD: scantral_dev
-    ports:
-      - "5432:5432"
+      POSTGRES_DB: ${POSTGRES_DB:-scantral}
+      POSTGRES_USER: ${POSTGRES_USER:-scantral}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-scantral_dev}
+    # No `ports:` → la BD sólo es accesible desde la red interna.
+    # Para inspeccionarla desde el host, ver DEPLOY.md (sección Troubleshooting).
+    expose:
+      - "5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U scantral"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-scantral}"]
       interval: 5s
       timeout: 5s
       retries: 5
+    networks:
+      - scantral-net
+    restart: unless-stopped
+
+networks:
+  scantral-net:
+    driver: bridge
 
 volumes:
   pgdata:
