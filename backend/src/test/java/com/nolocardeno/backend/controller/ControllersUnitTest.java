@@ -45,10 +45,10 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import org.mockito.ArgumentMatchers;
 
 @ExtendWith(MockitoExtension.class)
 class ControllersUnitTest {
@@ -316,7 +316,7 @@ class ControllersUnitTest {
                 .passwordHash("p").role(Role.ADMIN).build();
         Page<User> page = new PageImpl<>(List.of(u));
         Pageable pageable = PageRequest.of(0, 20);
-        when(userRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
+        when(userRepository.findAll(ArgumentMatchers.<Specification<User>>any(), eq(pageable))).thenReturn(page);
 
         ResponseEntity<Page<AuthResponse>> r = admin.listUsers(Role.ADMIN, "a", pageable);
 

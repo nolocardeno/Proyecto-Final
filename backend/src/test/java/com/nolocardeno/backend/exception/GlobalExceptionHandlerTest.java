@@ -60,7 +60,7 @@ class GlobalExceptionHandlerTest {
     void uploadSize_returns_413() {
         ResponseEntity<Map<String, Object>> resp = handler.handleUploadSize(
                 new MaxUploadSizeExceededException(1024L));
-        assertThat(resp.getStatusCode()).isEqualTo(HttpStatus.PAYLOAD_TOO_LARGE);
+        assertThat(resp.getStatusCode()).isEqualTo(HttpStatus.CONTENT_TOO_LARGE);
     }
 
     @Test
