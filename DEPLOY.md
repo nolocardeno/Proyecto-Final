@@ -25,6 +25,8 @@ sidecar OCR + Postgres) con Docker Compose.
   - [Limpiar todo y volver a empezar](#limpiar-todo-y-volver-a-empezar)
 - [7. Despliegue en remoto](#7-despliegue-en-remoto)
 - [8. Evidencias de CI/CD](#8-evidencias-de-cicd)
+- [9. Gestión de ficheros y artefactos](#9-gestión-de-ficheros-y-artefactos)
+- [10. Verificación de red del despliegue](#10-verificación-de-red-del-despliegue)
 
 ## 0. Arquitectura
 
@@ -136,6 +138,10 @@ scantral-backend      scantral-backend     "java -jar app.jar"      Up          
 scantral-frontend     scantral-frontend    "/docker-entrypoint.…"   Up                        0.0.0.0:4200->80/tcp
 ```
 
+Captura real del último despliegue local:
+
+![docker compose ps](docs/assets/docker_compose_ps.png)
+
 > Sólo `scantral-frontend` publica puertos al host. El resto sólo es
 > alcanzable a través de la red interna `scantral-net`.
 
@@ -210,26 +216,22 @@ curl -s http://localhost:4200/api/documents \
 
 ### 4.3 OpenAPI / Swagger
 
-El backend no expone el puerto 8080 al host en producción (sólo internamente vía `scantral-net`), y Nginx únicamente proxea `/api/` y `/uploads/`, por lo que las rutas de Swagger **no** son accesibles en `localhost:4200`.
+El backend no expone el puerto 8080 al host (sólo internamente vía
+`scantral-net`). En su lugar, Nginx proxy-pasa también `/swagger-ui/` y
+`/v3/api-docs` al backend (ver [frontend/nginx.conf](frontend/nginx.conf)),
+por lo que la documentación de la API es accesible directamente desde el
+front sin tocar `docker-compose.yml`:
 
-**Para explorar la API localmente**, añade temporalmente el mapeo de puertos en `docker-compose.yml` y reinicia el servicio:
-
-```yaml
-# docker-compose.yml — bloque backend (sólo para desarrollo)
-    ports:
-      - "8080:8080"
-```
+- Spec JSON: <http://localhost:4200/v3/api-docs>
+- Swagger UI: <http://localhost:4200/swagger-ui/index.html>
 
 ```bash
-docker compose up -d backend
+curl -s http://localhost:4200/v3/api-docs | head -c 60
 ```
 
-Luego accede en:
-
-- Spec JSON: <http://localhost:8080/v3/api-docs>
-- Swagger UI: <http://localhost:8080/swagger-ui/index.html>
-
-> Recuerda quitar el `ports:` antes de desplegar en producción.
+```text
+{"openapi":"3.1.0","info":{"title":"Scantral API","version":
+```
 
 ### 4.4 Sidecar OCR (sólo desde dentro de la red interna)
 
@@ -398,3 +400,316 @@ Ambos workflows se ejecutan en verde en `main`:
 
 Los badges de arriba enlazan al historial de runs y reflejan en tiempo
 real el estado del último commit en `main`.
+
+Capturas de los workflows en verde:
+
+![GitHub Actions — vista general](docs/assets/workflows_actions.png)
+
+![GitHub Actions — detalle de run](docs/assets/workflows_actions_2.png)
+
+## 9. Gestión de ficheros y artefactos
+
+Esta sección recoge **qué ficheros son necesarios** para desplegar Scantral,
+**cuáles se generan**, **cuáles no deben subirse al repositorio** y **qué
+datos deben persistir** entre arranques. El objetivo es que cualquiera
+pueda reproducir el despliegue sólo clonando el repo y siguiendo los
+pasos.
+
+### 9.1 Inventario de artefactos del despliegue
+
+| Artefacto | Ruta en el repo | ¿Se sube? | Rol |
+| --------- | --------------- | :-------: | --- |
+| Orquestación | [docker-compose.yml](docker-compose.yml) | sí | Define los 4 servicios, red interna, volúmenes y variables |
+| Imagen backend | [backend/Dockerfile](backend/Dockerfile) | sí | Build multistage Maven → `eclipse-temurin:21-jre` |
+| Imagen frontend | [frontend/Dockerfile](frontend/Dockerfile) | sí | Build Node 20 → `nginx:alpine` con la SPA y `nginx.conf` |
+| Imagen OCR | [paddleocr-service/Dockerfile](paddleocr-service/Dockerfile) | sí | `python:3.11-slim` + FastAPI + PaddleOCR |
+| Config reverse proxy | [frontend/nginx.conf](frontend/nginx.conf) | sí | Sirve la SPA y proxy-pasa `/api` y `/uploads` al backend |
+| Plantilla de variables | [.env.example](.env.example) | sí | Documenta todas las variables; se copia a `.env` |
+| Variables reales | `.env` | **no** | Secretos (JWT, API keys, contraseñas SMTP) |
+| Workflows CI/CD | [.github/workflows/ci.yml](.github/workflows/ci.yml), [.github/workflows/docker-publish.yml](.github/workflows/docker-publish.yml) | sí | Build, tests con gate JaCoCo y publicación de imágenes |
+| Config backend | [backend/src/main/resources/application.properties](backend/src/main/resources/application.properties) | sí | Datasource, JPA, JWT, mail, OCR, rate-limit |
+
+### 9.2 Ficheros que NO se suben al repositorio
+
+El `.gitignore` raíz garantiza que `.env` (con secretos reales) nunca llegue
+al repo. La plantilla pública es `.env.example`.
+
+```bash
+$ cat .gitignore
+.env
+```
+
+Verificación rápida de que no hay secretos versionados:
+
+```bash
+$ git ls-files | grep -E '^\.env$'
+# (sin salida) → .env no está trackeado
+
+$ git check-ignore -v .env
+.gitignore:1:.env       .env
+```
+
+Adicionalmente, los artefactos de build de cada servicio (`backend/target/`,
+`frontend/dist/`, `frontend/node_modules/`, `__pycache__/`) están ignorados
+por los `.gitignore` y `.dockerignore` específicos de cada subproyecto, de
+modo que **el contexto de build de Docker no envía binarios** al daemon.
+
+### 9.3 Imágenes publicadas (tags y registry)
+
+Las tres imágenes se publican automáticamente en Docker Hub desde
+[.github/workflows/docker-publish.yml](.github/workflows/docker-publish.yml):
+
+```yaml
+# .github/workflows/docker-publish.yml — extracto
+- name: Extract metadata
+  uses: docker/metadata-action@v5
+  with:
+    images: ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/${{ matrix.service.name }}
+    tags: |
+      type=ref,event=branch
+      type=ref,event=tag
+      type=sha,format=short
+      type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
+```
+
+| Imagen | Registry | Tags publicados |
+| ------ | -------- | --------------- |
+| [`nolorubio23/scantral-frontend`](https://hub.docker.com/r/nolorubio23/scantral-frontend) | docker.io | `latest`, `main`, `sha-<corto>`, `v*` |
+| [`nolorubio23/scantral-backend`](https://hub.docker.com/r/nolorubio23/scantral-backend)   | docker.io | `latest`, `main`, `sha-<corto>`, `v*` |
+| [`nolorubio23/scantral-paddleocr`](https://hub.docker.com/r/nolorubio23/scantral-paddleocr) | docker.io | `latest`, `main`, `sha-<corto>`, `v*` |
+
+Verificación local de que la imagen se ha descargado / construido:
+
+```bash
+$ docker compose images
+CONTAINER             REPOSITORY           TAG       IMAGE ID       SIZE
+scantral-backend      scantral-backend     latest    a1b2c3d4e5f6   312MB
+scantral-frontend     scantral-frontend    latest    f6e5d4c3b2a1    52MB
+scantral-paddleocr    scantral-paddleocr   latest    9f8e7d6c5b4a   1.8GB
+scantral-db           postgres             17        0a1b2c3d4e5f   438MB
+```
+
+### 9.4 Datos que deben persistir (volúmenes)
+
+La sección `volumes:` del compose declara tres volúmenes con nombre que
+sobreviven a `docker compose down` (sólo se borran con `down -v`):
+
+```yaml
+# docker-compose.yml — extracto
+volumes:
+  pgdata:              # /var/lib/postgresql/data — base de datos
+  uploads:             # /app/uploads en el backend — ficheros subidos
+  paddleocr_models:    # /app/.paddleocr — pesos PP-OCR (~16 MB)
+```
+
+| Volumen | Servicio | Qué guarda | Por qué persistir |
+| ------- | -------- | ---------- | ----------------- |
+| `pgdata` | postgres | BD completa (usuarios, documentos, alertas) | Sin él se pierden todos los datos al recrear el contenedor |
+| `uploads` | backend | Imágenes subidas por los usuarios | El backend sirve `/uploads/<id>` proxy-pasado por Nginx |
+| `paddleocr_models` | paddleocr | Pesos PP-OCRv4 descargados de `paddleocr.bj.bcebos.com` | Evita re-descargar ~16 MB en cada arranque (CDN lento) |
+
+Comprobación de que existen y son estables:
+
+```bash
+$ docker volume ls --filter name=scantral
+DRIVER    VOLUME NAME
+local     scantral_pgdata
+local     scantral_uploads
+local     scantral_paddleocr_models
+
+$ docker volume inspect scantral_pgdata --format '{{.Mountpoint}}'
+/var/lib/docker/volumes/scantral_pgdata/_data
+```
+
+Backup mínimo recomendado (ver §5):
+
+```bash
+docker compose exec -T postgres pg_dump -U scantral scantral > backup.sql
+docker run --rm -v scantral_uploads:/data -v $PWD:/backup alpine \
+    tar czf /backup/uploads.tgz -C /data .
+```
+
+### 9.5 Variables de entorno: dónde viven y cómo se inyectan
+
+```bash
+# 1) Plantilla pública versionada
+$ head -n 12 .env.example
+# ============================================================================
+# Scantral — variables de entorno
+# Copiar a `.env` y rellenar los valores. `.env` está en .gitignore.
+# ============================================================================
+POSTGRES_DB=scantral
+POSTGRES_USER=scantral
+POSTGRES_PASSWORD=scantral_dev
+...
+
+# 2) `.env` real (no versionado) lo lee Docker Compose automáticamente
+$ cp .env.example .env && $EDITOR .env
+```
+
+Docker Compose inyecta cada variable en el contenedor con la sintaxis
+`${VAR:-default}`, que define un valor por defecto razonable para arranque
+local:
+
+```yaml
+# docker-compose.yml — extracto
+environment:
+  SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-scantral}
+  SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-scantral}
+  SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-scantral_dev}
+  JWT_SECRET: ${JWT_SECRET:-dev-only-change-me-please-32-bytes-minimum-secret-key-1234567890}
+```
+
+Verificación de que las variables llegan al contenedor sin exponer
+secretos en logs:
+
+```bash
+$ docker compose exec backend printenv | grep -E '^(SPRING_DATASOURCE_URL|OCR_SERVICE_URL|AI_MODEL)='
+SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/scantral
+OCR_SERVICE_URL=http://paddleocr:8001
+AI_MODEL=gemini-2.5-flash-lite
+```
+
+## 10. Verificación de red del despliegue
+
+Esta sección reúne las **comprobaciones técnicas de red** que demuestran
+que el despliegue funciona y que cada servicio responde por el camino
+esperado: URL pública del front, puerto publicado, ruta proxy-pasada al
+backend y comunicación interna entre contenedores por DNS de Docker.
+
+### 10.1 Estado y puertos publicados
+
+Único puerto expuesto al host: `4200/tcp` del frontend. El resto vive en
+la red interna `scantral-net`.
+
+```bash
+$ docker compose ps
+NAME                  IMAGE                COMMAND                  STATUS                    PORTS
+scantral-db           postgres:17          "docker-entrypoint.s…"   Up (healthy)              5432/tcp
+scantral-paddleocr    scantral-paddleocr   "uvicorn app:app --h…"   Up (healthy)              8001/tcp
+scantral-backend      scantral-backend     "java -jar app.jar"      Up                        8080/tcp
+scantral-frontend     scantral-frontend    "/docker-entrypoint.…"   Up                        0.0.0.0:4200->80/tcp
+```
+
+Lectura del resultado:
+
+- `0.0.0.0:4200->80/tcp` → el host alcanza al frontend en `localhost:4200`,
+  que internamente escucha en `:80`.
+- Las columnas `5432/tcp`, `8001/tcp`, `8080/tcp` (sin `0.0.0.0:` delante)
+  significan que esos puertos **sólo** son alcanzables desde dentro de la
+  red Docker, no desde el host. Esto es intencionado.
+
+### 10.2 URL de acceso y resolución por nombre
+
+| Capa | Cómo se accede | Quién resuelve el nombre |
+| ---- | -------------- | ------------------------ |
+| Navegador → frontend | `http://localhost:4200` | DNS del SO (loopback) |
+| Navegador → API | `http://localhost:4200/api/...` | DNS del SO + reverse proxy |
+| frontend → backend | `http://backend:8080` | **DNS interno de Docker** (`scantral-net`) |
+| backend → postgres | `jdbc:postgresql://postgres:5432/...` | DNS interno de Docker |
+| backend → OCR | `http://paddleocr:8001` | DNS interno de Docker |
+
+Los nombres `backend`, `postgres` y `paddleocr` se corresponden con la
+clave de cada servicio en el [docker-compose.yml](docker-compose.yml).
+
+### 10.3 Acceso al frontend desde el host (`curl -I`)
+
+```bash
+$ curl -I http://localhost:4200/
+HTTP/1.1 200 OK
+Server: nginx/1.27.x
+Content-Type: text/html
+Content-Length: 1234
+```
+
+Quién responde: el contenedor `scantral-frontend` (Nginx), sirviendo el
+`index.html` de la SPA Angular desde `/usr/share/nginx/html`.
+
+### 10.4 Acceso al backend a través del proxy (`/api`)
+
+```bash
+$ curl -i http://localhost:4200/api/documents
+HTTP/1.1 401
+Server: nginx/1.27.x
+Content-Type: application/json
+
+{"error":"Token JWT ausente o inválido"}
+```
+
+Lectura: la petición sale del host hacia `:4200` (Nginx), Nginx hace
+`proxy_pass http://backend:8080` (config en
+[frontend/nginx.conf](frontend/nginx.conf)) y el backend responde **401
+JSON** porque el endpoint requiere JWT. Una respuesta `404` HTML aquí
+indicaría que el proxy no está bien montado.
+
+### 10.5 Comunicación interna entre contenedores
+
+Probado **desde dentro** de la red `scantral-net`, sin exponer puertos al
+host:
+
+```bash
+# frontend → backend (lo que hace Nginx en cada petición /api)
+$ docker compose exec frontend wget -qO- http://backend:8080/v3/api-docs | head -c 60
+{"openapi":"3.1.0","info":{"title":"Scantral API","version":
+
+# backend → paddleocr (sidecar OCR)
+$ docker compose exec backend curl -s http://paddleocr:8001/health
+{"status":"ok","language":"latin","gpu":false}
+
+# backend → postgres (resolución DNS + conectividad TCP)
+$ docker compose exec backend sh -c 'getent hosts postgres'
+172.20.0.2      postgres
+```
+
+### 10.6 Inspección de la red Docker
+
+```bash
+$ docker network ls --filter name=scantral
+NETWORK ID     NAME                DRIVER    SCOPE
+1a2b3c4d5e6f   scantral_scantral-net  bridge    local
+
+$ docker network inspect scantral_scantral-net --format '{{range .Containers}}{{.Name}} {{.IPv4Address}}{{"\n"}}{{end}}'
+scantral-frontend   172.20.0.5/16
+scantral-backend    172.20.0.4/16
+scantral-paddleocr  172.20.0.3/16
+scantral-db         172.20.0.2/16
+```
+
+Los cuatro contenedores comparten la misma red bridge, por eso pueden
+llamarse por nombre de servicio.
+
+### 10.7 Comprobación de aislamiento (lo que NO debe responder)
+
+Desde el host, los puertos internos **no** deben estar accesibles:
+
+```bash
+$ curl -s -o /dev/null -w "%{http_code}\n" --max-time 2 http://localhost:8080/v3/api-docs
+000   # connection refused / timeout — esperado: backend NO publicado
+
+$ curl -s -o /dev/null -w "%{http_code}\n" --max-time 2 http://localhost:5432/
+000   # esperado: Postgres NO publicado al host
+```
+
+Este resultado confirma el **principio de mínima exposición**: el único
+punto de entrada es `:4200`.
+
+### 10.8 Resolución de nombre en local (opcional)
+
+Para acceder con un nombre amigable (`scantral.local`) en lugar de
+`localhost`, basta con añadirlo al `hosts` del sistema:
+
+```text
+# /etc/hosts  (Linux/macOS)  o  C:\Windows\System32\drivers\etc\hosts
+127.0.0.1   scantral.local
+```
+
+Verificación:
+
+```bash
+$ curl -I http://scantral.local:4200/
+HTTP/1.1 200 OK
+Server: nginx/1.27.x
+```
+
+El frontend responde igual que con `localhost` porque Nginx no filtra por
+`server_name` (escucha cualquier Host en `:80`).
