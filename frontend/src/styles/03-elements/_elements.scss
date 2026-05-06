@@ -13,6 +13,28 @@ html {
   scroll-behavior: smooth;
 }
 
+// --------------------------------------------------------------------------
+// MOVIMIENTO REDUCIDO — Red de seguridad global
+// Neutraliza animaciones, transiciones y scroll suave para usuarios que
+// activan `prefers-reduced-motion: reduce` (WCAG 2.3.3).
+// Los componentes pueden afinar reglas específicas con el mixin
+// `reduced-motion` cuando necesiten un comportamiento distinto.
+// --------------------------------------------------------------------------
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 body {
   font-family: v.$font-primary;
   font-size: v.$font-size-md;

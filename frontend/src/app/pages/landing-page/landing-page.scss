@@ -210,6 +210,14 @@
     opacity: 1;
     transform: translateY(0);
   }
+
+  // Respeta `prefers-reduced-motion`: muestra el contenido inmediatamente
+  // sin desplazamiento ni transición.
+  @include m.reduced-motion {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 
 // Hero: aparición en cascada al cargar

@@ -118,4 +118,25 @@
     transform: translateY(v.$active-translate);
     box-shadow: var(--shadow-active);
   }
+
+  // Respeta la preferencia del usuario por movimiento reducido (WCAG 2.3.3).
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+
+    &:hover,
+    &:active {
+      transform: none;
+    }
+  }
+}
+
+// --------------------------------------------------------------------------
+// REDUCED MOTION — Aplica `@content` cuando el usuario prefiere
+// movimiento reducido (`prefers-reduced-motion: reduce`).
+// Útil para neutralizar animaciones, transiciones o transforms.
+// --------------------------------------------------------------------------
+@mixin reduced-motion {
+  @media (prefers-reduced-motion: reduce) {
+    @content;
+  }
 }
