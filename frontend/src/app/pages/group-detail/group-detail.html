@@ -81,6 +81,8 @@
 
         @if (group.creatorId === authService.user()?.userId) {
           <app-delete-group-card (deleteConfirmed)="onDeleteGroupConfirmed()" />
+        } @else {
+          <app-leave-group-card (leaveConfirmed)="onLeaveGroupConfirmed()" />
         }
       </aside>
   </section>

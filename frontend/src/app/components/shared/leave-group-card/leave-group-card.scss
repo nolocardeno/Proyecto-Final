@@ -1,0 +1,89 @@
+@use '../../../../styles/00-settings/variables' as v;
+
+// --------------------------------------------------------------------------
+// HOST
+// --------------------------------------------------------------------------
+:host {
+  display: block;
+}
+
+// --------------------------------------------------------------------------
+// LEAVE GROUP CARD
+// --------------------------------------------------------------------------
+.leave-group-card {
+  display: flex;
+  flex-direction: column;
+  gap: v.$spacing-2;
+  background-color: var(--color-accent-secondary);
+  border: v.$border-thin solid var(--color-modal-border);
+  border-radius: v.$radius-card;
+  box-shadow: var(--shadow-card);
+  padding: v.$spacing-4;
+
+  // --------------------------------------------------------------------------
+  // SVG DEFS (oculto, solo define gradientes)
+  // --------------------------------------------------------------------------
+  &__defs {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+
+  // --------------------------------------------------------------------------
+  // HEADER (icono + título)
+  // --------------------------------------------------------------------------
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: v.$spacing-2;
+  }
+
+  &__header-icon {
+    font-size: v.$font-size-md-lg;
+    flex-shrink: 0;
+
+    ::ng-deep svg path {
+      fill: url(#grad-leave-group-icon);
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  // DIVISOR
+  // --------------------------------------------------------------------------
+  &__divider {
+    border: none;
+    border-top: v.$border-thin solid var(--color-divider);
+    margin: 0;
+  }
+
+  // --------------------------------------------------------------------------
+  // TÍTULO
+  // --------------------------------------------------------------------------
+  &__title {
+    font-family: v.$font-primary;
+    font-size: v.$font-size-md-lg;
+    font-weight: v.$font-weight-bold;
+    color: var(--color-text-primary);
+    line-height: v.$line-height-tight;
+  }
+
+  // --------------------------------------------------------------------------
+  // AVISO
+  // --------------------------------------------------------------------------
+  &__warning {
+    font-family: v.$font-primary;
+    font-size: v.$font-size-sm;
+    color: var(--color-text-faint);
+    line-height: v.$line-height-normal;
+    text-align: center;
+  }
+
+  // --------------------------------------------------------------------------
+  // BOTÓN
+  // --------------------------------------------------------------------------
+  &__action {
+    width: 85%;
+    align-self: center;
+  }
+}

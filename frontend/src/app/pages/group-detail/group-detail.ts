@@ -16,6 +16,7 @@ import { GroupCodeCardComponent } from '../../components/shared/group-code-card/
 import { GroupMembersCardComponent } from '../../components/shared/group-members-card/group-members-card';
 import { UploadDocumentModalComponent } from '../../components/shared/upload-document-modal/upload-document-modal';
 import { DeleteGroupCardComponent } from '../../components/shared/delete-group-card/delete-group-card';
+import { LeaveGroupCardComponent } from '../../components/shared/leave-group-card/leave-group-card';
 import { GroupService } from '../../services/group.service';
 import { AuthService } from '../../services/auth.service';
 import { AlertService } from '../../services/alert.service';
@@ -54,6 +55,7 @@ import {
     GroupMembersCardComponent,
     UploadDocumentModalComponent,
     DeleteGroupCardComponent,
+    LeaveGroupCardComponent,
   ],
   templateUrl: './group-detail.html',
   styleUrl: './group-detail.scss',
@@ -160,6 +162,14 @@ export class GroupDetailComponent implements OnInit {
     const groupId = Number(this.route.snapshot.paramMap.get('id'));
     this.groupService.deleteGroup(groupId).subscribe(() => {
       this.alertService.show('success', 'El grupo ha sido eliminado correctamente.');
+      this.router.navigate(['/groups']);
+    });
+  }
+
+  protected onLeaveGroupConfirmed(): void {
+    const groupId = Number(this.route.snapshot.paramMap.get('id'));
+    this.groupService.leaveGroup(groupId).subscribe(() => {
+      this.alertService.show('success', 'Has abandonado el grupo correctamente.');
       this.router.navigate(['/groups']);
     });
   }

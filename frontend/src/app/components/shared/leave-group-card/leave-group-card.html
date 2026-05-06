@@ -1,0 +1,46 @@
+<!-- --------------------------------------------------------------------------
+     LEAVE GROUP CARD: Aviso + botón que abre modal de confirmación
+     -------------------------------------------------------------------------- -->
+<!-- Hidden SVG gradient defs -->
+<svg class="leave-group-card__defs" aria-hidden="true">
+  <defs>
+    <linearGradient id="grad-leave-group-icon" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="var(--color-primary)" />
+      <stop offset="100%" stop-color="var(--color-secondary)" />
+    </linearGradient>
+  </defs>
+</svg>
+
+<section class="leave-group-card">
+  <header class="leave-group-card__header">
+    <fa-icon class="leave-group-card__header-icon" [icon]="faRightFromBracket" aria-hidden="true" />
+    <h3 class="leave-group-card__title">Abandonar grupo</h3>
+  </header>
+
+  <hr class="leave-group-card__divider" />
+
+  <p class="leave-group-card__warning">
+    Dejarás de tener acceso a los documentos y miembros de este grupo.
+  </p>
+
+  <app-button
+    variant="primary"
+    size="full"
+    class="leave-group-card__action"
+    (click)="openConfirm()"
+  >
+    Abandonar grupo
+  </app-button>
+</section>
+
+<!-- Modal de confirmación -->
+@if (showConfirm) {
+  <app-confirm-modal
+    title="Abandonar grupo"
+    message="¿Estás seguro de que quieres abandonar este grupo? Perderás el acceso a sus documentos y miembros."
+    confirmLabel="Abandonar"
+    cancelLabel="Cancelar"
+    (confirmed)="onConfirm()"
+    (cancelled)="onCancel()"
+  />
+}

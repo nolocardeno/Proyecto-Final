@@ -61,6 +61,11 @@ export class GroupService {
     return this.http.delete<void>(`${this.baseUrl}/${id}`, { headers: this.headers });
   }
 
+  /** Abandona un grupo del que el usuario es miembro (no creador). */
+  leaveGroup(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}/leave`, { headers: this.headers });
+  }
+
   /** Une al usuario actual a un grupo mediante su código de acceso. */
   joinGroup(accessCode: string): Observable<GroupResponse> {
     return this.http.post<GroupResponse>(`${this.baseUrl}/join`, { accessCode }, { headers: this.headers });
