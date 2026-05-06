@@ -5,7 +5,6 @@ import com.nolocardeno.backend.dto.UpdateUserRequest;
 import com.nolocardeno.backend.exception.ResourceNotFoundException;
 import com.nolocardeno.backend.model.User;
 import com.nolocardeno.backend.model.enums.Role;
-import com.nolocardeno.backend.model.DocumentGroup;
 import com.nolocardeno.backend.repository.GroupRepository;
 import com.nolocardeno.backend.repository.UserRepository;
 import org.junit.jupiter.api.Test;
