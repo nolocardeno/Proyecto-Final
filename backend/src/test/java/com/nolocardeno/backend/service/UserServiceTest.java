@@ -5,6 +5,8 @@ import com.nolocardeno.backend.dto.UpdateUserRequest;
 import com.nolocardeno.backend.exception.ResourceNotFoundException;
 import com.nolocardeno.backend.model.User;
 import com.nolocardeno.backend.model.enums.Role;
+import com.nolocardeno.backend.model.DocumentGroup;
+import com.nolocardeno.backend.repository.GroupRepository;
 import com.nolocardeno.backend.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,6 +26,7 @@ import static org.mockito.Mockito.*;
 class UserServiceTest {
 
     @Mock UserRepository userRepository;
+    @Mock GroupRepository groupRepository;
     @Mock PasswordEncoder passwordEncoder;
     @InjectMocks UserService service;
 
@@ -98,6 +101,8 @@ class UserServiceTest {
     void deleteUser_removes_user() {
         User existing = user(1L, "x@y.z");
         when(userRepository.findById(1L)).thenReturn(Optional.of(existing));
+        when(groupRepository.findByCreatorIdOrderByCreatedAtDesc(1L)).thenReturn(java.util.List.of());
+        when(groupRepository.findByMembersIdOrderByCreatedAtDesc(1L)).thenReturn(java.util.List.of());
         service.deleteUser(1L);
         verify(userRepository).delete(existing);
     }
