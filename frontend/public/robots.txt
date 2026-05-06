@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /settings
+Disallow: /groups
+Disallow: /document/
+Disallow: /api/
+
+Sitemap: https://scantral.com/sitemap.xml
