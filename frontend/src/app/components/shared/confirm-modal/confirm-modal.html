@@ -2,13 +2,13 @@
      CONFIRM MODAL: Modal de confirmación con backdrop
      -------------------------------------------------------------------------- -->
 <aside class="confirm-modal" (click)="onBackdropClick($event)">
-  <article class="confirm-modal__card" role="dialog" aria-modal="true">
+  <article class="confirm-modal__card" role="dialog" aria-modal="true" aria-labelledby="confirm-modal-title" aria-describedby="confirm-modal-message">
     <header class="confirm-modal__header">
-      <h2 class="confirm-modal__title">{{ title() }}</h2>
+      <h2 class="confirm-modal__title" id="confirm-modal-title">{{ title() }}</h2>
     </header>
 
     <div class="confirm-modal__body">
-      <p class="confirm-modal__message">{{ message() }}</p>
+      <p class="confirm-modal__message" id="confirm-modal-message">{{ message() }}</p>
 
       <div class="confirm-modal__actions">
         <app-button variant="text" size="auth" (click)="cancelled.emit()">

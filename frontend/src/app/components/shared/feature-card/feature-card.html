@@ -4,10 +4,16 @@
 <article
   class="feature-card"
   [class.feature-card--flipped]="flipped()"
+  role="button"
+  tabindex="0"
+  [attr.aria-pressed]="flipped()"
+  [attr.aria-label]="(flipped() ? 'Ocultar descripción de' : 'Ver descripción de') + ' ' + text()"
   (click)="toggle()"
+  (keydown.enter)="toggle()"
+  (keydown.space)="$event.preventDefault(); toggle()"
 >
   <section class="feature-card__cara feature-card__front">
-    <fa-icon [icon]="icon()" class="feature-card__icon" />
+    <fa-icon [icon]="icon()" class="feature-card__icon" aria-hidden="true" />
     <p class="feature-card__text">{{ text() }}</p>
   </section>
 

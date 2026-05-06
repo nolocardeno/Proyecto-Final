@@ -2,9 +2,9 @@
      AUTH CARD: Modal con backdrop y tarjeta de autenticación
      -------------------------------------------------------------------------- -->
 <aside class="auth-modal" (click)="onBackdropClick($event)">
-  <article class="auth-modal__card" role="dialog" aria-modal="true">
+  <article class="auth-modal__card" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
     <header class="auth-modal__header">
-      <h2 class="auth-modal__title">{{ title() }}</h2>
+      <h2 class="auth-modal__title" id="auth-modal-title">{{ title() }}</h2>
     </header>
     <ng-content />
   </article>

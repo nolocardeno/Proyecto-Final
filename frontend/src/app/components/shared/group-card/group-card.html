@@ -16,8 +16,10 @@
   class="group-card"
   role="button"
   tabindex="0"
+  [attr.aria-label]="'Ver detalle del grupo ' + name()"
   (click)="onClick()"
   (keydown.enter)="onClick()"
+  (keydown.space)="$event.preventDefault(); onClick()"
 >
   <!-- --------------------------------------------------------------------------
        HEADER: Nombre del grupo + icono decorativo

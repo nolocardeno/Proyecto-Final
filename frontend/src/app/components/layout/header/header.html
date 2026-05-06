@@ -44,10 +44,8 @@
   } @else {
     <nav class="header__nav">
       <app-theme-toggle />
-      <a (click)="authModal.openLogin()" class="header__link">Iniciar sesión</a>
-      <a (click)="authModal.openRegister()">
-        <app-button variant="primary" size="md">Crear cuenta</app-button>
-      </a>
+      <button type="button" (click)="authModal.openLogin()" class="header__link">Iniciar sesión</button>
+      <app-button variant="primary" size="md" (click)="authModal.openRegister()">Crear cuenta</app-button>
     </nav>
   }
 </header>

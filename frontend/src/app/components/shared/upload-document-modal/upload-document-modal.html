@@ -2,13 +2,13 @@
      UPLOAD DOCUMENT MODAL: Modal multi-paso para subida de documentos
      -------------------------------------------------------------------------- -->
 <aside class="upload-modal" (click)="onBackdropClick($event)">
-  <article class="upload-modal__card" role="dialog" aria-modal="true">
+  <article class="upload-modal__card" role="dialog" aria-modal="true" aria-labelledby="upload-modal-title">
 
     <!-- ----------------------------------------------------------------
          CABECERA CON GRADIENTE
          ---------------------------------------------------------------- -->
     <header class="upload-modal__header" [class.upload-modal__header--with-back]="showBack()">
-      <h2 class="upload-modal__title">Subir un nuevo documento</h2>
+      <h2 class="upload-modal__title" id="upload-modal-title">Subir un nuevo documento</h2>
 
       <!-- Barra de progreso -->
       <app-progress-bar [value]="progress()" />

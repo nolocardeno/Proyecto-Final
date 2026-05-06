@@ -1,20 +1,20 @@
 <!-- --------------------------------------------------------------------------
      ALERTS CONTAINER (floating, top-right corner)
      -------------------------------------------------------------------------- -->
-<aside class="alerts">
+<aside class="alerts" aria-label="Notificaciones" aria-live="polite" aria-relevant="additions">
   @for (alert of alertService.alerts(); track alert.id) {
-    <output class="alerts__item" [class]="'alerts__item--' + alert.type">
-      <span class="alerts__icon-wrapper">
+    <output class="alerts__item" [class]="'alerts__item--' + alert.type" role="status">
+      <span class="alerts__icon-wrapper" aria-hidden="true">
         <fa-icon class="alerts__icon" [icon]="icons[alert.type]" />
       </span>
       <span class="alerts__message">{{ alert.message }}</span>
       <button
         class="alerts__close"
         type="button"
-        aria-label="Close alert"
+        aria-label="Cerrar notificación"
         (click)="alertService.close(alert.id)"
       >
-        <fa-icon [icon]="faXmark" />
+        <fa-icon [icon]="faXmark" aria-hidden="true" />
       </button>
     </output>
   }
