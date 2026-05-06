@@ -90,6 +90,18 @@ public class GroupService {
     }
 
     @Transactional
+    public void leaveGroup(Long userId, Long groupId) {
+        DocumentGroup group = findGroupByUser(userId, groupId);
+        if (group.getCreator().getId().equals(userId)) {
+            throw new IllegalArgumentException("El creador no puede abandonar el grupo; elimínalo en su lugar");
+        }
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+        group.getMembers().remove(user);
+        groupRepository.save(group);
+    }
+
+    @Transactional
     public DocumentResponse addDocumentToGroup(Long userId, Long groupId, DocumentRequest request, MultipartFile file) {
         DocumentGroup group = findGroupByUser(userId, groupId);
 

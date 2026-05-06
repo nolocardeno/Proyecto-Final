@@ -90,6 +90,14 @@ public class GroupController {
         return ResponseEntity.noContent().build();
     }
 
+    @DeleteMapping("/{id}/leave")
+    public ResponseEntity<Void> leave(
+            @AuthenticationPrincipal CustomUserDetails principal,
+            @PathVariable Long id) {
+        groupService.leaveGroup(principal.getId(), id);
+        return ResponseEntity.noContent().build();
+    }
+
     @PostMapping("/join")
     public ResponseEntity<GroupResponse> join(
             @AuthenticationPrincipal CustomUserDetails principal,
