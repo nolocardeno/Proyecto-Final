@@ -1,13 +1,14 @@
 // --------------------------------------------------------------------------
 // IMPORTS
 // --------------------------------------------------------------------------
-import { Component, HostListener, inject, input, output, OnInit, signal, computed } from '@angular/core';
+import { Component, HostListener, inject, input, output, OnInit, OnDestroy, signal, computed } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonComponent } from '../button/button';
 import { FormFieldComponent } from '../form-field/form-field';
 import { FilePickerComponent } from '../file-picker/file-picker';
 import { DocumentService } from '../../../services/document.service';
 import { AlertService } from '../../../services/alert.service';
+import { PageTitleService } from '../../../services/page-title.service';
 import { type DocumentResponse, type DocumentType } from '../../../models/document.model';
 
 // --------------------------------------------------------------------------
@@ -46,10 +47,11 @@ const KIND_MAP: Record<DocumentType, DocKind> = {
   templateUrl: './edit-document-modal.html',
   styleUrl: './edit-document-modal.scss',
 })
-export class EditDocumentModalComponent implements OnInit {
+export class EditDocumentModalComponent implements OnInit, OnDestroy {
   private readonly fb = inject(FormBuilder);
   private readonly documentService = inject(DocumentService);
   private readonly alertService = inject(AlertService);
+  private readonly pageTitle = inject(PageTitleService);
 
   document = input.required<DocumentResponse>();
   saved = output<DocumentResponse>();
@@ -75,6 +77,7 @@ export class EditDocumentModalComponent implements OnInit {
   });
 
   ngOnInit(): void {
+    this.pageTitle.setModalTitle('Editar documento');
     const doc = this.document();
 
     // Derive kind from DocumentType
@@ -97,6 +100,10 @@ export class EditDocumentModalComponent implements OnInit {
       issueDate: doc.issueDate ?? '',
       expiryDate: doc.expiryDate ?? '',
     });
+  }
+
+  ngOnDestroy(): void {
+    this.pageTitle.restoreRouteTitle();
   }
 
   protected onKindChange(kind: string): void {

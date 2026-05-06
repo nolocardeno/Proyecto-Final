@@ -10,12 +10,14 @@ import { authRedirectGuard } from './guards/auth-redirect.guard';
 export const routes: Routes = [
   {
     path: '',
+    title: 'Inicio',
     canActivate: [authRedirectGuard],
     loadComponent: () =>
       import('./pages/landing-page/landing-page').then((m) => m.LandingPageComponent),
   },
   {
     path: 'dashboard',
+    title: 'Dashboard',
     loadComponent: () =>
       import('./pages/dashboard/dashboard').then(
         (m) => m.DashboardComponent,
@@ -23,6 +25,7 @@ export const routes: Routes = [
   },
   {
     path: 'groups',
+    title: 'Grupos',
     loadComponent: () =>
       import('./pages/groups/groups').then(
         (m) => m.GroupsComponent,
@@ -30,6 +33,7 @@ export const routes: Routes = [
   },
   {
     path: 'groups/:id',
+    title: 'Detalle del grupo',
     loadComponent: () =>
       import('./pages/group-detail/group-detail').then(
         (m) => m.GroupDetailComponent,
@@ -37,6 +41,7 @@ export const routes: Routes = [
   },
   {
     path: 'validator',
+    title: 'Validador',
     loadComponent: () =>
       import('./pages/validator/validator').then(
         (m) => m.ValidatorComponent,
@@ -44,6 +49,7 @@ export const routes: Routes = [
   },
   {
     path: 'documents/:id',
+    title: 'Documento',
     loadComponent: () =>
       import('./pages/document-detail/document-detail').then(
         (m) => m.DocumentDetailComponent,
@@ -51,6 +57,7 @@ export const routes: Routes = [
   },
   {
     path: 'settings',
+    title: 'Configuración',
     loadComponent: () =>
       import('./pages/settings/settings').then(
         (m) => m.SettingsComponent,

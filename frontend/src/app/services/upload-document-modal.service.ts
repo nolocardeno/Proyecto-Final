@@ -1,7 +1,8 @@
 // --------------------------------------------------------------------------
 // IMPORTS
 // --------------------------------------------------------------------------
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
+import { PageTitleService } from './page-title.service';
 
 // --------------------------------------------------------------------------
 // SERVICIO: Upload document modal control
@@ -16,6 +17,7 @@ import { Injectable, signal } from '@angular/core';
 export class UploadDocumentModalService {
   private readonly _isOpen = signal(false);
   private readonly _groupId = signal<number | null>(null);
+  private readonly pageTitle = inject(PageTitleService);
 
   /** Estado de visibilidad del modal. */
   readonly isOpen = this._isOpen.asReadonly();
@@ -26,11 +28,13 @@ export class UploadDocumentModalService {
   open(groupId?: number): void {
     this._groupId.set(groupId ?? null);
     this._isOpen.set(true);
+    this.pageTitle.setModalTitle('Subir documento');
   }
 
   /** Cierra el modal y limpia el grupo asociado. */
   close(): void {
     this._isOpen.set(false);
     this._groupId.set(null);
+    this.pageTitle.restoreRouteTitle();
   }
 }

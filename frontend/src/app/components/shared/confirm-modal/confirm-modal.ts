@@ -1,8 +1,9 @@
 // --------------------------------------------------------------------------
 // IMPORTS
 // --------------------------------------------------------------------------
-import { Component, HostListener, input, output } from '@angular/core';
+import { Component, HostListener, inject, input, output, OnInit, OnDestroy } from '@angular/core';
 import { ButtonComponent } from '../button/button';
+import { PageTitleService } from '../../../services/page-title.service';
 
 // --------------------------------------------------------------------------
 // COMPONENTE: CONFIRM MODAL (Modal de confirmación reutilizable)
@@ -19,7 +20,9 @@ import { ButtonComponent } from '../button/button';
   templateUrl: './confirm-modal.html',
   styleUrl: './confirm-modal.scss',
 })
-export class ConfirmModalComponent {
+export class ConfirmModalComponent implements OnInit, OnDestroy {
+  private readonly pageTitle = inject(PageTitleService);
+
   /** Título del modal. */
   title = input.required<string>();
   /** Mensaje principal del modal. */
@@ -33,6 +36,14 @@ export class ConfirmModalComponent {
   confirmed = output<void>();
   /** Emitido al cancelar. */
   cancelled = output<void>();
+
+  ngOnInit(): void {
+    this.pageTitle.setModalTitle(this.title());
+  }
+
+  ngOnDestroy(): void {
+    this.pageTitle.restoreRouteTitle();
+  }
 
   /** Cierra el modal al pulsar `Escape`. */
   @HostListener('document:keydown.escape')

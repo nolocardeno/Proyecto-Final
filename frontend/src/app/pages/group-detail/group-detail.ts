@@ -3,6 +3,7 @@
 // --------------------------------------------------------------------------
 import { Component, computed, effect, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { PageTitleService } from '../../services/page-title.service';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faCirclePlus, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { SidebarComponent, type SidebarPage } from '../../components/layout/sidebar/sidebar';
@@ -67,6 +68,7 @@ export class GroupDetailComponent implements OnInit {
   protected readonly authService = inject(AuthService);
   private readonly alertService = inject(AlertService);
   protected readonly uploadModal = inject(UploadDocumentModalService);
+  private readonly pageTitle = inject(PageTitleService);
 
   protected readonly faCirclePlus = faCirclePlus;
   protected readonly faArrowLeft = faArrowLeft;
@@ -192,6 +194,7 @@ export class GroupDetailComponent implements OnInit {
   private loadGroupDetail(id: number): void {
     this.groupService.getGroupDetail(id).subscribe((detail: GroupDetailResponse) => {
       this.group.set(detail);
+      this.pageTitle.setRouteTitle(detail.name);
     });
   }
 

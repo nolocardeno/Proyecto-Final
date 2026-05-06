@@ -1,7 +1,8 @@
 ﻿// --------------------------------------------------------------------------
 // IMPORTS
 // --------------------------------------------------------------------------
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
+import { PageTitleService } from './page-title.service';
 
 // --------------------------------------------------------------------------
 // TIPO: Auth modal state
@@ -21,6 +22,7 @@ export type AuthModalType = 'login' | 'register' | null;
 @Injectable({ providedIn: 'root' })
 export class AuthModalService {
   private readonly _activeModal = signal<AuthModalType>(null);
+  private readonly pageTitle = inject(PageTitleService);
 
   /** Modal activo en sólo lectura. */
   readonly activeModal = this._activeModal.asReadonly();
@@ -28,15 +30,18 @@ export class AuthModalService {
   /** Abre el modal de inicio de sesión. */
   openLogin(): void {
     this._activeModal.set('login');
+    this.pageTitle.setModalTitle('Iniciar sesión');
   }
 
   /** Abre el modal de registro. */
   openRegister(): void {
     this._activeModal.set('register');
+    this.pageTitle.setModalTitle('Registro');
   }
 
   /** Cierra cualquier modal de autenticación abierto. */
   close(): void {
     this._activeModal.set(null);
+    this.pageTitle.restoreRouteTitle();
   }
 }

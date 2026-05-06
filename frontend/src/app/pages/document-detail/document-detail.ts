@@ -3,6 +3,7 @@
 // --------------------------------------------------------------------------
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { PageTitleService } from '../../services/page-title.service';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
   faArrowLeft,
@@ -74,6 +75,7 @@ export class DocumentDetailComponent implements OnInit {
   private readonly documentAlertService = inject(DocumentAlertService);
   private readonly alertService = inject(AlertService);
   private readonly documentHistoryService = inject(DocumentHistoryService);
+  private readonly pageTitle = inject(PageTitleService);
   protected readonly authService = inject(AuthService);
 
   // Icons
@@ -143,6 +145,7 @@ export class DocumentDetailComponent implements OnInit {
     }
     this.documentService.getDocument(id).subscribe((doc) => {
       this.document.set(doc);
+      this.pageTitle.setRouteTitle(doc.title);
       this.loadAlerts(doc.id);
       this.loadHistory(doc.id);
     });
