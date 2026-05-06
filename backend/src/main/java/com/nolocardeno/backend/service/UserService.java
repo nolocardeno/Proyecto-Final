@@ -3,7 +3,10 @@ package com.nolocardeno.backend.service;
 import com.nolocardeno.backend.dto.AuthResponse;
 import com.nolocardeno.backend.dto.UpdateUserRequest;
 import com.nolocardeno.backend.exception.ResourceNotFoundException;
+import com.nolocardeno.backend.model.Document;
+import com.nolocardeno.backend.model.DocumentGroup;
 import com.nolocardeno.backend.model.User;
+import com.nolocardeno.backend.repository.GroupRepository;
 import com.nolocardeno.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,12 +14,14 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -24,6 +29,7 @@ import java.util.UUID;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final GroupRepository groupRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Value("${scantral.uploads.path}")
@@ -102,6 +108,7 @@ public class UserService {
         return resource;
     }
 
+    @Transactional
     public void deleteUser(Long userId) {
         User user = findUserById(userId);
 
@@ -115,6 +122,23 @@ public class UserService {
             }
         }
 
+        // Eliminar grupos de los que el usuario es creador
+        List<DocumentGroup> createdGroups = groupRepository.findByCreatorIdOrderByCreatedAtDesc(userId);
+        groupRepository.deleteAll(createdGroups);
+
+        // Eliminar al usuario de los grupos en los que es miembro
+        List<DocumentGroup> memberGroups = groupRepository.findByMembersIdOrderByCreatedAtDesc(userId);
+        for (DocumentGroup group : memberGroups) {
+            group.getMembers().remove(user);
+            groupRepository.save(group);
+        }
+
+        // Eliminar los documentos del usuario de todas las tablas group_documents
+        for (Document document : user.getDocuments()) {
+            groupRepository.removeDocumentFromAllGroups(document.getId());
+        }
+
+        // Eliminar el usuario (cascade elimina documentos, alertas e historial)
         userRepository.delete(user);
     }
 
