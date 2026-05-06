@@ -2,15 +2,17 @@
 @use '../../../styles/01-tools/mixins' as m;
 
 // --------------------------------------------------------------------------
-// HOST: Layout con Sidebar
-// El sidebar es drawer en <lg, por eso solo reservamos espacio en lg+.
+// HOST: Layout con Sidebar (desktop-first)
+// Reservamos espacio para el sidebar fijo. En <lg el sidebar es un drawer
+// y se libera ese margen.
 // --------------------------------------------------------------------------
 :host {
   display: flex;
   flex: 1;
+  margin-left: v.$spacing-sidebar-width;
 
-  @include m.respond-to(lg) {
-    margin-left: v.$spacing-sidebar-width;
+  @include m.respond-down(lg) {
+    margin-left: 0;
   }
 }
 

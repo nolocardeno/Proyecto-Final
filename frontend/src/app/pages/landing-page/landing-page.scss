@@ -134,9 +134,8 @@
 
 .features__grid {
   display: grid;
-  // 3 cols en xl/lg, baja a 2 en md, 1 en sm.
-  // `auto-fit` con minmax garantiza adaptación incluso en breakpoints intermedios.
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  // Desktop-first: 3 cols fijas en lg+, baja a auto-fit responsivo en <lg.
+  grid-template-columns: repeat(3, minmax(0, 18rem));
   row-gap: v.$spacing-4;
   column-gap: v.$spacing-5;
   justify-content: center;
@@ -144,8 +143,9 @@
   width: 100%;
   max-width: 66rem; // limita el ancho del grid en xl
 
-  @include m.respond-to(lg) {
-    grid-template-columns: repeat(3, minmax(0, 18rem));
+  @include m.respond-down(lg) {
+    // `auto-fit` con minmax garantiza adaptación en breakpoints intermedios.
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
   }
 
   @include m.respond-down(md) {

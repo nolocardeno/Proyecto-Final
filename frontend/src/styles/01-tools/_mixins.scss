@@ -7,8 +7,10 @@
 // --------------------------------------------------------------------------
 // RESPONSIVE — Media queries por breakpoint
 // --------------------------------------------------------------------------
-// `respond-to`   → mobile-first  (min-width). Aplica DESDE el breakpoint hacia arriba.
-// `respond-down` → desktop-first (max-width). Aplica HASTA el breakpoint (excluido).
+// Este proyecto sigue un enfoque DESKTOP-FIRST: los estilos base se diseñan
+// para escritorio y se adaptan hacia pantallas más pequeñas.
+//
+// `respond-down`    → max-width. Aplica HASTA el breakpoint (excluido). Uso principal.
 // `respond-between` → ventana cerrada [min, max).
 // Usar siempre los breakpoints definidos en _variables.scss (xs, sm, md, lg, xl).
 // --------------------------------------------------------------------------
@@ -23,13 +25,8 @@
   @else { @error "Breakpoint desconocido: #{$name}. Usa xs|sm|md|lg|xl."; }
 }
 
-// Mobile-first: aplica desde el breakpoint hacia arriba.
-@mixin respond-to($breakpoint) {
-  @media (min-width: _bp($breakpoint)) { @content; }
-}
-
 // Desktop-first: aplica hasta el breakpoint (estrictamente menor).
-// Se resta 0.02px para evitar solapamiento con `respond-to` (Bootstrap-style).
+// Se resta 0.02px para evitar solapamiento con rangos superiores (Bootstrap-style).
 @mixin respond-down($breakpoint) {
   @media (max-width: calc(#{_bp($breakpoint)} - 0.02px)) { @content; }
 }

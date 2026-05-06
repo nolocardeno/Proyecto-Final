@@ -9,15 +9,11 @@
   align-items: center;
   justify-content: center;
   flex-wrap: wrap; // permite saltar a 2 líneas en pantallas estrechas
-  gap: v.$spacing-2;
+  gap: v.$spacing-3;
   min-height: v.$spacing-footer;
   padding: v.$spacing-2 v.$spacing-3;
   background-color: var(--color-surface);
   border-top: v.$border-thin solid var(--color-surface-border);
-
-  @include m.respond-to(sm) {
-    gap: v.$spacing-3;
-  }
 
   @include m.respond-down(md) {
     padding: v.$spacing-2;
@@ -27,8 +23,10 @@
   // ---- Variante "with-sidebar": deja espacio al sidebar fijo en desktop ----
   // En <lg el sidebar es un drawer y el footer ocupa el ancho completo.
   &--with-sidebar {
-    @include m.respond-to(lg) {
-      margin-left: v.$spacing-sidebar-width;
+    margin-left: v.$spacing-sidebar-width;
+
+    @include m.respond-down(lg) {
+      margin-left: 0;
     }
   }
 }
@@ -56,14 +54,10 @@
 
 .footer__copy {
   font-family: v.$font-primary;
-  font-size: v.$font-size-sm;
+  font-size: v.$font-size-md;
   font-weight: v.$font-weight-regular;
   color: var(--color-text-body);
   white-space: nowrap;
-
-  @include m.respond-to(sm) {
-    font-size: v.$font-size-md;
-  }
 
   // Permite cortar en móvil muy estrecho.
   @include m.respond-down(md) {
@@ -77,12 +71,8 @@
 // --------------------------------------------------------------------------
 .footer__divider {
   width: v.$border-thin;
-  height: 2rem;
+  height: 2.1875rem; // 35px
   background-color: var(--color-surface-border);
-
-  @include m.respond-to(sm) {
-    height: 2.1875rem; // 35px
-  }
 
   // Cuando el footer envuelve a 2 líneas el divisor vertical pierde sentido.
   @include m.respond-down(md) {

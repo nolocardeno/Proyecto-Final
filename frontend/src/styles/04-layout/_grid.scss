@@ -12,10 +12,10 @@
   width: 100%;
   max-width: v.$breakpoint-xl;
   margin-inline: auto;
-  padding-inline: v.$spacing-2;
+  padding-inline: v.$spacing-4;
 
-  @include m.respond-to(md) {
-    padding-inline: v.$spacing-4;
+  @include m.respond-down(md) {
+    padding-inline: v.$spacing-2;
   }
 }
 
@@ -37,36 +37,36 @@
 .grid--3 { grid-template-columns: repeat(3, 1fr); }
 .grid--4 { grid-template-columns: repeat(4, 1fr); }
 
-// Columnas responsivas: 1 col en móvil, N cols en desktop
+// Columnas responsivas: N cols en desktop, reduce hacia móvil (desktop-first)
 .grid--responsive-2 {
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(2, 1fr);
 
-  @include m.respond-to(md) {
-    grid-template-columns: repeat(2, 1fr);
+  @include m.respond-down(md) {
+    grid-template-columns: 1fr;
   }
 }
 
 .grid--responsive-3 {
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(3, 1fr);
 
-  @include m.respond-to(sm) {
+  @include m.respond-down(lg) {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  @include m.respond-to(lg) {
-    grid-template-columns: repeat(3, 1fr);
+  @include m.respond-down(sm) {
+    grid-template-columns: 1fr;
   }
 }
 
 .grid--responsive-4 {
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(4, 1fr);
 
-  @include m.respond-to(sm) {
+  @include m.respond-down(lg) {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  @include m.respond-to(lg) {
-    grid-template-columns: repeat(4, 1fr);
+  @include m.respond-down(sm) {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -80,17 +80,16 @@
   min-height: 100dvh;
 }
 
-// Layout con sidebar
+// Layout con sidebar (desktop-first: 2 cols por defecto, colapsa a 1 en <lg)
 .page-layout--sidebar {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 16rem 1fr;
   grid-template-rows: auto 1fr auto;
   min-height: 100vh;
   min-height: 100dvh;
 
-  @include m.respond-to(lg) {
-    grid-template-columns: 16rem 1fr;
-    grid-template-rows: auto 1fr auto;
+  @include m.respond-down(lg) {
+    grid-template-columns: 1fr;
   }
 }
 

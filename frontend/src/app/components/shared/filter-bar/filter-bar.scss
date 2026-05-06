@@ -11,15 +11,15 @@
 
 .filter-bar {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(4, 1fr);
   gap: v.$spacing-2;
 
-  @include m.respond-to(md) {
+  @include m.respond-down(lg) {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  @include m.respond-to(lg) {
-    grid-template-columns: repeat(4, 1fr);
+  @include m.respond-down(md) {
+    grid-template-columns: 1fr;
   }
 
   // ------------------------------------------------------------------
