@@ -336,7 +336,8 @@ permite combinar condiciones opcionales sin tener que escribir JPQL.
 | POST    | `/api/groups/join`                     | autenticado            | Unirse por código                                            |
 | POST    | `/api/groups/{id}/documents`           | autenticado            | Añadir documento (multipart)                                 |
 | POST    | `/api/groups/{id}/documents/extract`   | autenticado            | Extraer documento desde imagen (OCR/IA)                      |
-| DELETE  | `/api/groups/{id}`                     | autenticado            | Eliminar grupo                                               |
+| DELETE  | `/api/groups/{id}`                     | autenticado (creador)  | Eliminar grupo                                               |
+| DELETE  | `/api/groups/{id}/leave`               | autenticado (miembro)  | Abandonar grupo (solo miembros no creadores)                 |
 | **Procesamiento** |                              |                        |                                                              |
 | POST    | `/api/documents/extract`               | autenticado            | Pipeline OCR + IA sobre una imagen                           |
 | **Admin** |                                      |                        |                                                              |
