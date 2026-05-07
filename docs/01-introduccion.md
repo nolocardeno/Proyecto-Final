@@ -44,8 +44,8 @@ A partir de este objetivo general, se definen los siguientes objetivos específi
 - Permitir el **registro y autenticación** segura de usuarios.
 - Ofrecer un **registro manual** de documentos con sus fechas de emisión y caducidad.
 - Permitir la **subida de imágenes** de tickets y documentos para su análisis automático.
-- Implementar un sistema de **análisis mediante inteligencia artificial** que extraiga la información relevante del documento (fechas, comercio, importe, tipo de producto, etc.).
-- Disponer de un sistema de **OCR de respaldo** (Tesseract) para los casos en los que la IA no consiga interpretar correctamente el documento.
+- Implementar un sistema de **extracción de datos mediante OCR** (PaddleOCR) que actúe como método principal y se ejecute de forma local sin enviar la imagen a servicios externos.
+- Ofrecer, como **opción seleccionable por el usuario**, un análisis avanzado mediante **inteligencia artificial** (Gemini API) para documentos complejos o de baja calidad en los que se requiera mayor precisión.
 - Calcular **automáticamente plazos de garantía o caducidad** en función del tipo de documento y de la información extraída.
 - Generar **alertas y recordatorios** para los documentos próximos a expirar.
 - Mostrar un **dashboard** con un resumen claro de los documentos registrados y sus vencimientos.
@@ -112,8 +112,8 @@ Sistema basado en IA que analiza recibos y genera alertas antes de que expire la
 | Característica | ReceiptSafe | SlipCrate | TrackWarranty | **Scantral** |
 |---|:---:|:---:|:---:|:---:|
 | Plataforma web | ❌ | ❌ | ❌ | ✅ |
-| Extracción automática con IA | ❌ | ✅ | ✅ | ✅ |
-| OCR de respaldo | ❌ | ❌ | ❌ | ✅ |
+| Extracción automática mediante OCR | ❌ | ❌ | ❌ | ✅ |
+| Extracción opcional mediante IA | ❌ | ✅ | ✅ | ✅ |
 | Gestión de documentos oficiales | ❌ | ❌ | ❌ | ✅ |
 | Gestión de tickets y garantías | ✅ | ✅ | ✅ | ✅ |
 | Cálculo automático de plazos | ❌ | Parcial | Parcial | ✅ |
