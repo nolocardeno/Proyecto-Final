@@ -7,10 +7,19 @@
   - [Relaciones](#relaciones)
 - [5.2. Diagrama de casos de uso](#52-diagrama-de-casos-de-uso)
 - [5.3. Diagramas de flujo de los procesos principales](#53-diagramas-de-flujo-de-los-procesos-principales)
-  - [Flujo 1 — Subida de documento desde imagen](#flujo-1--subida-de-documento-desde-imagen)
-  - [Flujo 2 — Envío de alertas](#flujo-2--envío-de-alertas)
-  - [Flujo 3 — Gestión de grupos](#flujo-3--gestión-de-grupos)
-  - [Flujo 4 — Validador de documentos](#flujo-4--validador-de-documentos)
+  - [Flujo 1 — Subir documento de forma manual](#flujo-1--subir-documento-de-forma-manual)
+  - [Flujo 2 — Subir documento mediante OCR / IA](#flujo-2--subir-documento-mediante-ocr--ia)
+  - [Flujo 3 — Editar documento](#flujo-3--editar-documento)
+  - [Flujo 4 — Eliminar documento](#flujo-4--eliminar-documento)
+  - [Flujo 5 — Activar y crear alertas](#flujo-5--activar-y-crear-alertas)
+  - [Flujo 6 — Consultar historial del documento](#flujo-6--consultar-historial-del-documento)
+  - [Flujo 7 — Crear un grupo](#flujo-7--crear-un-grupo)
+  - [Flujo 8 — Unirse a un grupo](#flujo-8--unirse-a-un-grupo)
+  - [Flujo 9 — Añadir documento en un grupo](#flujo-9--añadir-documento-en-un-grupo)
+  - [Flujo 10 — Eliminar un grupo](#flujo-10--eliminar-un-grupo)
+  - [Flujo 11 — Validar documentos](#flujo-11--validar-documentos)
+  - [Flujo 12 — Ajustes del usuario](#flujo-12--ajustes-del-usuario)
+  - [Flujo 13 — Eliminar cuenta de usuario](#flujo-13--eliminar-cuenta-de-usuario)
 - [5.4. Arquitectura de la aplicación](#54-arquitectura-de-la-aplicación)
   - [Visión general](#visión-general)
   - [Frontend — Angular SPA](#frontend--angular-spa)
@@ -320,33 +329,107 @@ _Diagrama de casos de uso con los tres actores y todas las funcionalidades del s
 
 ## 5.3. Diagramas de flujo de los procesos principales
 
-### Flujo 1 — Subida de documento desde imagen
+### Flujo 1 — Subir documento de forma manual
 
-![Diagrama de flujo — Subida de documento desde imagen](assets/flujo-subida-documento.png)
-_Flujo completo del proceso de subida y extracción automática de un documento._
+![Diagrama de flujo — Subir documento de forma manual](assets/flujo-subir-documento.png)
 
-El proceso comienza cuando el usuario abre el asistente de subida y elige el método «Desde imagen». Una vez subido el archivo, el backend ejecuta PaddleOCR de forma local. Si la extracción tiene éxito, los campos se pre-rellenan en el formulario del paso 5; si falla, los campos quedan vacíos con un aviso. Si el usuario tiene la IA activada en sus ajustes, se realiza una segunda llamada a la API de Gemini que puede enriquecer o corregir los datos obtenidos por OCR. En ambos casos el usuario revisa el resultado antes de guardar. Justo antes de persistir el documento, el sistema comprueba si el hash de la imagen coincide con el de algún documento previo del usuario y muestra un aviso si detecta un posible duplicado.
+El usuario accede al asistente de creación de documentos y elige la opción de introducción manual. Rellena el formulario paso a paso: primero el tipo de documento (ticket o documento oficial), después la categoría, y finalmente los campos de detalle como título, fechas o importe. El sistema valida los campos obligatorios antes de persistir el documento y redirige al usuario a la vista de detalle una vez guardado.
 
-### Flujo 2 — Envío de alertas
+---
 
-![Diagrama de flujo — Envío de alertas](assets/flujo-alertas.png)
-_Flujo de la tarea programada de envío de correos de alerta._
+### Flujo 2 — Subir documento mediante OCR / IA
 
-Una tarea `@Scheduled` se ejecuta diariamente en el backend. Para cada documento con fecha de caducidad y alertas activas, calcula los días restantes hasta el vencimiento. Si coincide con alguno de los umbrales configurados (por defecto 1, 7 y 30 días) y no se ha enviado ya una notificación en el día actual, el sistema envía un correo al propietario del documento y registra la fecha de envío en el campo `notified_at`.
+![Diagrama de flujo — Subir documento mediante OCR / IA](assets/flujo-subir-documento-ia.png)
 
-### Flujo 3 — Gestión de grupos
+El usuario elige la opción «Desde imagen» en el asistente. Sube una fotografía o escáner del documento y el backend la envía al sidecar de PaddleOCR para extraer el texto de forma local. Si la extracción tiene éxito, los campos del formulario se pre-rellenan automáticamente. Si el usuario marca la opción de usar IA, se realiza adicionalmente una llamada a la API de Gemini, que puede enriquecer o corregir los datos obtenidos por OCR. En ambos casos el usuario revisa y confirma el resultado antes de guardar.
 
-![Diagrama de flujo — Gestión de grupos](assets/flujo-grupos.png)
-_Flujo de creación de un grupo y proceso de unión mediante código de acceso._
+---
 
-El creador del grupo introduce nombre y descripción; el sistema genera automáticamente un código de acceso único de 10 caracteres. Ese código se comparte con otros usuarios. Cuando un usuario introduce el código en la pantalla «Unirse a grupo», el backend verifica que el código existe y que el usuario no pertenece ya al grupo antes de añadirlo como miembro.
+### Flujo 3 — Editar documento
 
-### Flujo 4 — Validador de documentos
+![Diagrama de flujo — Editar documento](assets/flujo-editar-documento.png)
 
-![Diagrama de flujo — Validador](assets/flujo-validador.png)
-_Flujo del validador de vigencia de documentos._
+Desde el detalle de un documento, el usuario pulsa «Editar» para abrir el formulario de modificación con los datos actuales pre-cargados. Puede cambiar cualquier campo, incluida la imagen asociada. Al guardar, el backend actualiza el registro y registra automáticamente una entrada en el historial de cambios (`DocumentHistory`) con el tipo `UPDATED`.
 
-El usuario selecciona un documento de su biblioteca y una fecha de referencia (mediante un preset o un calendario). El frontend calcula si la fecha de caducidad del documento es anterior o posterior a la fecha seleccionada y muestra el resultado con código de color: verde si estará vigente, rojo si habrá caducado, y un aviso especial si el documento no tiene fecha de caducidad configurada.
+---
+
+### Flujo 4 — Eliminar documento
+
+![Diagrama de flujo — Eliminar documento](assets/flujo-eliminar-documento.png)
+
+El usuario selecciona la opción de eliminar desde el detalle o el listado de documentos. El sistema muestra un diálogo de confirmación para evitar borrados accidentales. Tras confirmar, el backend elimina el documento junto con sus alertas, historial y registros de renovación asociados gracias a la cascada de eliminación definida en las entidades JPA.
+
+---
+
+### Flujo 5 — Activar y crear alertas
+
+![Diagrama de flujo — Activar y crear alertas](assets/flujo-activar-crear-alertas.png)
+
+Desde el detalle de un documento, el usuario puede configurar una o varias alertas indicando cuántos días antes de la fecha de caducidad quiere ser notificado. El backend valida que no exista ya una alerta con el mismo número de días para ese documento y usuario antes de crearla. Una tarea programada diaria comprueba las alertas activas y envía un correo automáticamente cuando se alcanza el umbral, registrando la fecha de envío para no volver a notificar en el mismo día.
+
+---
+
+### Flujo 6 — Consultar historial del documento
+
+![Diagrama de flujo — Consultar historial del documento](assets/flujo-consultar-historial-documento.png)
+
+El usuario accede al detalle de un documento y navega a la pestaña de historial. El sistema muestra de forma cronológica todas las acciones registradas sobre ese documento: creación, ediciones, subidas de imagen, renovaciones y actualizaciones de fechas. Cada entrada incluye el tipo de cambio, la descripción y la fecha exacta en que se realizó.
+
+---
+
+### Flujo 7 — Crear un grupo
+
+![Diagrama de flujo — Crear un grupo](assets/flujo-crear-grupo.png)
+
+El usuario accede a la sección de grupos y pulsa «Crear grupo». Introduce un nombre y los permisos que van a tener esos usuarios. Al confirmar, el backend crea el grupo, asigna al usuario como creador y genera automáticamente un código de acceso único de 10 caracteres que podrá compartir con otros usuarios para que se unan.
+
+---
+
+### Flujo 8 — Unirse a un grupo
+
+![Diagrama de flujo — Unirse a un grupo](assets/flujo-unirse-grupo.png)
+
+El usuario selecciona la opción «Unirse a un grupo» e introduce el código de acceso que le ha proporcionado el creador. El backend verifica que el código existe y que el usuario no es ya miembro del grupo. Si todo es correcto, lo añade como miembro y le concede acceso a los documentos compartidos del grupo.
+
+---
+
+### Flujo 9 — Añadir documento en un grupo
+
+![Diagrama de flujo — Añadir documento en un grupo](assets/flujo-anadir-documento-grupo.png)
+
+Desde la vista de detalle de un grupo, un miembro con permisos de escritura puede añadir un nuevo documento directamente al grupo. El flujo es equivalente al de subida individual (manual o desde imagen con OCR/IA), con la diferencia de que el documento queda vinculado tanto al usuario que lo sube como al grupo, apareciendo en la biblioteca compartida del grupo.
+
+---
+
+### Flujo 10 — Eliminar un grupo
+
+![Diagrama de flujo — Eliminar un grupo](assets/flujo-eliminar-grupo.png)
+
+Solo el creador del grupo puede eliminarlo. Desde los ajustes del grupo, pulsa «Eliminar grupo» y confirma la acción. El backend elimina el grupo y todas sus relaciones con miembros y documentos.
+
+---
+
+### Flujo 11 — Validar documentos
+
+![Diagrama de flujo — Validar documentos](assets/flujo-validar-documentos.png)
+
+El usuario accede al validador y elige una fecha de referencia (mediante un preset como «hoy», «+6 meses», «+1 año» o «+2 años», o introduciendo una fecha concreta en el calendario). El frontend compara las fechas de caducidad de los documentos seleccionados con la fecha indicada y muestra el resultado con código de color: verde si el documento estará vigente, rojo si habrá caducado, y un aviso diferenciado si el documento no tiene fecha de caducidad.
+
+---
+
+### Flujo 12 — Ajustes del usuario
+
+![Diagrama de flujo — Ajustes del usuario](assets/flujo-ajustes-usuario.png)
+
+Desde la sección de ajustes, el usuario puede modificar su nombre de usuario, email, cambiar su contraseña y subir o reemplazar su imagen de perfil. Cada tipo de cambio se procesa de forma independiente: el backend actualiza solo los campos modificados y valida las reglas de negocio pertinentes (por ejemplo, que la contraseña actual sea correcta antes de permitir el cambio).
+
+---
+
+### Flujo 13 — Eliminar cuenta de usuario
+
+![Diagrama de flujo — Eliminar cuenta de usuario](assets/flujo-eliminar-cuenta.png)
+
+El usuario accede a los ajustes de cuenta y solicita la eliminación de su perfil. El sistema muestra un diálogo de confirmación advirtiendo de que la acción es irreversible. Tras confirmar, el backend elimina el usuario y, en cascada, todos sus documentos, alertas, historial y membresías en grupos. Si el usuario era el creador de algún grupo, ese grupo también se elimina.
 
 ---
 
