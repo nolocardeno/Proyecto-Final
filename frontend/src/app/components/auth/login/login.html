@@ -25,7 +25,7 @@
 
     <hr class="login__separator" />
 
-    <app-button variant="primary" size="auth" type="submit" class="login__action" [disabled]="loading">
+    <app-button variant="primary" size="auth" type="submit" class="login__action" [disabled]="loading || loginForm.invalid">
       {{ loading ? 'Iniciando...' : 'Iniciar sesión' }}
     </app-button>
   </form>

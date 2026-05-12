@@ -40,7 +40,7 @@
 
     <hr class="register__separator" />
 
-    <app-button variant="primary" size="auth" type="submit" class="register__action" [disabled]="loading">
+    <app-button variant="primary" size="auth" type="submit" class="register__action" [disabled]="loading || registerForm.invalid">
       {{ loading ? 'Creando...' : 'Crear cuenta' }}
     </app-button>
   </form>
