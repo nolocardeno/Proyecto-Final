@@ -1,0 +1,66 @@
+@use '../../../../styles/00-settings/variables' as v;
+@use '../../../../styles/01-tools/mixins' as m;
+
+// --------------------------------------------------------------------------
+// AVISO DE COOKIES
+// --------------------------------------------------------------------------
+.cookie-banner {
+  position: fixed;
+  inset: auto v.$spacing-3 v.$spacing-3 v.$spacing-3;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: v.$spacing-3;
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: v.$spacing-2 v.$spacing-3;
+  background-color: var(--color-surface);
+  border: v.$border-thin solid var(--color-surface-border);
+  border-radius: v.$radius-card;
+  box-shadow: var(--shadow-lg);
+
+  @include m.respond-down(md) {
+    inset: auto v.$spacing-2 v.$spacing-2 v.$spacing-2;
+    flex-direction: column;
+    align-items: stretch;
+    gap: v.$spacing-2;
+    padding: v.$spacing-2;
+  }
+}
+
+// --------------------------------------------------------------------------
+// TEXTO
+// --------------------------------------------------------------------------
+.cookie-banner__text {
+  font-family: v.$font-primary;
+  font-size: v.$font-size-sm-md;
+  font-weight: v.$font-weight-regular;
+  color: var(--color-text-body);
+  line-height: v.$line-height-normal;
+  margin: 0;
+
+  @include m.respond-down(sm) {
+    font-size: v.$font-size-sm;
+  }
+}
+
+// --------------------------------------------------------------------------
+// ACCIONES
+// --------------------------------------------------------------------------
+.cookie-banner__actions {
+  display: flex;
+  align-items: center;
+  gap: v.$spacing-1;
+  flex-shrink: 0;
+
+  @include m.respond-down(md) {
+    justify-content: flex-end;
+  }
+
+  @include m.respond-down(sm) {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: v.$spacing-1;
+  }
+}

@@ -1,0 +1,22 @@
+<!-- --------------------------------------------------------------------------
+     AVISO DE COOKIES: Solo visible mientras el consentimiento esté pendiente
+     -------------------------------------------------------------------------- -->
+@if (consent.isPending()) {
+  <aside class="cookie-banner" role="region" aria-label="Aviso de cookies">
+    <p class="cookie-banner__text">
+      Usamos almacenamiento local para recordar tu sesión, tus preferencias
+      de tema y, si lo eliges, tu email en el login. No usamos cookies de
+      análisis ni de terceros. Más detalles en la
+      <a routerLink="/cookies">Política de cookies</a>.
+    </p>
+
+    <nav class="cookie-banner__actions" aria-label="Acciones de consentimiento">
+      <app-button variant="secondary" size="sm" (click)="consent.reject()">
+        Rechazar opcionales
+      </app-button>
+      <app-button variant="primary" size="sm" (click)="consent.accept()">
+        Aceptar
+      </app-button>
+    </nav>
+  </aside>
+}
