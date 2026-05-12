@@ -1,0 +1,46 @@
+<!-- --------------------------------------------------------------------------
+     LEGAL LAYOUT: Cabecera, índice lateral, contenido y enlaces cruzados
+     -------------------------------------------------------------------------- -->
+<main class="legal">
+  <!-- ------------------------------------------------------------------------
+       HERO
+       ------------------------------------------------------------------------ -->
+  <header class="legal__hero">
+    <span class="legal__hero-icon" aria-hidden="true">
+      <fa-icon [icon]="heroIcon()" />
+    </span>
+    <h1 class="legal__title">{{ title() }}</h1>
+    <p class="legal__meta">
+      <fa-icon [icon]="faClock" />
+      <span>Última actualización: {{ updatedAt() }}</span>
+    </p>
+  </header>
+
+  <!-- ------------------------------------------------------------------------
+       ÍNDICE + CONTENIDO
+       ------------------------------------------------------------------------ -->
+  <article class="legal__shell">
+    <aside class="legal__toc" aria-label="Índice de la página">
+      <p class="legal__toc-label">En esta página</p>
+      <nav class="legal__toc-list">
+        @for (item of sections(); track item.id) {
+          <a
+            [href]="'#' + item.id"
+            class="legal__toc-link"
+            [class.legal__toc-link--active]="activeId() === item.id"
+            (click)="scrollTo(item.id, $event)"
+          >
+            <fa-icon [icon]="item.icon" class="legal__toc-icon" />
+            <span>{{ item.title }}</span>
+          </a>
+        }
+      </nav>
+    </aside>
+
+    <section class="legal__content">
+      <ng-content />
+    </section>
+  </article>
+
+</main>
+
