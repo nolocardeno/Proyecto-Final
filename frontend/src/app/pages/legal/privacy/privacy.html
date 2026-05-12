@@ -1,0 +1,152 @@
+<app-legal-layout
+  title="Política de privacidad"
+  [updatedAt]="updatedAt"
+  [heroIcon]="heroIcon"
+  [sections]="sections"
+>
+  <app-legal-section
+    sectionId="summary"
+    title="Lo importante en dos líneas"
+    [icon]="faSummary"
+  >
+    <p>
+      Solo guardamos lo necesario para que Scantral funcione: tu cuenta y
+      tus documentos. No vendemos datos, no hacemos perfilado publicitario y
+      no usamos herramientas de análisis de terceros.
+    </p>
+  </app-legal-section>
+
+  <app-legal-section
+    sectionId="responsible"
+    title="Responsable"
+    [icon]="faResponsible"
+  >
+    <p>
+      Responsable del tratamiento: Manolo Cardeño Sánchez, autor y operador
+      de Scantral. Contacto:
+      <a href="mailto:manologorrion&#64;hotmail.com">manologorrion&#64;hotmail.com</a>.
+    </p>
+  </app-legal-section>
+
+  <app-legal-section
+    sectionId="data"
+    title="Qué datos tratamos"
+    [icon]="faData"
+  >
+    <ul>
+      <li>
+        <strong>Cuenta:</strong> tu email, nombre y contraseña. La contraseña
+        nunca se almacena en texto legible; se transforma con un algoritmo
+        seguro antes de guardarse.
+      </li>
+      <li>
+        <strong>Foto de perfil:</strong> si la subes, se guarda para
+        mostrarla en tu cuenta.
+      </li>
+      <li>
+        <strong>Documentos:</strong> los archivos que subes y los datos que
+        introduces o que se extraen mediante el lector automático
+        (texto, fechas, tipos de documento).
+      </li>
+      <li>
+        <strong>Alertas:</strong> con cuánta antelación quieres que te
+        avisemos antes de que caduque un documento y cuándo te enviamos
+        el último email.
+      </li>
+      <li>
+        <strong>Registros de seguridad:</strong> guardamos información
+        básica de acceso para detectar usos indebidos y resolver
+        problemas técnicos. No la usamos para ningún otro fin.
+      </li>
+    </ul>
+  </app-legal-section>
+
+  <app-legal-section
+    sectionId="purpose"
+    title="Para qué los usamos"
+    [icon]="faPurpose"
+  >
+    <ul>
+      <li>
+        <strong>Prestar el servicio:</strong> darte de alta, mantener tu
+        sesión activa, gestionar tus documentos, leerlos automáticamente
+        y enviarte avisos de caducidad.
+      </li>
+      <li>
+        <strong>Mantener la seguridad</strong> de tu cuenta y de la
+        plataforma frente a accesos no autorizados.
+      </li>
+      <li>
+        <strong>Cumplir obligaciones legales</strong> cuando la normativa
+        así lo exija.
+      </li>
+    </ul>
+  </app-legal-section>
+
+  <app-legal-section
+    sectionId="access"
+    title="Quién accede a tus datos"
+    [icon]="faAccess"
+  >
+    <p>
+      Solo accedemos a tus datos para operar y dar soporte al servicio.
+      Los documentos que subes se procesan internamente: primero el servidor
+      principal y luego el lector automático de texto, que funciona dentro
+      del mismo entorno y no envía tus archivos a ningún tercero.
+    </p>
+    <p>
+      Si la función de resumen inteligente está activa, el texto extraído
+      puede enviarse a un proveedor externo de inteligencia artificial para
+      enriquecer el resultado. Esta función no está habilitada por defecto.
+    </p>
+    <p>
+      El servicio se aloja en infraestructura europea. No transferimos
+      tus datos fuera del Espacio Económico Europeo de forma habitual.
+    </p>
+  </app-legal-section>
+
+  <app-legal-section
+    sectionId="retention"
+    title="Cuánto tiempo los conservamos"
+    [icon]="faRetention"
+  >
+    <p>
+      Tus datos se conservan mientras mantengas la cuenta activa.
+      Cuando eliminas tu cuenta desde Configuración, borramos tus documentos,
+      alertas y datos de perfil de forma definitiva.
+    </p>
+  </app-legal-section>
+
+  <app-legal-section
+    sectionId="rights"
+    title="Tus derechos"
+    [icon]="faRights"
+  >
+    <p>
+      Tienes derecho a acceder, rectificar, suprimir, oponerte, limitar el
+      tratamiento y solicitar la portabilidad de tus datos. Puedes ejercer
+      la mayoría directamente desde Configuración dentro de la aplicación
+      y, para el resto,
+      escribirnos a
+      <a href="mailto:manologorrion&#64;hotmail.com">manologorrion&#64;hotmail.com</a>.
+    </p>
+    <p>
+      Si consideras que tratamos tus datos de forma incorrecta, puedes
+      reclamar ante la Agencia Española de Protección de Datos
+      (<a href="https://www.aepd.es" target="_blank" rel="noopener noreferrer">aepd.es</a>).
+    </p>
+  </app-legal-section>
+
+  <app-legal-section
+    sectionId="cookies"
+    title="Cookies y almacenamiento en el navegador"
+    [icon]="faCookies"
+  >
+    <p>
+      Los detalles sobre qué guardamos en tu navegador están en la
+      <a routerLink="/cookies">Política de cookies</a>.
+    </p>
+  </app-legal-section>
+</app-legal-layout>
+
+
