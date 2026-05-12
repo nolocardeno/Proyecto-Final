@@ -381,9 +381,11 @@ docker compose pull
 docker compose up -d
 ```
 
-Para HTTPS, lo recomendado es poner un reverse proxy externo
-(Traefik, Caddy o Cloudflare Tunnel) delante del puerto 4200, en
-lugar de gestionar certificados dentro del contenedor de Nginx.
+Para **HTTPS en producción**, el proyecto usa **Cloudflare** como proxy
+externo: el dominio `scantral.com` apunta al servidor a través de
+Cloudflare, que termina TLS (certificado gestionado automáticamente) y
+reenvía las peticiones por HTTP al puerto `4200`. Nginx no necesita
+gestionar certificados; el cifrado ocurre fuera del contenedor.
 
 ## 8. Evidencias de CI/CD
 
@@ -394,7 +396,7 @@ Ambos workflows se ejecutan en verde en `main`:
 
 - **CI** ([ci.yml](https://github.com/nolocardeno/Scantral/actions/workflows/ci.yml)) — 3 jobs en paralelo:
   - `Backend (Spring Boot)`: levanta un Postgres 17 como service container y ejecuta `./mvnw -B verify`, que aplica el gate JaCoCo ≥ 80 %.
-  - `Frontend (Angular)`: `npm ci` + `ng build --configuration production`.
+  - `Frontend (Angular)`: `npm ci` + `ng test` (headless Chrome, gate cobertura ≥ 80 %) + `ng build --configuration production`.
   - `PaddleOCR service (Python)`: `python -m py_compile app.py`.
 - **CD** ([docker-publish.yml](https://github.com/nolocardeno/Scantral/actions/workflows/docker-publish.yml)) — matriz que construye y publica las 3 imágenes (`scantral-backend`, `scantral-frontend`, `scantral-paddleocr`) en Docker Hub bajo `nolorubio23/`. Los tags se generan con [`docker/metadata-action`](https://github.com/docker/metadata-action) y la autenticación usa los secrets `DOCKERHUB_USERNAME` y `DOCKERHUB_TOKEN`.
 
