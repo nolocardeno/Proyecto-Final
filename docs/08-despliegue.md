@@ -1,5 +1,18 @@
 # 8. Despliegue
 
+> **Documentos de referencia para la evaluación**
+>
+> Esta sección es el resumen de despliegue de la memoria. La guía paso a paso
+> completa y los materiales de evaluación de la asignatura están en los documentos
+> siguientes:
+>
+> | Documento | Contenido |
+> | --------- | --------- |
+> | [**DEPLOY.md**](../DEPLOY.md) | Guía de despliegue paso a paso: arranque, verificación con `curl`, troubleshooting, gestión de artefactos y verificación de red |
+> | [**08-despliegue-eval.md**](08-despliegue-eval.md) | Evidencias de evaluación de la asignatura: criterios c1–c4, C7, C8 con capturas y comandos reales |
+
+---
+
 ## Índice
 
 - [8.1. Entorno de despliegue](#81-entorno-de-despliegue)
@@ -13,8 +26,6 @@
   - [8.4.3. Arranque del stack](#843-arranque-del-stack)
   - [8.4.4. Verificación funcional](#844-verificación-funcional)
 - [8.5. URL de la aplicación en producción](#85-url-de-la-aplicación-en-producción)
-
-> Para una guía de despliegue local paso a paso más detallada (arranque en local, troubleshooting, gestión de volúmenes, backups, etc.) consulta [DEPLOY.md](../DEPLOY.md).
 
 ---
 
