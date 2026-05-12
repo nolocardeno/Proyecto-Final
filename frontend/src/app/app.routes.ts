@@ -63,4 +63,22 @@ export const routes: Routes = [
         (m) => m.SettingsComponent,
       ),
   },
+  {
+    path: 'terms',
+    title: 'Términos y condiciones',
+    loadComponent: () =>
+      import('./pages/legal/terms/terms').then((m) => m.TermsComponent),
+  },
+  {
+    path: 'privacy',
+    title: 'Política de privacidad',
+    loadComponent: () =>
+      import('./pages/legal/privacy/privacy').then((m) => m.PrivacyComponent),
+  },
+  {
+    path: 'cookies',
+    title: 'Política de cookies',
+    loadComponent: () =>
+      import('./pages/legal/cookies/cookies').then((m) => m.CookiesComponent),
+  },
 ];

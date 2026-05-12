@@ -11,6 +11,7 @@ import { LoginComponent } from './components/auth/login/login';
 import { RegisterComponent } from './components/auth/register/register';
 import { AuthModalService } from './services/auth-modal.service';
 import { AlertsComponent } from './components/shared/alerts/alerts';
+import { CookieBannerComponent } from './components/shared/cookie-banner/cookie-banner';
 import { ThemeService } from './services/theme.service';
 
 // --------------------------------------------------------------------------
@@ -41,6 +42,7 @@ const SIDEBAR_ROUTES = ['/dashboard', '/settings', '/groups'];
     LoginComponent,
     RegisterComponent,
     AlertsComponent,
+    CookieBannerComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss',

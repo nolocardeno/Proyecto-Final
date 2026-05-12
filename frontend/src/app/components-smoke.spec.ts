@@ -11,6 +11,7 @@ import {
   faStar,
   faCheck,
   faHome,
+  faFileContract,
 } from '@fortawesome/free-solid-svg-icons';
 
 // Components - layout & auth
@@ -18,6 +19,8 @@ import { LoginComponent } from './components/auth/login/login';
 import { RegisterComponent } from './components/auth/register/register';
 import { FooterComponent } from './components/layout/footer/footer';
 import { HeaderComponent } from './components/layout/header/header';
+import { LegalLayoutComponent } from './components/layout/legal-layout/legal-layout';
+import { LegalSectionComponent } from './components/layout/legal-section/legal-section';
 import { SidebarComponent } from './components/layout/sidebar/sidebar';
 
 // Components - shared
@@ -31,6 +34,7 @@ import { AvatarUploadCardComponent } from './components/shared/avatar-upload-car
 import { ButtonComponent } from './components/shared/button/button';
 import { CalendarComponent } from './components/shared/calendar/calendar';
 import { ConfirmModalComponent } from './components/shared/confirm-modal/confirm-modal';
+import { CookieBannerComponent } from './components/shared/cookie-banner/cookie-banner';
 import { CopyButtonComponent } from './components/shared/copy-button/copy-button';
 import { CreateGroupModalComponent } from './components/shared/create-group-modal/create-group-modal';
 import { DeleteAccountCardComponent } from './components/shared/delete-account-card/delete-account-card';
@@ -74,6 +78,9 @@ import { DocumentDetailComponent } from './pages/document-detail/document-detail
 import { GroupDetailComponent } from './pages/group-detail/group-detail';
 import { GroupsComponent } from './pages/groups/groups';
 import { LandingPageComponent } from './pages/landing-page/landing-page';
+import { CookiesComponent } from './pages/legal/cookies/cookies';
+import { PrivacyComponent } from './pages/legal/privacy/privacy';
+import { TermsComponent } from './pages/legal/terms/terms';
 import { SettingsComponent } from './pages/settings/settings';
 import { ValidatorComponent } from './pages/validator/validator';
 
@@ -88,6 +95,25 @@ const cases: SmokeCase[] = [
   { name: 'RegisterComponent', component: RegisterComponent },
   { name: 'FooterComponent', component: FooterComponent },
   { name: 'HeaderComponent', component: HeaderComponent },
+  {
+    name: 'LegalLayoutComponent',
+    component: LegalLayoutComponent,
+    inputs: {
+      title: 'Términos',
+      updatedAt: '12 de mayo de 2026',
+      heroIcon: faFileContract,
+      sections: [],
+    },
+  },
+  {
+    name: 'LegalSectionComponent',
+    component: LegalSectionComponent,
+    inputs: {
+      sectionId: 'demo',
+      title: 'Demo',
+      icon: faFileContract,
+    },
+  },
   { name: 'SidebarComponent', component: SidebarComponent },
   { name: 'AccordionItemComponent', component: AccordionItemComponent, inputs: { question: '¿Qué es?' } },
   { name: 'AlertButtonComponent', component: AlertButtonComponent, inputs: { days: 7 } },
@@ -104,6 +130,7 @@ const cases: SmokeCase[] = [
     inputs: { title: 'Confirmar', message: '¿Seguro?' },
   },
   { name: 'CopyButtonComponent', component: CopyButtonComponent, inputs: { textToCopy: 'hola' } },
+  { name: 'CookieBannerComponent', component: CookieBannerComponent },
   { name: 'CreateGroupModalComponent', component: CreateGroupModalComponent },
   { name: 'DeleteAccountCardComponent', component: DeleteAccountCardComponent },
   { name: 'DeleteDocumentCardComponent', component: DeleteDocumentCardComponent },
@@ -272,6 +299,9 @@ const cases: SmokeCase[] = [
   { name: 'GroupDetailComponent', component: GroupDetailComponent },
   { name: 'GroupsComponent', component: GroupsComponent },
   { name: 'LandingPageComponent', component: LandingPageComponent },
+  { name: 'CookiesComponent', component: CookiesComponent },
+  { name: 'PrivacyComponent', component: PrivacyComponent },
+  { name: 'TermsComponent', component: TermsComponent },
   { name: 'SettingsComponent', component: SettingsComponent },
   { name: 'ValidatorComponent', component: ValidatorComponent },
 ];
