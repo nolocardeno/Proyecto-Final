@@ -81,6 +81,34 @@
 }
 
 // --------------------------------------------------------------------------
+// ENLACES LEGALES
+// --------------------------------------------------------------------------
+.footer__legal {
+  display: flex;
+  align-items: center;
+  gap: v.$spacing-2;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.footer__legal-link {
+  font-family: v.$font-primary;
+  font-size: v.$font-size-sm-md;
+  font-weight: v.$font-weight-medium;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color v.$transition-fast;
+
+  &:hover {
+    color: var(--color-text-primary);
+  }
+
+  @include m.respond-down(md) {
+    font-size: v.$font-size-sm;
+  }
+}
+
+// --------------------------------------------------------------------------
 // REDES SOCIALES
 // --------------------------------------------------------------------------
 .footer__social {

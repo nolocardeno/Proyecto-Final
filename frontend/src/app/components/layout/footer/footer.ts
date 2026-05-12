@@ -2,6 +2,7 @@
 // IMPORTS
 // --------------------------------------------------------------------------
 import { Component, input } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
   faGithub,
@@ -21,7 +22,7 @@ import {
  */
 @Component({
   selector: 'app-footer',
-  imports: [FaIconComponent],
+  imports: [RouterLink, FaIconComponent],
   templateUrl: './footer.html',
   styleUrl: './footer.scss',
 })
