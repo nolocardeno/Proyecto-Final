@@ -40,7 +40,7 @@ public final class DocumentSpecifications {
      * Búsqueda libre case-insensitive sobre {@code title} y {@code storeName}.
      */
     public static Specification<Document> textMatches(String q) {
-        if (q == null || q.isBlank()) {
+        if (q == null || q.isBlank() || q.length() > 255) {
             return null;
         }
         String like = "%" + q.trim().toLowerCase(Locale.ROOT) + "%";

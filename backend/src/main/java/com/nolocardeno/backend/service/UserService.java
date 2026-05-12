@@ -22,11 +22,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
+
+    private static final Set<String> ALLOWED_EXTENSIONS = Set.of(".jpg", ".jpeg", ".png", ".webp", ".gif");
 
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
@@ -73,8 +76,16 @@ public class UserService {
         Files.createDirectories(uploadDir);
 
         String extension = getFileExtension(file.getOriginalFilename());
+        if (!ALLOWED_EXTENSIONS.contains(extension.toLowerCase())) {
+            throw new IllegalArgumentException("Tipo de archivo no permitido. Solo se aceptan: jpg, jpeg, png, webp, gif");
+        }
+
         String filename = userId + "_" + UUID.randomUUID() + extension;
-        Path filePath = uploadDir.resolve(filename);
+        Path filePath = uploadDir.resolve(filename).normalize();
+
+        if (!filePath.startsWith(uploadDir.normalize())) {
+            throw new IllegalArgumentException("Ruta de archivo inválida");
+        }
 
         // Eliminar imagen anterior si existe
         if (user.getProfileImagePath() != null) {

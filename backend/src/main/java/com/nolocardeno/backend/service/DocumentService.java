@@ -335,7 +335,7 @@ public class DocumentService {
      */
     private String normalizeHolderName(String raw) {
         if (raw == null || raw.isBlank()) return null;
-        String cleaned = raw.replaceAll("[<>|]+", " ").trim();
+        String cleaned = raw.replaceAll("[<>&\"'|]+", " ").trim();
         if (cleaned.isEmpty()) return null;
         String[] tokens = cleaned.split("\\s+");
         for (String t : tokens) {

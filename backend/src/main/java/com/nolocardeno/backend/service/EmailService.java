@@ -41,15 +41,25 @@ public class EmailService {
 
             helper.setFrom(fromAddress);
             helper.setTo(toEmail);
-            helper.setSubject("Recordatorio: \"" + documentTitle + "\" caduca en " + daysLeft + (daysLeft == 1 ? " día" : " días"));
+            helper.setSubject("Recordatorio: \"" + escapeHtml(documentTitle) + "\" caduca en " + daysLeft + (daysLeft == 1 ? " día" : " días"));
 
-            helper.setText(buildEmailBody(userName, documentTitle, daysLeft), true);
+            helper.setText(buildEmailBody(escapeHtml(userName), escapeHtml(documentTitle), daysLeft), true);
 
             mailSender.send(message);
             log.info("Alerta enviada a {} para el documento \"{}\" ({} días restantes)", toEmail, documentTitle, daysLeft);
         } catch (MessagingException e) {
             log.error("Error al enviar alerta a {} para el documento \"{}\": {}", toEmail, documentTitle, e.getMessage());
         }
+    }
+
+    private String escapeHtml(String text) {
+        if (text == null) return "";
+        return text
+                .replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\"", "&quot;")
+                .replace("'", "&#39;");
     }
 
     private String buildEmailBody(String userName, String documentTitle, int daysLeft) {
