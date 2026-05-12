@@ -1,0 +1,109 @@
+<app-legal-layout
+  title="Política de cookies"
+  [updatedAt]="updatedAt"
+  [heroIcon]="heroIcon"
+  [sections]="sections"
+>
+  <app-legal-section
+    sectionId="summary"
+    title="Resumen"
+    [icon]="faSummary"
+  >
+    <p>
+      Scantral no instala ninguna cookie de seguimiento ni de publicidad.
+      Tampoco cargamos herramientas de analítica de terceros. Lo único
+      que guardamos en tu navegador son unos pocos datos propios,
+      estrictamente necesarios para que la aplicación funcione y
+      recuerde tus preferencias.
+    </p>
+  </app-legal-section>
+
+  <app-legal-section
+    sectionId="storage"
+    title="Qué guardamos en tu navegador"
+    [icon]="faStorage"
+  >
+    <p>
+      Guardamos cuatro datos en tu dispositivo. Ninguno se comparte
+      automáticamente con otros servidores.
+    </p>
+    <ul>
+      <li>
+        <strong>Datos de sesión (necesario).</strong> Un identificador
+        seguro que mantiene tu sesión activa mientras usas la aplicación.
+        Al cerrar sesión o al caducar, se elimina de forma automática.
+      </li>
+      <li>
+        <strong>Preferencia de tema (preferencia).</strong> Si cambias
+        entre el tema claro y el oscuro, recordamos tu elección para que
+        no tengas que ajustarlo en cada visita.
+      </li>
+      <li>
+        <strong>Acceso rápido al email (opcional).</strong> Solo si
+        marcas expresamente "Recuérdame" al iniciar sesión, guardamos
+        tu email para ahorrarte escribirlo la próxima vez. Nunca se
+        activa sin que tú lo pidas.
+      </li>
+      <li>
+        <strong>Decisión sobre este aviso (necesario).</strong> Guardamos
+        tu respuesta al aviso de privacidad para no volvértelo a
+        mostrar.
+      </li>
+    </ul>
+  </app-legal-section>
+
+  <app-legal-section
+    sectionId="third-party"
+    title="Terceros"
+    [icon]="faThirdParty"
+  >
+    <p>
+      No usamos Google Analytics, Meta Pixel, Hotjar ni herramientas
+      similares de seguimiento o publicidad.
+    </p>
+    <p>
+      El tráfico web pasa por Cloudflare como capa de seguridad y
+      distribución de contenidos. Cloudflare puede registrar información
+      básica de la conexión para proteger el servicio frente a ataques,
+      pero no instala cookies de seguimiento a través de Scantral.
+    </p>
+  </app-legal-section>
+
+  <app-legal-section
+    sectionId="consent"
+    title="Cómo gestionar tu consentimiento"
+    [icon]="faConsent"
+  >
+    <p>
+      Al entrar por primera vez verás un aviso para aceptar o rechazar
+      los datos opcionales. Puedes cambiar tu decisión en cualquier
+      momento desde aquí:
+    </p>
+    <menu class="cookies__controls" aria-label="Controles de consentimiento">
+      <li>
+        <app-button variant="primary" size="sm" (click)="consent.reset()">
+          Volver a preguntar
+        </app-button>
+      </li>
+    </menu>
+    <p>
+      También puedes borrar estos datos en cualquier momento desde la
+      configuración de privacidad de tu navegador.
+    </p>
+  </app-legal-section>
+
+  <app-legal-section
+    sectionId="more"
+    title="Más información"
+    [icon]="faMore"
+  >
+    <p>
+      Cómo tratamos tus datos está descrito en la
+      <a routerLink="/privacy">Política de privacidad</a>. Si tienes
+      cualquier duda escríbenos a
+      <a href="mailto:manologorrion&#64;hotmail.com">manologorrion&#64;hotmail.com</a>.
+    </p>
+  </app-legal-section>
+</app-legal-layout>
+
+
