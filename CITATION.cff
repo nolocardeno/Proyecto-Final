@@ -1,0 +1,37 @@
+cff-version: 1.2.0
+message: "If you use or reference this software in academic work, please cite it as below."
+type: software
+
+title: "Scantral"
+abstract: >
+  Scantral is a full-stack web application for intelligent personal document management.
+  It combines a Spring Boot 4 backend, an Angular 20 SPA, and an offline OCR sidecar
+  (PaddleOCR PP-OCRv4), with optional AI-assisted data extraction via Google Gemini.
+  The application supports document storage, expiry alerts, shared groups, and JWT-based
+  authentication, and is deployed at scantral.com.
+
+authors:
+  - family-names: "Cárdeno Sánchez"
+    given-names: "Manolo"
+    alias: "nolocardeno"
+    email: "manologorrion@hotmail.com"
+
+version: "1.0.0"
+date-released: "2026-05-12"
+
+repository-code: "https://github.com/nolocardeno/Scantral"
+url: "https://scantral.com"
+
+license: "LicenseRef-proprietary"
+
+keywords:
+  - document management
+  - OCR
+  - Angular
+  - Spring Boot
+  - Java
+  - PaddleOCR
+  - Docker
+  - JWT
+  - TFG
+  - DAW
