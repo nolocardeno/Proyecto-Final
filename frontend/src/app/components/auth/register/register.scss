@@ -21,6 +21,27 @@
   }
 
   // --------------------------------------------------------------------------
+  // BLOQUE LEGAL
+  // --------------------------------------------------------------------------
+  &__legal {
+    display: flex;
+    flex-direction: column;
+    gap: v.$spacing-half;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    min-width: 0;
+  }
+
+  &__legal-text {
+    font-family: v.$font-primary;
+    font-size: v.$font-size-sm;
+    color: var(--color-text-muted);
+    line-height: v.$line-height-normal;
+    margin: 0;
+  }
+
+  // --------------------------------------------------------------------------
   // SEPARADOR
   // --------------------------------------------------------------------------
   &__separator {

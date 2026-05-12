@@ -1,6 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient, HttpErrorResponse } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideRouter } from '@angular/router';
+import { provideLocationMocks } from '@angular/common/testing';
 import { of, throwError } from 'rxjs';
 
 import { RegisterComponent } from './register';
@@ -16,7 +18,12 @@ describe('RegisterComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [RegisterComponent],
-      providers: [provideHttpClient(), provideHttpClientTesting()],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        provideRouter([]),
+        provideLocationMocks(),
+      ],
     }).compileComponents();
     auth = TestBed.inject(AuthService);
     alert = TestBed.inject(AlertService);
@@ -43,10 +50,25 @@ describe('RegisterComponent', () => {
       email: 'a@b.com',
       password: '123456',
       confirmPassword: 'distinto',
+      acceptTerms: true,
     });
     comp.onSubmit();
     expect(spy).not.toHaveBeenCalled();
     expect(comp.registerForm.hasError('passwordsMismatch')).toBeTrue();
+  });
+
+  it('no envía si no se aceptan los términos', () => {
+    const spy = spyOn(auth, 'register');
+    const { comp } = build();
+    comp.registerForm.setValue({
+      email: 'a@b.com',
+      password: '123456',
+      confirmPassword: '123456',
+      acceptTerms: false,
+    });
+    comp.onSubmit();
+    expect(spy).not.toHaveBeenCalled();
+    expect(comp.registerForm.get('acceptTerms')!.valid).toBeFalse();
   });
 
   it('registro exitoso abre login y muestra alerta', () => {
@@ -58,6 +80,7 @@ describe('RegisterComponent', () => {
       email: 'a@b.com',
       password: '123456',
       confirmPassword: '123456',
+      acceptTerms: true,
     });
     comp.onSubmit();
     expect(alertSpy).toHaveBeenCalledWith('success', jasmine.stringMatching(/creada/i));
@@ -74,6 +97,7 @@ describe('RegisterComponent', () => {
       email: 'a@b.com',
       password: '123456',
       confirmPassword: '123456',
+      acceptTerms: true,
     });
     comp.onSubmit();
     expect(alertSpy).toHaveBeenCalledWith('error', 'Email en uso');
@@ -89,6 +113,7 @@ describe('RegisterComponent', () => {
       email: 'a@b.com',
       password: '123456',
       confirmPassword: '123456',
+      acceptTerms: true,
     });
     comp.onSubmit();
     expect(alertSpy).toHaveBeenCalledWith('error', jasmine.stringMatching(/No se pudo crear/));

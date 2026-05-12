@@ -24,6 +24,20 @@
       formControlName="confirmPassword"
     />
 
+    <fieldset class="register__legal">
+      <app-form-checkbox
+        label="He leído y acepto los términos"
+        checkboxId="register-accept-terms"
+        formControlName="acceptTerms"
+      />
+      <p class="register__legal-text">
+        Antes de continuar revisa los
+        <a routerLink="/terms" (click)="onLegalLink()">Términos y condiciones</a>
+        y la
+        <a routerLink="/privacy" (click)="onLegalLink()">Política de privacidad</a>.
+      </p>
+    </fieldset>
+
     <hr class="register__separator" />
 
     <app-button variant="primary" size="auth" type="submit" class="register__action" [disabled]="loading">

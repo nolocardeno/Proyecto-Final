@@ -10,9 +10,11 @@ import {
   Validators,
 } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
+import { RouterLink } from '@angular/router';
 import { AuthCardComponent } from '../../shared/auth-card/auth-card';
 import { ButtonComponent } from '../../shared/button/button';
 import { FormFieldComponent } from '../../shared/form-field/form-field';
+import { FormCheckboxComponent } from '../../shared/form-checkbox/form-checkbox';
 import { AuthService } from '../../../services/auth.service';
 import { AuthModalService } from '../../../services/auth-modal.service';
 import { AlertService } from '../../../services/alert.service';
@@ -45,7 +47,7 @@ function passwordsMatchValidator(control: AbstractControl): ValidationErrors | n
  */
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule, AuthCardComponent, ButtonComponent, FormFieldComponent],
+  imports: [ReactiveFormsModule, RouterLink, AuthCardComponent, ButtonComponent, FormFieldComponent, FormCheckboxComponent],
   templateUrl: './register.html',
   styleUrl: './register.scss',
 })
@@ -64,9 +66,15 @@ export class RegisterComponent {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required]],
+      acceptTerms: [false, [Validators.requiredTrue]],
     },
     { validators: passwordsMatchValidator },
   );
+
+  /** Cierra el modal al pulsar un enlace legal para que el usuario llegue a la página. */
+  protected onLegalLink(): void {
+    this.authModal.close();
+  }
 
   /** Manejador del evento `submit` del formulario. */
   protected onSubmit(): void {
