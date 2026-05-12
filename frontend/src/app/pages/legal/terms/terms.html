@@ -1,0 +1,121 @@
+<app-legal-layout
+  title="Términos y condiciones"
+  [updatedAt]="updatedAt"
+  [heroIcon]="heroIcon"
+  [sections]="sections"
+>
+  <app-legal-section
+    sectionId="about"
+    title="De qué va Scantral"
+    [icon]="faAbout"
+  >
+    <p>
+      Scantral es una aplicación web que te ayuda a guardar tus documentos
+      personales, leer sus datos con OCR y avisarte por email antes de que
+      caduquen. Al usar el servicio aceptas estos términos. Si no estás de
+      acuerdo con algún punto, lo más sensato es no crear una cuenta.
+    </p>
+  </app-legal-section>
+
+  <app-legal-section
+    sectionId="account"
+    title="Tu cuenta"
+    [icon]="faAccount"
+  >
+    <p>
+      Para usar Scantral necesitas registrarte con un email y una contraseña.
+      Eres responsable de mantener tus credenciales a salvo y de la actividad
+      que ocurra desde tu cuenta. Si crees que alguien la está usando sin
+      permiso, ciérrala desde el menú o escríbenos.
+    </p>
+    <p>
+      Puedes borrar tu cuenta en cualquier momento desde Configuración.
+      Al hacerlo se eliminan tus documentos, alertas y la información asociada.
+    </p>
+  </app-legal-section>
+
+  <app-legal-section
+    sectionId="content"
+    title="Contenido que subes"
+    [icon]="faContent"
+  >
+    <p>
+      Solo puedes subir documentos e imágenes (incluyendo tu foto de perfil)
+      sobre los que tengas derechos. No subas material ilegal, contenido
+      sensible de terceros sin permiso, ni imágenes que vulneren la dignidad
+      de otras personas. Si la foto de perfil incluye a otra persona,
+      asegúrate de tener su consentimiento.
+    </p>
+    <ul>
+      <li>Nada de contenido ilegal, violento o sexual explícito.</li>
+      <li>Nada de datos de terceros que no te correspondan.</li>
+      <li>Nada de uso del servicio para acosar o suplantar a alguien.</li>
+    </ul>
+  </app-legal-section>
+
+  <app-legal-section
+    sectionId="moderation"
+    title="Moderación"
+    [icon]="faModeration"
+  >
+    <p>
+      Si detectamos que una cuenta o un archivo incumple estos términos
+      podemos eliminar el contenido y, en casos graves o reincidentes,
+      suspender la cuenta sin previo aviso. Procuramos hacerlo con criterio
+      y, siempre que sea razonable, antes de actuar te lo comunicaremos.
+    </p>
+  </app-legal-section>
+
+  <app-legal-section
+    sectionId="availability"
+    title="Disponibilidad y cambios"
+    [icon]="faAvailability"
+  >
+    <p>
+      Scantral se ofrece "tal cual". Hacemos lo posible por mantener el
+      servicio estable y seguro, pero no podemos garantizar que esté siempre
+      disponible o libre de errores. Podemos introducir cambios, pausar
+      funciones o discontinuar el servicio; si afecta a tus datos, te
+      avisaremos con tiempo razonable.
+    </p>
+  </app-legal-section>
+
+  <app-legal-section
+    sectionId="liability"
+    title="Limitación de responsabilidad"
+    [icon]="faLiability"
+  >
+    <p>
+      No nos hacemos responsables de daños indirectos derivados del uso del
+      servicio, como pérdida de datos por causas ajenas, decisiones tomadas
+      en base a la información extraída por OCR/IA, o uso indebido por
+      terceros. Verifica siempre los datos importantes antes de actuar
+      sobre ellos.
+    </p>
+  </app-legal-section>
+
+  <app-legal-section
+    sectionId="privacy"
+    title="Privacidad y cookies"
+    [icon]="faPrivacy"
+  >
+    <p>
+      El tratamiento de tus datos está descrito en la
+      <a routerLink="/privacy">Política de privacidad</a> y los
+      almacenamientos que utilizamos en la
+      <a routerLink="/cookies">Política de cookies</a>.
+    </p>
+  </app-legal-section>
+
+  <app-legal-section
+    sectionId="law"
+    title="Ley aplicable y contacto"
+    [icon]="faLaw"
+  >
+    <p>
+      Estos términos se rigen por la legislación española. Para cualquier
+      duda o reclamación puedes escribir a
+      <a href="mailto:manologorrion&#64;hotmail.com">manologorrion&#64;hotmail.com</a>.
+    </p>
+  </app-legal-section>
+</app-legal-layout>
