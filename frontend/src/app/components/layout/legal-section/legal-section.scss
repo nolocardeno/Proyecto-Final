@@ -1,0 +1,140 @@
+@use '../../../../styles/00-settings/variables' as v;
+@use '../../../../styles/01-tools/mixins' as m;
+
+// --------------------------------------------------------------------------
+// LEGAL SECTION — Tarjeta con icono numerado y cuerpo proyectado
+// --------------------------------------------------------------------------
+.legal-section {
+  display: flex;
+  flex-direction: column;
+  gap: v.$spacing-2;
+  padding: v.$spacing-3;
+  background-color: var(--color-surface);
+  border: v.$border-thin solid var(--color-border-subtle);
+  border-radius: v.$radius-card;
+  box-shadow: var(--shadow-card);
+  scroll-margin-top: v.$spacing-header;
+  transition:
+    transform v.$transition-fast,
+    box-shadow v.$transition-fast,
+    border-color v.$transition-fast;
+
+  &:hover {
+    transform: translateY(v.$hover-translate);
+    border-color: var(--color-border-strong);
+    box-shadow: v.$hover-shadow;
+  }
+
+  @include m.respond-down(md) {
+    padding: v.$spacing-2;
+    gap: v.$spacing-1;
+  }
+}
+
+// --------------------------------------------------------------------------
+// CABECERA
+// --------------------------------------------------------------------------
+.legal-section__header {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: v.$spacing-2;
+  padding-bottom: v.$spacing-2;
+  border-bottom: v.$border-thin solid var(--color-divider);
+
+  @include m.respond-down(sm) {
+    gap: v.$spacing-1;
+    padding-bottom: v.$spacing-1;
+  }
+}
+
+.legal-section__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: v.$spacing-5;
+  height: v.$spacing-5;
+  font-size: v.$font-size-md-lg;
+  color: v.$color-primary;
+  background-image: v.$color-gradient-primary;
+  border-radius: v.$radius-lg;
+  box-shadow: var(--shadow-md);
+
+  // El gradiente sirve de fondo; el icono se pinta blanco para contraste.
+  > * {
+    color: v.$color-accent-secondary;
+  }
+
+  @include m.respond-down(sm) {
+    width: v.$spacing-4;
+    height: v.$spacing-4;
+    font-size: v.$font-size-md;
+  }
+}
+
+.legal-section__title {
+  font-family: v.$font-primary;
+  font-size: v.$font-size-md-lg;
+  font-weight: v.$font-weight-bold;
+  color: var(--color-text-primary);
+  line-height: v.$line-height-tight;
+  margin: 0;
+
+  @include m.respond-down(sm) {
+    font-size: v.$font-size-md;
+  }
+}
+
+// --------------------------------------------------------------------------
+// CONTENIDO PROYECTADO
+// Los elementos p/ul/li vienen de los templates de las páginas (terms,
+// privacy, cookies) y llevan el _ngcontent de ese componente, no el de
+// legal-section. ::ng-deep permite alcanzarlos.
+// --------------------------------------------------------------------------
+// stylelint-disable-next-line selector-pseudo-element-no-unknown
+:host ::ng-deep {
+  p {
+    margin: 0;
+    font-family: v.$font-primary;
+    font-size: v.$font-size-md;
+    line-height: v.$line-height-relaxed;
+    color: var(--color-text-body);
+  }
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: v.$spacing-1;
+    padding-left: v.$spacing-3;
+    list-style: disc;
+    margin: v.$spacing-1 0 0;
+  }
+
+  li {
+    font-family: v.$font-primary;
+    font-size: v.$font-size-md;
+    line-height: v.$line-height-relaxed;
+    color: var(--color-text-body);
+
+    &::marker {
+      color: v.$color-primary;
+    }
+  }
+
+  strong {
+    font-weight: v.$font-weight-semibold;
+    color: var(--color-text-primary);
+  }
+
+  a {
+    color: v.$color-primary;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    transition: color v.$transition-fast;
+
+    &:hover,
+    &:focus-visible {
+      color: v.$color-secondary;
+    }
+  }
+}

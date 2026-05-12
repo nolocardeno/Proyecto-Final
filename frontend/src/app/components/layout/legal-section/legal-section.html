@@ -1,0 +1,13 @@
+<!-- --------------------------------------------------------------------------
+     LEGAL SECTION: Bloque numerado con icono dentro de una página legal
+     -------------------------------------------------------------------------- -->
+<section [id]="sectionId()" class="legal-section">
+  <header class="legal-section__header">
+    <span class="legal-section__badge" aria-hidden="true">
+      <fa-icon [icon]="icon()" />
+    </span>
+    <h2 class="legal-section__title">{{ title() }}</h2>
+  </header>
+
+  <ng-content />
+</section>
