@@ -475,17 +475,22 @@ La interfaz de usuario es una Single Page Application construida con **Angular 2
 
 Las rutas principales de la aplicación son:
 
-| Ruta | Componente | Descripción |
-|---|---|---|
-| `/` | `LandingComponent` | Página de inicio pública |
-| `/login` | `LoginComponent` | Formulario de inicio de sesión |
-| `/register` | `RegisterComponent` | Formulario de registro |
-| `/dashboard` | `DashboardComponent` | Vista principal de documentos |
-| `/documents/:id` | `DocumentDetailComponent` | Detalle de un documento |
-| `/groups` | `GroupsComponent` | Listado de grupos |
-| `/groups/:id` | `GroupDetailComponent` | Detalle de un grupo |
-| `/validator` | `ValidatorComponent` | Validador de vigencia |
-| `/settings` | `SettingsComponent` | Ajustes de cuenta |
+| Ruta | Componente | Descripción | Guard |
+|---|---|---|---|
+| `/` | `LandingComponent` | Página de inicio pública | `authRedirectGuard` |
+| `/login` | `LoginComponent` | Formulario de inicio de sesión | — |
+| `/register` | `RegisterComponent` | Formulario de registro | — |
+| `/dashboard` | `DashboardComponent` | Vista principal de documentos | `authGuard` |
+| `/documents/:id` | `DocumentDetailComponent` | Detalle de un documento | `authGuard` |
+| `/groups` | `GroupsComponent` | Listado de grupos | `authGuard` |
+| `/groups/:id` | `GroupDetailComponent` | Detalle de un grupo | `authGuard` |
+| `/validator` | `ValidatorComponent` | Validador de vigencia | `authGuard` |
+| `/settings` | `SettingsComponent` | Ajustes de cuenta | `authGuard` |
+
+La aplicación cuenta con dos guards funcionales de Angular Router:
+
+- **`authGuard`** (`guards/auth.guard.ts`) — protege las rutas privadas. Si el usuario no tiene sesión activa redirige automáticamente a `/` (landing page).
+- **`authRedirectGuard`** (`guards/auth-redirect.guard.ts`) — protege las rutas públicas frente a usuarios ya autenticados. Si el usuario tiene sesión activa redirige automáticamente a `/dashboard`.
 
 ### Backend — Spring Boot API
 

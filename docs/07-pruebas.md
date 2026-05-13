@@ -198,10 +198,9 @@ describe('Componentes - smoke tests', () => {
 ```
 
 **Guards e interceptores**  
-`auth-redirect.guard.spec.ts` y `auth.interceptor.spec.ts` prueban el guard de redirección
-autenticada y el interceptor HTTP de autorización, respectivamente, verificando que se
-añade la cabecera `Authorization` en las peticiones y que el guard redirige correctamente
-cuando el usuario no está autenticado.
+`auth.guard.spec.ts` prueba el guard de rutas privadas: verifica que un usuario sin sesión activa es redirigido a `/` y que uno autenticado puede acceder.  
+`auth-redirect.guard.spec.ts` prueba el guard de rutas públicas: verifica que un usuario autenticado es redirigido a `/dashboard` y que uno sin sesión puede acceder.  
+`auth.interceptor.spec.ts` prueba el interceptor HTTP de autorización, verificando que se añade la cabecera `Authorization: Bearer <token>` en las peticiones autenticadas.
 
 ---
 
