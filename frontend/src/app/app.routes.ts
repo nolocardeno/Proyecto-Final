@@ -2,6 +2,7 @@
 // IMPORTS
 // --------------------------------------------------------------------------
 import { Routes } from '@angular/router';
+import { authGuard } from './guards/auth.guard';
 import { authRedirectGuard } from './guards/auth-redirect.guard';
 
 // --------------------------------------------------------------------------
@@ -18,6 +19,7 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     title: 'Dashboard',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./pages/dashboard/dashboard').then(
         (m) => m.DashboardComponent,
@@ -26,6 +28,7 @@ export const routes: Routes = [
   {
     path: 'groups',
     title: 'Grupos',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./pages/groups/groups').then(
         (m) => m.GroupsComponent,
@@ -34,6 +37,7 @@ export const routes: Routes = [
   {
     path: 'groups/:id',
     title: 'Detalle del grupo',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./pages/group-detail/group-detail').then(
         (m) => m.GroupDetailComponent,
@@ -42,6 +46,7 @@ export const routes: Routes = [
   {
     path: 'validator',
     title: 'Validador',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./pages/validator/validator').then(
         (m) => m.ValidatorComponent,
@@ -50,6 +55,7 @@ export const routes: Routes = [
   {
     path: 'documents/:id',
     title: 'Documento',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./pages/document-detail/document-detail').then(
         (m) => m.DocumentDetailComponent,
@@ -58,6 +64,7 @@ export const routes: Routes = [
   {
     path: 'settings',
     title: 'Configuración',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./pages/settings/settings').then(
         (m) => m.SettingsComponent,
