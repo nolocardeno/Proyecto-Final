@@ -316,8 +316,8 @@ cada componente de la aplicación (64 componentes). El total real de tests ejecu
 | Origen | Specs | Tests |
 |---|---|---|
 | Pruebas explícitas (`it(...)`) | 34 | 178 |
-| Smoke tests generados dinámicamente | 1 (64 componentes) | 64 |
-| **TOTAL** | **35** | **242** |
+| Smoke tests generados dinámicamente | 1 (71 componentes) | 71 |
+| **TOTAL** | **35** | **249** |
 
 Desglose por categoría de los tests explícitos:
 
@@ -328,14 +328,14 @@ Desglose por categoría de los tests explícitos:
 | Guards e interceptores | `auth-redirect.guard`, `auth.interceptor` | 6 |
 | Modelos y utils | `document.model`, `calendar-export.utils`, `app-title-strategy` | 11 |
 | App raíz | `app.spec.ts` | 4 |
-| Smoke (componentes) | `components-smoke.spec.ts` | 64 |
+| Smoke (componentes) | `components-smoke.spec.ts` | 71 |
 
 **Resumen global del frontend:**
 
 | Métrica | Valor |
 |---|---|
-| Total de pruebas | 242 |
-| Pruebas exitosas | 242 |
+| Total de pruebas | 249 |
+| Pruebas exitosas | 249 |
 | Fallos | 0 |
 | Errores | 0 |
 | Specs (archivos) | 35 |

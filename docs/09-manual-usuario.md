@@ -48,7 +48,10 @@ Todas las funcionalidades son accesibles desde cualquier navegador moderno en
 3. Rellena el formulario con tu dirección de correo electrónico y una contraseña.
    - La contraseña debe tener al menos 8 caracteres, incluir una mayúscula, una minúscula y
      un número.
-4. Haz clic en **Crear cuenta**.
+4. Acepta los **Términos y condiciones** marcando el checkbox correspondiente. El botón
+   **Crear cuenta** permanece deshabilitado hasta que todos los campos sean válidos y el
+   checkbox esté marcado.
+5. Haz clic en **Crear cuenta**.
 5. Serás redirigido automáticamente al dashboard con tu cuenta activa.
 
 ![Formulario de registro](assets/registro.png)
@@ -58,7 +61,9 @@ _Formulario de creación de cuenta._
 
 1. Accede a [https://scantral.com](https://scantral.com).
 2. Introduce tu correo electrónico y contraseña.
-3. Haz clic en **Iniciar sesión**.
+3. El botón **Iniciar sesión** se habilita automáticamente en cuanto el email y la
+   contraseña tienen un formato válido.
+4. Haz clic en **Iniciar sesión**.
 
 ![Formulario de inicio de sesión](assets/inicio-sesion.png)
 _Pantalla de inicio de sesión._
