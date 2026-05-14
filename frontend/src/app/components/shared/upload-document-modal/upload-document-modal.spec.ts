@@ -141,28 +141,117 @@ describe('UploadDocumentModalComponent', () => {
   });
 
   it('extractData sin archivo no llama al servicio', () => {
-    const spy = spyOn(docService, 'extractFromImage');
+    const spy = spyOn(docService, 'previewFromImage');
     const { comp } = build();
     comp.extractData();
     expect(spy).not.toHaveBeenCalled();
   });
 
-  it('extractData con éxito emite documentCreated', () => {
-    spyOn(docService, 'extractFromImage').and.returnValue(of({ id: 1 } as any));
+  it('extractData con éxito aplica preview y navega al paso form', () => {
+    spyOn(docService, 'previewFromImage').and.returnValue(
+      of({
+        type: 'RECEIPT',
+        kind: 'ticket',
+        title: 'Compra',
+        category: 'Garantía',
+        storeName: 'MediaMarkt',
+        amount: 100,
+        issueDate: '2025-01-01',
+        expiryDate: '2027-01-01',
+        aiProcessed: true,
+      } as any),
+    );
     const alertSpy = spyOn(alert, 'show');
-    const closeSpy = spyOn(modalService, 'close');
     const { comp } = build();
     comp.imageFile.set(new File(['x'], 'a.png'));
-    let emitted = false;
-    comp.documentCreated.subscribe(() => (emitted = true));
     comp.extractData();
-    expect(emitted).toBeTrue();
+    expect(comp.currentStep()).toBe('form');
+    expect(comp.selectedKind()).toBe('ticket');
+    expect(comp.selectedTicketCategory()).toBe('Garantía');
+    expect(comp.aiPreviewApplied()).toBeTrue();
     expect(alertSpy).toHaveBeenCalledWith('success', jasmine.any(String));
-    expect(closeSpy).toHaveBeenCalled();
+    expect(comp.loading()).toBeFalse();
+  });
+
+  it('extractData mientras loading no llama al servicio', () => {
+    const spy = spyOn(docService, 'previewFromImage');
+    const { comp } = build();
+    comp.imageFile.set(new File(['x'], 'a.png'));
+    comp.loading.set(true);
+    comp.extractData();
+    expect(spy).not.toHaveBeenCalled();
+  });
+
+  it('extractData con preview de documento categoría OTHER usa custom', () => {
+    spyOn(docService, 'previewFromImage').and.returnValue(
+      of({
+        type: 'OTHER',
+        kind: 'document',
+        title: 'Doc',
+        category: 'MiCategoriaLargaQueSeTrunca',
+        storeName: null,
+        amount: null,
+        issueDate: null,
+        expiryDate: null,
+        aiProcessed: false,
+      } as any),
+    );
+    spyOn(alert, 'show');
+    const { comp } = build();
+    comp.imageFile.set(new File(['x'], 'a.png'));
+    comp.extractData();
+    expect(comp.selectedKind()).toBe('document');
+    expect(comp.selectedCategory()).toBe('OTHER');
+    expect(comp.customCategory().length).toBeLessThanOrEqual(12);
+    expect(comp.aiPreviewApplied()).toBeFalse();
+  });
+
+  it('extractData con preview de documento categoría conocida', () => {
+    spyOn(docService, 'previewFromImage').and.returnValue(
+      of({
+        type: 'DNI',
+        kind: 'document',
+        title: 'Mi DNI',
+        category: 'DNI',
+        storeName: null,
+        amount: null,
+        issueDate: null,
+        expiryDate: null,
+        aiProcessed: false,
+      } as any),
+    );
+    spyOn(alert, 'show');
+    const { comp } = build();
+    comp.imageFile.set(new File(['x'], 'a.png'));
+    comp.extractData();
+    expect(comp.selectedCategory()).toBe('DNI');
+    expect(comp.customCategory()).toBe('');
+  });
+
+  it('extractData con preview de ticket categoría OTHER usa custom', () => {
+    spyOn(docService, 'previewFromImage').and.returnValue(
+      of({
+        type: 'OTHER',
+        kind: 'ticket',
+        title: 'T',
+        category: 'OtraCosaMuyLarga',
+        storeName: null,
+        amount: null,
+        issueDate: null,
+        expiryDate: null,
+        aiProcessed: false,
+      } as any),
+    );
+    spyOn(alert, 'show');
+    const { comp } = build();
+    comp.imageFile.set(new File(['x'], 'a.png'));
+    comp.extractData();
+    expect(comp.selectedTicketCategory()).toBe('OTHER');
+    expect(comp.customTicketCategory().length).toBeLessThanOrEqual(12);
   });
 
   it('extractData con error muestra alerta', () => {
-    spyOn(docService, 'extractFromImage').and.returnValue(
+    spyOn(docService, 'previewFromImage').and.returnValue(
       throwError(() => new HttpErrorResponse({ error: { error: 'Bad' }, status: 500 })),
     );
     const alertSpy = spyOn(alert, 'show');
@@ -260,7 +349,7 @@ describe('UploadDocumentModalComponent', () => {
   });
 
   it('extractData error sin payload usa mensaje genérico', () => {
-    spyOn(docService, 'extractFromImage').and.returnValue(
+    spyOn(docService, 'previewFromImage').and.returnValue(
       throwError(() => new HttpErrorResponse({ status: 500 })),
     );
     const alertSpy = spyOn(alert, 'show');
@@ -268,6 +357,103 @@ describe('UploadDocumentModalComponent', () => {
     comp.imageFile.set(new File(['x'], 'a.png'));
     comp.extractData();
     expect(alertSpy).toHaveBeenCalledWith('error', jasmine.stringMatching(/No se pudo extraer/));
+  });
+
+  it('onEscape con lightbox abierto solo cierra el lightbox', () => {
+    const closeSpy = spyOn(modalService, 'close');
+    const { comp } = build();
+    comp.lightboxOpen.set(true);
+    comp.onEscape();
+    expect(comp.lightboxOpen()).toBeFalse();
+    expect(closeSpy).not.toHaveBeenCalled();
+  });
+
+  it('openLightbox sin imagen no abre', () => {
+    const { comp } = build();
+    comp.openLightbox();
+    expect(comp.lightboxOpen()).toBeFalse();
+  });
+
+  it('openLightbox con imagen abre y closeLightbox cierra', () => {
+    const { comp } = build();
+    comp.imageFile.set(new File(['x'], 'a.png'));
+    comp.imagePreviewUrl.set('blob:fake');
+    comp.openLightbox();
+    expect(comp.lightboxOpen()).toBeTrue();
+    comp.closeLightbox();
+    expect(comp.lightboxOpen()).toBeFalse();
+  });
+
+  it('goBack desde form en flujo image vuelve a image-upload', () => {
+    const { comp } = build();
+    comp.selectedMethod.set('image');
+    comp.currentStep.set('form');
+    comp.goBack();
+    expect(comp.currentStep()).toBe('image-upload');
+  });
+
+  it('onSubmit envía creationMethod OCR cuando viene de imagen sin IA', () => {
+    const createSpy = spyOn(docService, 'createDocument').and.returnValue(of({ id: 1 } as any));
+    spyOn(alert, 'show');
+    spyOn(modalService, 'close');
+    const { comp } = build();
+    comp.selectedMethod.set('image');
+    comp.selectedKind.set('document');
+    comp.selectedCategory.set('DNI');
+    comp.currentStep.set('form');
+    comp.aiPreviewApplied.set(false);
+    comp.docForm.setValue({ title: 'X', storeName: '', issueDate: '', expiryDate: '' });
+    comp.onSubmit();
+    const body = createSpy.calls.mostRecent().args[0] as any;
+    expect(body.creationMethod).toBe('OCR');
+    expect(body.aiProcessed).toBeFalse();
+  });
+
+  it('onSubmit envía creationMethod AI cuando viene de imagen con IA', () => {
+    const createSpy = spyOn(docService, 'createDocument').and.returnValue(of({ id: 1 } as any));
+    spyOn(alert, 'show');
+    spyOn(modalService, 'close');
+    const { comp } = build();
+    comp.selectedMethod.set('image');
+    comp.selectedKind.set('document');
+    comp.selectedCategory.set('DNI');
+    comp.currentStep.set('form');
+    comp.aiPreviewApplied.set(true);
+    comp.docForm.setValue({ title: 'X', storeName: '', issueDate: '', expiryDate: '' });
+    comp.onSubmit();
+    const body = createSpy.calls.mostRecent().args[0] as any;
+    expect(body.creationMethod).toBe('AI');
+    expect(body.aiProcessed).toBeTrue();
+  });
+
+  it('onSubmit envía creationMethod MANUAL en flujo manual', () => {
+    const createSpy = spyOn(docService, 'createDocument').and.returnValue(of({ id: 1 } as any));
+    spyOn(alert, 'show');
+    spyOn(modalService, 'close');
+    const { comp } = build();
+    comp.selectMethod('manual');
+    comp.selectType('document');
+    comp.onTypeNext();
+    comp.selectCategory('DNI');
+    comp.onCategoryNext();
+    comp.docForm.setValue({ title: 'X', storeName: '', issueDate: '', expiryDate: '' });
+    comp.onSubmit();
+    const body = createSpy.calls.mostRecent().args[0] as any;
+    expect(body.creationMethod).toBe('MANUAL');
+  });
+
+  it('onSubmit mientras loading no llama al servicio', () => {
+    const spy = spyOn(docService, 'createDocument');
+    const { comp } = build();
+    comp.selectMethod('manual');
+    comp.selectType('document');
+    comp.onTypeNext();
+    comp.selectCategory('DNI');
+    comp.onCategoryNext();
+    comp.docForm.setValue({ title: 'X', storeName: '', issueDate: '', expiryDate: '' });
+    comp.loading.set(true);
+    comp.onSubmit();
+    expect(spy).not.toHaveBeenCalled();
   });
 
   it('onSubmit error sin payload usa mensaje genérico', () => {
