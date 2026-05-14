@@ -19,6 +19,13 @@
   border-radius: v.$radius-card;
   box-shadow: var(--shadow-card);
   padding: 0.375rem;
+  width: 100%;
+  min-width: 0;
+
+  @include m.respond-down(sm) {
+    padding: 0.25rem;
+    gap: v.$spacing-half;
+  }
 }
 
 // --------------------------------------------------------------------------
@@ -29,21 +36,32 @@
   align-items: center;
   justify-content: center;
   gap: v.$spacing-1;
-  flex: 1;
+  flex: 1 1 0;
   min-width: 0;
-  padding: 0.625rem v.$spacing-2;
+  // Altura fija: evita saltos verticales al activarse o si una label envuelve.
+  height: 2.75rem; // 44px (touch target)
+  padding: 0 v.$spacing-2;
   border: none;
   border-radius: v.$radius-lg;
   background: transparent;
   cursor: pointer;
   font-family: v.$font-primary;
-  font-weight: v.$font-weight-semibold;
+  font-weight: v.$font-weight-bold;
   font-size: v.$font-size-sm;
   color: var(--color-text-faint);
-  @include m.transition(all, v.$transition-base);
+  // Solo transicionar propiedades sin impacto en layout para evitar saltos.
+  transition:
+    background-color v.$transition-base,
+    color v.$transition-base;
+
+  @include m.respond-down(md) {
+    padding: 0 v.$spacing-1;
+    height: 2.5rem;
+    gap: v.$spacing-half;
+  }
 
   @include m.respond-down(sm) {
-    padding: v.$spacing-1 v.$spacing-1;
+    padding: 0 v.$spacing-half;
     font-size: v.$font-size-xs;
   }
 
@@ -64,7 +82,6 @@
   &--active {
     background: v.$color-gradient-primary;
     color: var(--color-text-primary);
-    font-weight: v.$font-weight-bold;
   }
 }
 
@@ -80,6 +97,7 @@
 
 .tab-bar__icon {
   font-size: v.$font-size-md;
+  flex-shrink: 0;
 
   ::ng-deep svg path {
     fill: url(#grad-tab-bar);
@@ -95,4 +113,14 @@
 // --------------------------------------------------------------------------
 .tab-bar__label {
   line-height: v.$line-height-tight;
+  // Una sola línea con ellipsis: evita saltos de altura cuando la etiqueta
+  // no cabe en el tab a anchos pequeños.
+  @include m.truncate(1);
+  min-width: 0;
+
+  // En móviles pequeños el icono ya identifica la pestaña: ocultamos el texto
+  // para ganar superficie táctil y evitar truncados ridículos.
+  @include m.respond-down(sm) {
+    @include m.visually-hidden;
+  }
 }

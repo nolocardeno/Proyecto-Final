@@ -2,11 +2,22 @@
 @use '../../../../styles/01-tools/mixins' as m;
 
 // --------------------------------------------------------------------------
-// HOST: En desktop (lg+) es una columna fija a la izquierda.
-// En <lg actúa como drawer off-canvas: oculto por defecto, se muestra al
-// abrir mediante SidebarService (clase `.sidebar-host--open` aplicada al host).
+// HOST
+// El host NO se transforma: si lo hiciera, `position: fixed` en el backdrop
+// se calcularía relativo al host (containing block transformado), no al
+// viewport, y el backdrop no cubriría el resto de la página. Por eso el
+// host ocupa 0 dimensiones (es sólo un contenedor lógico) y delegamos
+// posicionamiento + transform en `.sidebar` y `.sidebar__backdrop`, que sí
+// son `position: fixed` respecto al viewport.
 // --------------------------------------------------------------------------
 :host {
+  display: contents;
+}
+
+// --------------------------------------------------------------------------
+// SIDEBAR
+// --------------------------------------------------------------------------
+.sidebar {
   position: fixed;
   top: v.$spacing-header;
   left: 0;
@@ -14,40 +25,26 @@
   height: calc(100dvh - #{v.$spacing-header});
   width: v.$spacing-sidebar-width;
   z-index: 20;
-
-  // --- DRAWER (mobile / tablet) ---
-  @include m.respond-down(lg) {
-    // Ocupa más ancho en móvil para mejor área táctil, capado a 16rem.
-    width: min(16rem, 80vw);
-    transform: translateX(-100%);
-    transition: transform v.$transition-base;
-    will-change: transform;
-  }
-
-  // Estado abierto del drawer
-  &.sidebar-host--open {
-    @include m.respond-down(lg) {
-      transform: translateX(0);
-    }
-  }
-}
-
-// --------------------------------------------------------------------------
-// SIDEBAR
-// --------------------------------------------------------------------------
-.sidebar {
-  position: relative;
-  z-index: 16;
   display: flex;
   flex-direction: column;
-  width: 100%;
-  height: 100%;
   background-color: var(--color-surface);
   border-right: v.$border-thin solid var(--color-surface-border);
   padding-block: v.$spacing-2;
 
+  // --- DRAWER (mobile / tablet) ---
   @include m.respond-down(lg) {
+    width: min(16rem, 80vw);
+    transform: translateX(-100%);
+    transition: transform v.$transition-base;
+    will-change: transform;
     box-shadow: var(--shadow-lg);
+  }
+}
+
+// Estado abierto del drawer (controlado por SidebarService → host class).
+:host(.sidebar-host--open) .sidebar {
+  @include m.respond-down(lg) {
+    transform: translateX(0);
   }
 }
 

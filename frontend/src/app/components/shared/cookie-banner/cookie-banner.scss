@@ -2,6 +2,14 @@
 @use '../../../../styles/01-tools/mixins' as m;
 
 // --------------------------------------------------------------------------
+// HOST — Banner flotante: usa display:contents para no afectar el layout
+// padre (en concreto, no estirar pistas auto del grid de <app-root>).
+// --------------------------------------------------------------------------
+:host {
+  display: contents;
+}
+
+// --------------------------------------------------------------------------
 // AVISO DE COOKIES
 // --------------------------------------------------------------------------
 .cookie-banner {

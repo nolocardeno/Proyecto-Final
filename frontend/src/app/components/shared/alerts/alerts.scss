@@ -1,6 +1,14 @@
 @use '../../../../styles/00-settings/variables' as v;
 
 // --------------------------------------------------------------------------
+// HOST — El componente flota mediante un hijo position:fixed, por lo que el
+// host NO debe participar en el cálculo de tamaños del layout padre.
+// --------------------------------------------------------------------------
+:host {
+  display: contents;
+}
+
+// --------------------------------------------------------------------------
 // FLOATING CONTAINER
 // --------------------------------------------------------------------------
 .alerts {

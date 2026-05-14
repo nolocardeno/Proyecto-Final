@@ -1,4 +1,5 @@
 @use '../../../../styles/00-settings/variables' as v;
+@use '../../../../styles/01-tools/mixins' as m;
 
 // --------------------------------------------------------------------------
 // HOST
@@ -17,11 +18,21 @@
   justify-content: center;
   gap: v.$spacing-2;
   flex: 1;
+  min-width: 0;
   background-color: var(--color-accent-secondary);
   border: v.$border-thin solid var(--color-modal-border);
   border-radius: v.$radius-card;
   box-shadow: var(--shadow-card);
   padding: v.$spacing-4;
+
+  @include m.respond-down(md) {
+    padding: v.$spacing-3;
+  }
+
+  @include m.respond-down(sm) {
+    padding: v.$spacing-2;
+    gap: v.$spacing-1;
+  }
 
   // --------------------------------------------------------------------------
   // TÍTULO
@@ -32,6 +43,12 @@
     font-size: v.$font-size-md;
     font-weight: v.$font-weight-bold;
     color: var(--color-text-primary);
+
+    @include m.respond-down(sm) {
+      font-size: v.$font-size-sm-md;
+      align-self: center;
+      text-align: center;
+    }
   }
 
   // --------------------------------------------------------------------------
@@ -44,6 +61,10 @@
     text-align: center;
     line-height: v.$line-height-normal;
     max-width: 20rem;
+
+    @include m.respond-down(sm) {
+      font-size: v.$font-size-sm;
+    }
   }
 
   // --------------------------------------------------------------------------
@@ -51,5 +72,10 @@
   // --------------------------------------------------------------------------
   &__action {
     width: 85%;
+    max-width: 100%;
+
+    @include m.respond-down(md) {
+      width: 100%;
+    }
   }
 }

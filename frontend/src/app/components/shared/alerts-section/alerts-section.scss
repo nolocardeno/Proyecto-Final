@@ -187,7 +187,10 @@
   }
 
   &__input {
-    width: 10rem;
+    flex: 1 1 0;
+    width: 100%;
+    min-width: 0;
+    max-width: 10rem;
     height: 2.625rem;
     padding: 0 v.$spacing-2;
     background-color: var(--color-input-bg);
@@ -197,6 +200,10 @@
     font-size: v.$font-size-sm-md;
     color: var(--color-text-primary);
     outline: none;
+
+    @include m.respond-down(sm) {
+      max-width: none;
+    }
 
     &:focus {
       border-color: v.$color-primary;

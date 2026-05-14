@@ -1,4 +1,5 @@
 @use '../../../../styles/00-settings/variables' as v;
+@use '../../../../styles/01-tools/mixins' as m;
 
 // --------------------------------------------------------------------------
 // CARD USUARIO
@@ -8,6 +9,7 @@
   align-items: center;
   gap: v.$spacing-1;
   margin: 0;
+  min-width: 0;
 
   // --------------------------------------------------------------------------
   // CONTENIDO DE TEXTO
@@ -16,11 +18,18 @@
     display: flex;
     flex-direction: column;
     gap: v.$spacing-half;
+    min-width: 0;
   }
 
   // VARIANTE HEADER: texto alineado a la derecha
   &--header &__info {
     text-align: right;
+
+    // En tablet/móvil ocultamos el texto del header para no romper el layout:
+    // el avatar es identificador suficiente y el menú de usuario está accesible.
+    @include m.respond-down(md) {
+      display: none;
+    }
   }
 
   &__name {
@@ -29,6 +38,8 @@
     font-size: v.$font-size-sm-md;
     color: var(--color-text-primary);
     line-height: v.$line-height-tight;
+    @include m.truncate(1);
+    max-width: 12rem;
   }
 
   &__subtitle {
@@ -37,6 +48,8 @@
     font-size: v.$font-size-sm;
     color: var(--color-text-faint);
     line-height: v.$line-height-tight;
+    @include m.truncate(1);
+    max-width: 12rem;
   }
 
   // --------------------------------------------------------------------------
@@ -48,6 +61,13 @@
     background-color: var(--color-surface-border);
     flex-shrink: 0;
     margin-right: v.$spacing-1;
+
+    // El separador acompaña al texto: si éste se oculta, también lo hacemos.
+    .user-card--header & {
+      @include m.respond-down(md) {
+        display: none;
+      }
+    }
   }
 
   // --------------------------------------------------------------------------
@@ -61,6 +81,11 @@
     box-shadow: var(--shadow-card);
     object-fit: cover;
     flex-shrink: 0;
+
+    @include m.respond-down(sm) {
+      width: 2.25rem;
+      height: 2.25rem;
+    }
 
     &--placeholder {
       display: flex;

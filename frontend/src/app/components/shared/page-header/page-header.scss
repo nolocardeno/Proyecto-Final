@@ -76,5 +76,19 @@
 
   @include m.respond-down(md) {
     width: 100%;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  @include m.respond-down(sm) {
+    // Botones a ancho completo y apilados verticalmente para evitar
+    // que se corten o desborden en pantallas estrechas.
+    flex-direction: column;
+    align-items: stretch;
+    gap: v.$spacing-1;
+
+    > * {
+      width: 100%;
+    }
   }
 }

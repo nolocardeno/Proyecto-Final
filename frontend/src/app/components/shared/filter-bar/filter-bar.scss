@@ -7,6 +7,11 @@
 
 :host {
   display: block;
+  // Habilita container queries: el grid de filtros se adapta al ancho de su
+  // contenedor (útil cuando comparte fila con un aside, p. ej. group-detail),
+  // no sólo al viewport global.
+  container-type: inline-size;
+  container-name: filter-bar;
 }
 
 .filter-bar {
@@ -18,8 +23,12 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
+  // En tablet/móvil mantenemos 2 columnas para evitar tarjetas demasiado
+  // altas y aprovechar el espacio horizontal. Solo en xs reducimos el
+  // tamaño (no el número de columnas) para que sigan cabiendo dos.
   @include m.respond-down(md) {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: v.$spacing-1;
   }
 
   // ------------------------------------------------------------------
@@ -84,6 +93,19 @@
         }
       }
     }
+
+    // Reducimos altura/padding al ir a tablet y móvil para que 2 tarjetas
+    // por fila sigan cómodas y no rompan la jerarquía vertical.
+    @include m.respond-down(md) {
+      min-height: 6.5rem;
+      padding: v.$spacing-1 v.$spacing-half;
+      gap: v.$spacing-half;
+    }
+
+    @include m.respond-down(sm) {
+      min-height: 5.5rem;
+      border-radius: v.$radius-md;
+    }
   }
 
   // ------------------------------------------------------------------
@@ -106,6 +128,14 @@
     font-size: v.$font-size-md;
     line-height: v.$line-height-tight;
     text-transform: uppercase;
+
+    @include m.respond-down(md) {
+      font-size: v.$font-size-sm-md;
+    }
+
+    @include m.respond-down(sm) {
+      font-size: v.$font-size-sm;
+    }
   }
 
   // ------------------------------------------------------------------
@@ -118,5 +148,45 @@
       min-height: 8.75rem;
       padding: v.$spacing-2 0.5rem;
     }
+  }
+}
+
+// --------------------------------------------------------------------------
+// CONTAINER QUERIES — Adaptan el grid al ancho real del contenedor padre.
+// Esto resuelve el caso en el que la barra está en una columna estrecha
+// (p. ej. en group-detail con aside) aunque el viewport sea >=lg.
+// --------------------------------------------------------------------------
+@container filter-bar (max-width: 720px) {
+  .filter-bar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: v.$spacing-2;
+  }
+}
+
+@container filter-bar (max-width: 480px) {
+  .filter-bar {
+    gap: v.$spacing-1;
+
+    &__card {
+      min-height: 6.5rem;
+      padding: v.$spacing-1 v.$spacing-half;
+      gap: v.$spacing-half;
+    }
+
+    &__count,
+    &__label {
+      font-size: v.$font-size-sm-md;
+    }
+  }
+}
+
+@container filter-bar (max-width: 360px) {
+  .filter-bar__card {
+    min-height: 5.5rem;
+  }
+
+  .filter-bar__count,
+  .filter-bar__label {
+    font-size: v.$font-size-sm;
   }
 }

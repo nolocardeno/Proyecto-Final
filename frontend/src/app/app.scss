@@ -6,6 +6,10 @@
 :host {
   display: grid;
   grid-template-rows: auto 1fr auto;
+  // Columna única limitada al viewport: evita que items con contenido ancho
+  // (banners, popovers, etc.) estiren la pista auto y rompan el ancho global.
+  grid-template-columns: minmax(0, 100%);
+  min-width: 0;
   min-height: 100vh;
   min-height: 100dvh;
   padding-top: v.$spacing-header;
