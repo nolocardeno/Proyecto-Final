@@ -7,7 +7,7 @@ services:
     # backend (ver frontend/nginx.conf), por lo que no hace falta exponer
     # ningún otro servicio.
     ports:
-      - "4200:80"
+      - "80:80"
     depends_on:
       - backend
     networks:
