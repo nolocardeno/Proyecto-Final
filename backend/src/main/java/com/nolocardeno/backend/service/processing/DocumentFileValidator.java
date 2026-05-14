@@ -35,7 +35,13 @@ public class DocumentFileValidator {
         this.maxSizeBytes = maxSizeBytes;
     }
 
-    public void validate(MultipartFile file) {
+    /**
+     * Validates the file and returns its effective MIME type derived from
+     * magic bytes. Callers should use the returned value instead of
+     * {@code file.getContentType()} because Safari/iOS frequently misreports
+     * HEIC images as {@code image/jpeg} or {@code application/octet-stream}.
+     */
+    public String validate(MultipartFile file) {
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("El archivo está vacío");
         }
@@ -50,21 +56,15 @@ public class DocumentFileValidator {
             throw new IllegalArgumentException("No se puede leer el archivo");
         }
 
-        String mime = file.getContentType();
-        // Some browsers (Safari/iOS) report HEIF and other images as
-        // application/octet-stream. Sniff the real type from the magic bytes
-        // so these uploads are not rejected unfairly.
-        if (mime == null || mime.equalsIgnoreCase("application/octet-stream")) {
-            mime = sniffMimeFromMagic(head);
-        }
-        mime = mime.toLowerCase();
+        // Use magic bytes as the authoritative format. Safari/iOS frequently
+        // misreports HEIC files as image/jpeg or application/octet-stream, so
+        // trusting the browser-declared MIME is not reliable.
+        String effectiveMime = sniffMimeFromMagic(head);
 
-        if (!ALLOWED_MIMES.contains(mime)) {
+        if (!ALLOWED_MIMES.contains(effectiveMime)) {
             throw new IllegalArgumentException("Tipo MIME no permitido: " + file.getContentType());
         }
-        if (!matchesMagic(head, mime)) {
-            throw new IllegalArgumentException("El contenido del archivo no coincide con su tipo declarado");
-        }
+        return effectiveMime;
     }
 
     /**
@@ -85,21 +85,5 @@ public class DocumentFileValidator {
         if (head.length >= 12
                 && head[4] == 0x66 && head[5] == 0x74 && head[6] == 0x79 && head[7] == 0x70) return "image/heic";
         return "application/octet-stream";
-    }
-
-    private boolean matchesMagic(byte[] head, String mime) {
-        if (head == null || head.length < 4) return false;
-        return switch (mime) {
-            case "image/jpeg" -> (head[0] & 0xFF) == 0xFF && (head[1] & 0xFF) == 0xD8;
-            case "image/png"  -> (head[0] & 0xFF) == 0x89 && head[1] == 0x50 && head[2] == 0x4E && head[3] == 0x47;
-            case "image/webp" -> head[0] == 0x52 && head[1] == 0x49 && head[2] == 0x46 && head[3] == 0x46
-                                 && head.length >= 12
-                                 && head[8] == 0x57 && head[9] == 0x45 && head[10] == 0x42 && head[11] == 0x50;
-            // HEIF/HEIC: ISO Base Media File Format — ftyp box at bytes 4-7,
-            // brand at bytes 8-11 (heic, heis, hevc, mif1, msf1, …).
-            case "image/heic", "image/heif" -> head.length >= 12
-                                 && head[4] == 0x66 && head[5] == 0x74 && head[6] == 0x79 && head[7] == 0x70;
-            default -> false;
-        };
     }
 }

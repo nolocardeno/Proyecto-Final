@@ -55,7 +55,9 @@ public class DocumentProcessingPipeline {
     }
 
     private ProcessDocumentResponse process(MultipartFile file, boolean useAi, boolean storeImage) {
-        validator.validate(file);
+        // effectiveMime is derived from magic bytes — reliable even when
+        // Safari/iOS misreports HEIC files as image/jpeg.
+        String effectiveMime = validator.validate(file);
 
         byte[] bytes;
         try {
@@ -73,7 +75,7 @@ public class DocumentProcessingPipeline {
             }
         }
 
-        ExtractionResult raw = dispatcher.dispatch(bytes, file.getContentType(), useAi);
+        ExtractionResult raw = dispatcher.dispatch(bytes, effectiveMime, useAi);
         ExtractionResult normalized = normalizer.normalize(raw);
         List<RuleOutcome> outcomes = rulesEngine.evaluate(normalized);
 
