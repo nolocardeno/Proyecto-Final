@@ -53,7 +53,7 @@ Initial production release of Scantral, deployed at [scantral.com](https://scant
 
 #### Infrastructure
 - Multi-service Docker Compose setup: `frontend`, `backend`, `postgres`, `paddleocr`.
-- Internal Docker network (`scantral-net`); only `frontend` (port 4200) is exposed.
+- Internal Docker network (`scantral-net`); only `frontend` (port 80) is exposed.
 - Nginx reverse proxy: serves the Angular SPA and forwards `/api/*` and `/uploads/*` to the backend.
 - GitHub Actions CI pipeline: build + tests (both backend and frontend) + JaCoCo gate.
 - GitHub Actions CD pipeline: builds and pushes Docker images to Docker Hub on `main` and `v*` tags.

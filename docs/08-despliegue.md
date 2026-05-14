@@ -48,7 +48,7 @@ RAM suficiente para inferencia).
 | CI/CD | GitHub Actions |
 
 El dominio `scantral.com` apunta al Droplet a través de Cloudflare, que
-termina TLS y reenvía las peticiones al puerto `4200` del host, donde escucha
+termina TLS y reenvía las peticiones al puerto `80` del host, donde escucha
 el contenedor `scantral-frontend`.
 
 ---
@@ -64,7 +64,7 @@ Navegador
     │ HTTPS :443
     ▼
 Cloudflare (TLS termination)
-    │ HTTP :4200
+    │ HTTP :80
     ▼
 ┌─────────────────────────── scantral-net ──────────────────────────────┐
 │                                                                        │
@@ -81,7 +81,7 @@ Cloudflare (TLS termination)
 │   └── OCR/IA → paddleocr (:8001)                                      │
 │                     │                                                  │
 │                     ├──── Google Gemini API (HTTPS saliente)          │
-│                     └──── Gmail SMTP (alertas caducidad)              │
+│                     └──── Resend SMTP (alertas caducidad)              │
 │                                                                        │
 │   paddleocr (python:3.11-slim + FastAPI + PaddleOCR PP-OCRv4)        │
 │   └── paddleocr_models (volumen, ~16 MB pesos)                        │
@@ -90,7 +90,7 @@ Cloudflare (TLS termination)
 
 | Servicio | Imagen | Puerto host | Puerto interno |
 |---|---|---|---|
-| `frontend` | `nginx:alpine` | `4200` | `80` |
+| `frontend` | `nginx:alpine` | `80` | `80` |
 | `backend` | `eclipse-temurin:21-jre` | — | `8080` |
 | `paddleocr` | `python:3.11-slim` | — | `8001` |
 | `postgres` | `postgres:17` | — | `5432` |
@@ -350,11 +350,11 @@ NAME                  IMAGE                STATUS
 scantral-db           postgres:17          Up (healthy)
 scantral-paddleocr    scantral-paddleocr   Up (healthy)
 scantral-backend      scantral-backend     Up
-scantral-frontend     scantral-frontend    Up          0.0.0.0:4200->80/tcp
+scantral-frontend     scantral-frontend    Up          0.0.0.0:80->80/tcp
 ```
 
-El único puerto publicado al host es `4200/tcp`. Cloudflare recibe en `:443`
-y reenvía al Droplet en `:4200`.
+El único puerto publicado al host es `80/tcp`. Cloudflare recibe en `:443`
+y reenvía al Droplet en `:80`.
 
 ### 8.4.4. Verificación funcional
 
@@ -362,11 +362,11 @@ y reenvía al Droplet en `:4200`.
 
 ```bash
 # El frontend responde con la SPA de Angular
-curl -I http://localhost:4200/
+curl -I http://localhost/
 # HTTP/1.1 200 OK — Server: nginx/1.27.x
 
 # El reverse proxy delega /api al backend (401 esperado sin token, no HTML)
-curl -i http://localhost:4200/api/documents
+curl -i http://localhost/api/documents
 # HTTP/1.1 401 — {"error":"Token JWT ausente o inválido"}
 ```
 
@@ -374,18 +374,18 @@ curl -i http://localhost:4200/api/documents
 
 ```bash
 # Registro de usuario
-curl -s -X POST http://localhost:4200/api/auth/register \
+curl -s -X POST http://localhost/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{"name":"Demo","email":"demo@scantral.local","password":"Demo1234!"}'
 
 # Login → captura el token JWT
-TOKEN=$(curl -s -X POST http://localhost:4200/api/auth/login \
+TOKEN=$(curl -s -X POST http://localhost/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"demo@scantral.local","password":"Demo1234!"}' \
   | python -c "import sys,json;print(json.load(sys.stdin)['token'])")
 
 # Endpoint autenticado
-curl -s http://localhost:4200/api/documents \
+curl -s http://localhost/api/documents \
   -H "Authorization: Bearer $TOKEN"
 ```
 

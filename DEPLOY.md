@@ -36,14 +36,14 @@ el resto sólo es alcanzable desde dentro de la red.
 
 ```mermaid
 flowchart LR
-    Browser["Navegador"] -->|HTTP :4200| FE["frontend<br/>Nginx + Angular SPA"]
+    Browser["Navegador"] -->|HTTP :80| FE["frontend<br/>Nginx + Angular SPA"]
     FE -->|/| FE
     FE -->|"/api → :8080"| BE["backend<br/>Spring Boot 4"]
     FE -->|"/uploads → :8080"| BE
     BE -->|JDBC :5432| DB[("postgres<br/>PostgreSQL 17")]
     BE -->|HTTP :8001| OCR["paddleocr<br/>FastAPI + PaddleOCR"]
     BE -->|HTTPS| Gemini[("Google Gemini API")]
-    BE -->|SMTP| Mail[("Gmail SMTP")]
+    BE -->|SMTP| Mail[("Resend SMTP")]
 
     subgraph "scantral-net (red interna Docker)"
         FE
@@ -55,14 +55,14 @@ flowchart LR
 
 | Servicio    | Imagen / build                       | Puerto host | Rol                                                                |
 | ----------- | ------------------------------------ | :---------: | ------------------------------------------------------------------ |
-| `frontend`  | `./frontend` (nginx:alpine)          | `4200`      | Sirve la SPA y hace **reverse proxy** del backend en `/api` y `/uploads` |
+| `frontend`  | `./frontend` (nginx:alpine)          | `80`        | Sirve la SPA y hace **reverse proxy** del backend en `/api` y `/uploads` |
 | `backend`   | `./backend` (eclipse-temurin:21-jre) | —           | API REST + lógica de negocio + auth JWT (puerto interno 8080)      |
 | `paddleocr` | `./paddleocr-service`                | —           | Sidecar de OCR (FastAPI + PaddleOCR PP-OCRv4) — puerto interno 8001 |
 | `postgres`  | `postgres:17`                        | —           | Persistencia (puerto interno 5432, volumen `pgdata`)               |
 
 **Comunicaciones:**
 
-- **Navegador → frontend (`:4200`)**: HTTP. Único punto de entrada al
+- **Navegador → frontend (`:80`)**: HTTP. Único punto de entrada al
   sistema. Nginx sirve los estáticos de Angular y proxy-pasa `/api/*` y
   `/uploads/*` al backend en `http://backend:8080` (resolución por DNS
   de Docker dentro de `scantral-net`). Ver
@@ -77,7 +77,7 @@ flowchart LR
 - **backend → Google Gemini API**: HTTPS saliente. Extractor IA
   primario; si la `GOOGLE_API_KEY` está vacía, se usa sólo el sidecar
   OCR como fallback.
-- **backend → Gmail SMTP**: envío de emails de alerta de caducidad
+- **backend → Resend SMTP**: envío de emails de alerta de caducidad
   (opcional; si `MAIL_*` están vacíos, no se envían).
 
 ## 1. Requisitos
@@ -86,7 +86,7 @@ flowchart LR
 - ~4 GB de RAM libres y ~2 GB de disco para imágenes + volúmenes.
 - Salida a Internet la primera vez (descarga de imágenes base + ~16 MB
   de pesos PP-OCR; quedan cacheados en el volumen `paddleocr_models`).
-- Puerto **4200** libre en el host (es el único que se publica).
+- Puerto **80** libre en el host (es el único que se publica).
 
 ## 2. Configuración (`.env`)
 
@@ -137,7 +137,7 @@ NAME                  IMAGE                COMMAND                  STATUS      
 scantral-db           postgres:17          "docker-entrypoint.s…"   Up (healthy)              5432/tcp
 scantral-paddleocr    scantral-paddleocr   "uvicorn app:app --h…"   Up (healthy)              8001/tcp
 scantral-backend      scantral-backend     "java -jar app.jar"      Up                        8080/tcp
-scantral-frontend     scantral-frontend    "/docker-entrypoint.…"   Up                        0.0.0.0:4200->80/tcp
+scantral-frontend     scantral-frontend    "/docker-entrypoint.…"   Up                        0.0.0.0:80->80/tcp
 ```
 
 Captura real del último despliegue local:
@@ -175,7 +175,7 @@ scantral-paddleocr | INFO     Uvicorn running on http://0.0.0.0:8001
 ### 4.1 Frontend (reverse proxy)
 
 ```bash
-curl -I http://localhost:4200/
+curl -I http://localhost/
 ```
 
 ```text
@@ -186,7 +186,7 @@ Content-Type: text/html
 
 ```bash
 # El front debe proxy-pasar /api al backend y devolver 401/400 (no HTML 404)
-curl -i http://localhost:4200/api/documents
+curl -i http://localhost/api/documents
 ```
 
 ```text
@@ -199,12 +199,12 @@ Content-Type: application/json
 
 ```bash
 # 1) Registro
-curl -s -X POST http://localhost:4200/api/auth/register \
+curl -s -X POST http://localhost/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{"name":"Demo","email":"demo@scantral.local","password":"Demo1234!"}'
 
 # 2) Login → captura el token
-TOKEN=$(curl -s -X POST http://localhost:4200/api/auth/login \
+TOKEN=$(curl -s -X POST http://localhost/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"demo@scantral.local","password":"Demo1234!"}' \
   | python -c "import sys,json;print(json.load(sys.stdin)['token'])")
@@ -212,7 +212,7 @@ TOKEN=$(curl -s -X POST http://localhost:4200/api/auth/login \
 echo "$TOKEN"
 
 # 3) Endpoint autenticado
-curl -s http://localhost:4200/api/documents \
+curl -s http://localhost/api/documents \
   -H "Authorization: Bearer $TOKEN"
 ```
 
@@ -224,11 +224,11 @@ El backend no expone el puerto 8080 al host (sólo internamente vía
 por lo que la documentación de la API es accesible directamente desde el
 front sin tocar `docker-compose.yml`:
 
-- Spec JSON: <http://localhost:4200/v3/api-docs>
-- Swagger UI: <http://localhost:4200/swagger-ui/index.html>
+- Spec JSON: <http://localhost/v3/api-docs>
+- Swagger UI: <http://localhost/swagger-ui/index.html>
 
 ```bash
-curl -s http://localhost:4200/v3/api-docs | head -c 60
+curl -s http://localhost/v3/api-docs | head -c 60
 ```
 
 ```text
@@ -253,7 +253,7 @@ docker compose exec backend curl -s http://paddleocr:8001/health
 ```bash
 for i in $(seq 1 12); do
   curl -s -o /dev/null -w "intento $i → HTTP %{http_code}\n" \
-    -X POST http://localhost:4200/api/auth/login \
+    -X POST http://localhost/api/auth/login \
     -H "Content-Type: application/json" \
     -d '{"email":"x@y.z","password":"x"}';
 done
@@ -264,7 +264,7 @@ a partir del intento 11. Si tienes `apache2-utils` instalado:
 
 ```bash
 ab -n 50 -c 5 -p login.json -T 'application/json' \
-   http://localhost:4200/api/auth/login
+   http://localhost/api/auth/login
 ```
 
 donde `login.json` contiene `{"email":"x@y.z","password":"x"}`. La
@@ -343,7 +343,7 @@ Si necesitas exponerlo permanentemente (p. ej. para DBeaver), añade en
 
 ### CORS al desarrollar el front fuera de Docker
 
-El backend tiene CORS configurado para `http://localhost:4200`. Si
+El backend tiene CORS configurado para `http://localhost`. Si
 desarrollas en otro puerto, ajustar `SecurityConfig.corsConfigurationSource()`
 o usar el `proxy.conf.json` de Angular (`npm start` ya lo hace).
 
@@ -386,7 +386,7 @@ docker compose up -d
 Para **HTTPS en producción**, el proyecto usa **Cloudflare** como proxy
 externo: el dominio `scantral.com` apunta al servidor a través de
 Cloudflare, que termina TLS (certificado gestionado automáticamente) y
-reenvía las peticiones por HTTP al puerto `4200`. Nginx no necesita
+reenvía las peticiones por HTTP al puerto `80`. Nginx no necesita
 gestionar certificados; el cifrado ocurre fuera del contenedor.
 
 ## 8. Evidencias de CI/CD
@@ -583,7 +583,7 @@ backend y comunicación interna entre contenedores por DNS de Docker.
 
 ### 10.1 Estado y puertos publicados
 
-Único puerto expuesto al host: `4200/tcp` del frontend. El resto vive en
+Único puerto expuesto al host: `80/tcp` del frontend. El resto vive en
 la red interna `scantral-net`.
 
 ```bash
@@ -592,12 +592,12 @@ NAME                  IMAGE                COMMAND                  STATUS      
 scantral-db           postgres:17          "docker-entrypoint.s…"   Up (healthy)              5432/tcp
 scantral-paddleocr    scantral-paddleocr   "uvicorn app:app --h…"   Up (healthy)              8001/tcp
 scantral-backend      scantral-backend     "java -jar app.jar"      Up                        8080/tcp
-scantral-frontend     scantral-frontend    "/docker-entrypoint.…"   Up                        0.0.0.0:4200->80/tcp
+scantral-frontend     scantral-frontend    "/docker-entrypoint.…"   Up                        0.0.0.0:80->80/tcp
 ```
 
 Lectura del resultado:
 
-- `0.0.0.0:4200->80/tcp` → el host alcanza al frontend en `localhost:4200`,
+- `0.0.0.0:80->80/tcp` → el host alcanza al frontend en `localhost`,
   que internamente escucha en `:80`.
 - Las columnas `5432/tcp`, `8001/tcp`, `8080/tcp` (sin `0.0.0.0:` delante)
   significan que esos puertos **sólo** son alcanzables desde dentro de la
@@ -607,8 +607,8 @@ Lectura del resultado:
 
 | Capa | Cómo se accede | Quién resuelve el nombre |
 | ---- | -------------- | ------------------------ |
-| Navegador → frontend | `http://localhost:4200` | DNS del SO (loopback) |
-| Navegador → API | `http://localhost:4200/api/...` | DNS del SO + reverse proxy |
+| Navegador → frontend | `http://localhost` | DNS del SO (loopback) |
+| Navegador → API | `http://localhost/api/...` | DNS del SO + reverse proxy |
 | frontend → backend | `http://backend:8080` | **DNS interno de Docker** (`scantral-net`) |
 | backend → postgres | `jdbc:postgresql://postgres:5432/...` | DNS interno de Docker |
 | backend → OCR | `http://paddleocr:8001` | DNS interno de Docker |
@@ -619,7 +619,7 @@ clave de cada servicio en el [docker-compose.yml](docker-compose.yml).
 ### 10.3 Acceso al frontend desde el host (`curl -I`)
 
 ```bash
-$ curl -I http://localhost:4200/
+$ curl -I http://localhost/
 HTTP/1.1 200 OK
 Server: nginx/1.27.x
 Content-Type: text/html
@@ -632,7 +632,7 @@ Quién responde: el contenedor `scantral-frontend` (Nginx), sirviendo el
 ### 10.4 Acceso al backend a través del proxy (`/api`)
 
 ```bash
-$ curl -i http://localhost:4200/api/documents
+$ curl -i http://localhost/api/documents
 HTTP/1.1 401
 Server: nginx/1.27.x
 Content-Type: application/json
@@ -640,7 +640,7 @@ Content-Type: application/json
 {"error":"Token JWT ausente o inválido"}
 ```
 
-Lectura: la petición sale del host hacia `:4200` (Nginx), Nginx hace
+Lectura: la petición sale del host hacia `:80` (Nginx), Nginx hace
 `proxy_pass http://backend:8080` (config en
 [frontend/nginx.conf](frontend/nginx.conf)) y el backend responde **401
 JSON** porque el endpoint requiere JWT. Una respuesta `404` HTML aquí
@@ -695,7 +695,7 @@ $ curl -s -o /dev/null -w "%{http_code}\n" --max-time 2 http://localhost:5432/
 ```
 
 Este resultado confirma el **principio de mínima exposición**: el único
-punto de entrada es `:4200`.
+punto de entrada es `:80`.
 
 ### 10.8 Resolución de nombre en local (opcional)
 
@@ -710,7 +710,7 @@ Para acceder con un nombre amigable (`scantral.local`) en lugar de
 Verificación:
 
 ```bash
-$ curl -I http://scantral.local:4200/
+$ curl -I http://scantral.local/
 HTTP/1.1 200 OK
 Server: nginx/1.27.x
 ```

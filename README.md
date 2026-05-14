@@ -85,14 +85,14 @@ Técnicamente, el sistema está diseñado siguiendo principios de arquitectura l
 
 ```mermaid
 flowchart LR
-    Browser["Navegador"] -->|HTTP :4200| FE["frontend<br/>Nginx + Angular SPA"]
+    Browser["Navegador"] -->|HTTP :80| FE["frontend<br/>Nginx + Angular SPA"]
     FE -->|/| FE
-    FE -->|"/api → :8080"| BE["backend<br/>Spring Boot 4"]
-    FE -->|"/uploads → :8080"| BE
+    FE -->"/api → :8080"| BE["backend<br/>Spring Boot 4"]
+    FE -->"/uploads → :8080"| BE
     BE -->|JDBC :5432| DB[("postgres<br/>PostgreSQL 17")]
     BE -->|HTTP :8001| OCR["paddleocr<br/>FastAPI + PaddleOCR"]
     BE -->|HTTPS| Gemini[("Google Gemini API")]
-    BE -->|SMTP| Mail[("Gmail SMTP")]
+    BE -->|SMTP| Mail[("Resend SMTP")]
 
     subgraph "scantral-net (red interna Docker)"
         FE
@@ -104,7 +104,7 @@ flowchart LR
 
 | Servicio    | Imagen / build              | Puerto host | Rol                                             |
 | ----------- | --------------------------- | :---------: | ----------------------------------------------- |
-| `frontend`  | `./frontend` (nginx:alpine) | `4200`      | Sirve la SPA y hace **reverse proxy** del back  |
+| `frontend`  | `./frontend` (nginx:alpine) | `80`        | Sirve la SPA y hace **reverse proxy** del back  |
 | `backend`   | `./backend` (eclipse-temurin:21-jre) | —  | API REST + lógica de negocio + auth JWT         |
 | `paddleocr` | `./paddleocr-service`       | —           | Sidecar de OCR (fallback cuando no hay IA)      |
 | `postgres`  | `postgres:17`               | —           | Persistencia                                    |
@@ -168,9 +168,9 @@ Cuando los healthchecks pasen a `healthy`:
 
 | URL                                           | Descripción                         |
 | --------------------------------------------- | ----------------------------------- |
-| <http://localhost:4200>                       | Aplicación (SPA)                    |
-| <http://localhost:4200/api/auth/register>     | API (vía reverse proxy)             |
-| <http://localhost:4200/swagger-ui/index.html> | Documentación OpenAPI / Swagger UI  |
+| <http://localhost>                                    | Aplicación (SPA)                    |
+| <http://localhost/api/auth/register>                  | API (vía reverse proxy)             |
+| <http://localhost/swagger-ui/index.html>              | Documentación OpenAPI / Swagger UI  |
 
 > Para la guía de despliegue paso a paso, comandos de verificación, ejemplos `curl`
 > y troubleshooting, ver [DEPLOY.md](DEPLOY.md).
@@ -225,13 +225,13 @@ El informe de cobertura se genera en `frontend/coverage/frontend/index.html`.
 
 ## HTTPS
 
-El despliegue local sirve **HTTP** sobre `localhost:4200` porque está
+El despliegue local sirve **HTTP** sobre `localhost` (puerto 80) porque está
 pensado para entorno de desarrollo / aula.
 
 En **producción**, el HTTPS se gestiona externamente mediante
 **Cloudflare**: el dominio `scantral.com` apunta al servidor a través de
 Cloudflare, que termina TLS (certificado gestionado automáticamente) y
-reenvía las peticiones por HTTP al puerto `4200` del host. Nginx no
+reenvía las peticiones por HTTP al puerto `80` del host. Nginx no
 necesita gestionar certificados ni escuchar en `:443`; el cifrado se
 delegó completamente al proxy externo.
 

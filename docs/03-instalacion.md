@@ -81,7 +81,7 @@ El stack de Scantral está compuesto por cuatro servicios orquestados con Docker
 
 ```
 Navegador
-    │  HTTP :4200
+    │  HTTP :80
     ▼
 frontend  (nginx:alpine + Angular SPA)
     │ /api/* y /uploads/*
@@ -93,7 +93,7 @@ backend  (eclipse-temurin:21-jre + Spring Boot 4)
 
 | Servicio | Imagen base | Puerto host | Puerto interno | Rol |
 |---|---|:---:|:---:|---|
-| `frontend` | `nginx:alpine` | **4200** | 80 | Sirve la SPA Angular y hace reverse proxy de `/api` y `/uploads` al backend |
+| `frontend` | `nginx:alpine` | **80** | 80 | Sirve la SPA Angular y hace reverse proxy de `/api` y `/uploads` al backend |
 | `backend` | `eclipse-temurin:21-jre` | — | 8080 | API REST, lógica de negocio, autenticación JWT |
 | `paddleocr` | `python:3.11-slim` | — | 8001 | Sidecar de OCR basado en PaddleOCR PP-OCRv4 (CPU) |
 | `postgres` | `postgres:17` | — | 5432 | Base de datos relacional; datos persistidos en el volumen `pgdata` |
@@ -156,7 +156,7 @@ EXPOSE 80
 ```
 
 - **Etapa `build`**: imagen `node:22-alpine`. Instala dependencias con `npm ci` (instalación reproducible desde `package-lock.json`) y ejecuta la compilación de producción de Angular.
-- **Etapa de ejecución**: imagen `nginx:alpine`. Copia los estáticos compilados y la configuración de nginx que establece el reverse proxy hacia el backend. Expone el puerto 80 (publicado como 4200 en el host mediante Docker Compose).
+- **Etapa de ejecución**: imagen `nginx:alpine`. Copia los estáticos compilados y la configuración de nginx que establece el reverse proxy hacia el backend. Expone el puerto 80 (publicado como 80 en el host mediante Docker Compose).
 
 ### Sidecar OCR — `paddleocr-service/Dockerfile`
 
@@ -340,13 +340,13 @@ INFO     Uvicorn running on http://0.0.0.0:8001
 Una vez que todos los contenedores están en estado `Up`, acceder desde el navegador a:
 
 ```
-http://localhost:4200
+http://localhost
 ```
 
 La página de inicio de Scantral debe cargarse correctamente. Para confirmar que el backend responde a través del reverse proxy de nginx:
 
 ```bash
-curl -i http://localhost:4200/api/documents
+curl -i http://localhost/api/documents
 ```
 
 La respuesta esperada es un código `401 Unauthorized` con cuerpo JSON, lo que confirma que la petición llegó al backend (y no devolvió un 404 o 502 de nginx):
@@ -360,7 +360,7 @@ Content-Type: application/json
 Para verificar que la documentación OpenAPI está disponible:
 
 ```
-http://localhost:4200/swagger-ui/index.html
+http://localhost/swagger-ui/index.html
 ```
 
 > Para instrucciones de verificación más detalladas (registro y login mediante `curl`, smoke test del rate limiter, comprobación del sidecar OCR desde dentro de la red), consultar el fichero [DEPLOY.md](../DEPLOY.md), sección 4.
