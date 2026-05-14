@@ -74,6 +74,21 @@ public class GroupController {
                 .body(documentService.createFromImage(principal.getId(), file, id, useAi));
     }
 
+    /**
+     * Versión "preview" para grupos: extrae datos de la imagen pero no crea
+     * todavía el documento. El frontend rellena el formulario con estos
+     * datos y el usuario confirma antes de crear el documento.
+     */
+    @PostMapping(value = "/{id}/documents/extract/preview", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<com.nolocardeno.backend.dto.DocumentExtractionPreview> previewDocumentFromImage(
+            @AuthenticationPrincipal CustomUserDetails principal,
+            @PathVariable Long id,
+            @RequestPart("file") MultipartFile file,
+            @RequestParam(value = "useAi", defaultValue = "false") boolean useAi) {
+        return ResponseEntity.ok(
+                documentService.previewFromImage(principal.getId(), file, id, useAi));
+    }
+
     @PostMapping
     public ResponseEntity<GroupResponse> create(
             @AuthenticationPrincipal CustomUserDetails principal,

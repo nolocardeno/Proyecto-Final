@@ -5,7 +5,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { DocumentResponse } from '../models/document.model';
+import { DocumentExtractionPreview, DocumentResponse } from '../models/document.model';
 import { AuthService } from './auth.service';
 
 // --------------------------------------------------------------------------
@@ -76,6 +76,21 @@ export class DocumentService {
       ? `/api/groups/${groupId}/documents/extract`
       : `${this.baseUrl}/extract`;
     return this.http.post<DocumentResponse>(url, formData, { headers: this.headers });
+  }
+
+  /**
+   * Sube una imagen al servicio de OCR/IA y obtiene únicamente los datos
+   * detectados (sin crear el documento). El frontend usa esta respuesta
+   * para prerellenar el formulario manual y que el usuario confirme.
+   */
+  previewFromImage(file: File, useAi: boolean, groupId?: number): Observable<DocumentExtractionPreview> {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('useAi', String(useAi));
+    const url = groupId
+      ? `/api/groups/${groupId}/documents/extract/preview`
+      : `${this.baseUrl}/extract/preview`;
+    return this.http.post<DocumentExtractionPreview>(url, formData, { headers: this.headers });
   }
 
   /** Sube/actualiza la imagen asociada a un documento existente. */

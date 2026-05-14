@@ -44,6 +44,23 @@ export interface DocumentResponse {
   updatedAt: string;
 }
 
+/**
+ * Datos detectados por OCR/IA antes de crear el documento. El usuario los
+ * revisa en el formulario del modal y confirma la creación.
+ * Espejo del DTO Java `DocumentExtractionPreview`.
+ */
+export interface DocumentExtractionPreview {
+  type: DocumentType;
+  kind: 'ticket' | 'document';
+  title: string;
+  category: string | null;
+  storeName: string | null;
+  amount: number | null;
+  issueDate: string | null;
+  expiryDate: string | null;
+  aiProcessed: boolean;
+}
+
 // --------------------------------------------------------------------------
 // MAPA: DocumentType → card visual variant
 // --------------------------------------------------------------------------

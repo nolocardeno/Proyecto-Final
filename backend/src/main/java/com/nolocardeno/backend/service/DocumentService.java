@@ -115,6 +115,7 @@ public class DocumentService {
                 .issueDate(request.getIssueDate())
                 .expiryDate(request.getExpiryDate())
                 .notes(request.getNotes())
+                .aiProcessed(Boolean.TRUE.equals(request.getAiProcessed()))
                 .status(DocumentStatus.ACTIVE)
                 .build();
 
@@ -128,7 +129,15 @@ public class DocumentService {
 
         updateDocumentStatus(doc);
         doc = documentRepository.save(doc);
-        recordHistory(doc, user, DocumentHistoryType.CREATED, "Documento creado");
+
+        String creationLabel = switch (request.getCreationMethod() != null
+                ? request.getCreationMethod().toUpperCase()
+                : "MANUAL") {
+            case "AI"  -> "Documento creado - IA (Gemini)";
+            case "OCR" -> "Documento creado - OCR";
+            default    -> "Documento creado - Manual";
+        };
+        recordHistory(doc, user, DocumentHistoryType.CREATED, creationLabel);
 
         return DocumentMapper.toResponse(doc);
     }
@@ -160,23 +169,79 @@ public class DocumentService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
 
-        DocumentGroup group = null;
-        if (groupId != null) {
-            group = groupRepository.findById(groupId)
-                    .orElseThrow(() -> new ResourceNotFoundException("Grupo no encontrado"));
-            boolean isMember = group.getCreator().getId().equals(userId)
-                    || group.getMembers().stream().anyMatch(m -> m.getId().equals(userId));
-            if (!isMember) {
-                throw new ResourceNotFoundException("Grupo no encontrado");
-            }
-            boolean isCreator = group.getCreator().getId().equals(userId);
-            if (!isCreator && !group.getAllCanAddDocuments()) {
-                throw new IllegalArgumentException(
-                        "No tienes permisos para añadir documentos a este grupo");
-            }
-        }
+        DocumentGroup group = validateGroupForImageUpload(userId, groupId);
 
         ProcessDocumentResponse result = processingPipeline.process(file, useAi);
+        DocumentExtractionPreview preview = buildPreviewOrThrow(result);
+
+        Document doc = Document.builder()
+                .user(user)
+                .type(preview.getType())
+                .kind(preview.getKind())
+                .title(preview.getTitle())
+                .category(preview.getCategory())
+                .storeName(preview.getStoreName())
+                .amount(preview.getAmount())
+                .issueDate(preview.getIssueDate())
+                .expiryDate(preview.getExpiryDate())
+                .imagePath(result.imagePath())
+                .aiProcessed(Boolean.TRUE.equals(preview.getAiProcessed()))
+                .status(DocumentStatus.ACTIVE)
+                .build();
+
+        updateDocumentStatus(doc);
+        doc = documentRepository.save(doc);
+
+        if (group != null) {
+            group.getDocuments().add(doc);
+            groupRepository.save(group);
+        }
+
+        String sourceLabel = result.source() == ExtractionSource.AI ? "IA" : "OCR";
+        recordHistory(doc, user, DocumentHistoryType.CREATED,
+                "Documento creado desde imagen (" + sourceLabel + ", confianza "
+                        + Math.round(result.overallConfidence() * 100) + "%)");
+
+        return DocumentMapper.toResponse(doc);
+    }
+
+    /**
+     * Ejecuta el pipeline de extracción OCR/IA sobre la imagen pero NO crea
+     * el documento. Devuelve los campos ya derivados (tipo, kind, título,
+     * categoría, fechas, etc.) para que el frontend prerellene el formulario
+     * manual y el usuario pueda revisarlos antes de confirmar la creación.
+     *
+     * La imagen no se almacena en este paso: el frontend la conserva en
+     * memoria y la enviará junto con el formulario final.
+     */
+    @Transactional(readOnly = true)
+    public DocumentExtractionPreview previewFromImage(Long userId, MultipartFile file, Long groupId, boolean useAi) {
+        userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+        validateGroupForImageUpload(userId, groupId);
+
+        ProcessDocumentResponse result = processingPipeline.processForPreview(file, useAi);
+        return buildPreviewOrThrow(result);
+    }
+
+    private DocumentGroup validateGroupForImageUpload(Long userId, Long groupId) {
+        if (groupId == null) return null;
+        DocumentGroup group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new ResourceNotFoundException("Grupo no encontrado"));
+        boolean isMember = group.getCreator().getId().equals(userId)
+                || group.getMembers().stream().anyMatch(m -> m.getId().equals(userId));
+        if (!isMember) {
+            throw new ResourceNotFoundException("Grupo no encontrado");
+        }
+        boolean isCreator = group.getCreator().getId().equals(userId);
+        if (!isCreator && !group.getAllCanAddDocuments()) {
+            throw new IllegalArgumentException(
+                    "No tienes permisos para añadir documentos a este grupo");
+        }
+        return group;
+    }
+
+    private DocumentExtractionPreview buildPreviewOrThrow(ProcessDocumentResponse result) {
         ExtractionResult data = result.data();
 
         if (data == null || result.status() == ExtractionStatus.FAILED) {
@@ -248,8 +313,7 @@ public class DocumentService {
             expiry = data.issueDate().plusYears(1);
         }
 
-        Document doc = Document.builder()
-                .user(user)
+        return DocumentExtractionPreview.builder()
                 .type(type)
                 .kind(isReceiptLike ? "ticket" : "document")
                 .title(buildTitle(data, isClothing))
@@ -258,25 +322,8 @@ public class DocumentService {
                 .amount(data.totalAmount())
                 .issueDate(data.issueDate())
                 .expiryDate(expiry)
-                .imagePath(result.imagePath())
                 .aiProcessed(result.source() == ExtractionSource.AI)
-                .status(DocumentStatus.ACTIVE)
                 .build();
-
-        updateDocumentStatus(doc);
-        doc = documentRepository.save(doc);
-
-        if (group != null) {
-            group.getDocuments().add(doc);
-            groupRepository.save(group);
-        }
-
-        String sourceLabel = result.source() == ExtractionSource.AI ? "IA" : "OCR";
-        recordHistory(doc, user, DocumentHistoryType.CREATED,
-                "Documento creado desde imagen (" + sourceLabel + ", confianza "
-                        + Math.round(result.overallConfidence() * 100) + "%)");
-
-        return DocumentMapper.toResponse(doc);
     }
 
     private String buildTitle(ExtractionResult data, boolean isClothing) {

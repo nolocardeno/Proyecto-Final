@@ -40,4 +40,19 @@ public class DocumentRequest {
 
     @Size(max = 2000, message = "Las notas no pueden superar 2000 caracteres")
     private String notes;
+
+    /**
+     * Indica si el documento fue creado a partir de datos extraídos mediante
+     * OCR/IA. El cliente puede establecerlo a {@code true} cuando confirma
+     * manualmente un preview generado por la IA, de modo que la marca
+     * persista en el documento creado.
+     */
+    private Boolean aiProcessed;
+
+    /**
+     * Método con el que se originó el documento. Valores reconocidos:
+     * {@code "MANUAL"}, {@code "OCR"}, {@code "AI"}.
+     * Si no se informa se asume {@code "MANUAL"}.
+     */
+    private String creationMethod;
 }

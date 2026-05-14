@@ -1,5 +1,6 @@
 package com.nolocardeno.backend.controller;
 
+import com.nolocardeno.backend.dto.DocumentExtractionPreview;
 import com.nolocardeno.backend.dto.DocumentHistoryResponse;
 import com.nolocardeno.backend.dto.DocumentRequest;
 import com.nolocardeno.backend.dto.DocumentResponse;
@@ -133,5 +134,20 @@ public class DocumentController {
             @RequestParam(value = "useAi", defaultValue = "false") boolean useAi) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(documentService.createFromImage(principal.getId(), file, null, useAi));
+    }
+
+    /**
+     * Extrae los datos de una imagen mediante OCR/IA pero NO crea todavía el
+     * documento. Devuelve un preview con los campos detectados para que el
+     * frontend prerellene el formulario manual y el usuario confirme o edite
+     * los datos antes de crear el documento.
+     */
+    @PostMapping(value = "/extract/preview", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<DocumentExtractionPreview> previewFromImage(
+            @AuthenticationPrincipal CustomUserDetails principal,
+            @RequestPart("file") MultipartFile file,
+            @RequestParam(value = "useAi", defaultValue = "false") boolean useAi) {
+        return ResponseEntity.ok(
+                documentService.previewFromImage(principal.getId(), file, null, useAi));
     }
 }

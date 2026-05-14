@@ -39,7 +39,7 @@ import { FormCheckboxComponent } from '../form-checkbox/form-checkbox';
 import { DocumentService } from '../../../services/document.service';
 import { UploadDocumentModalService } from '../../../services/upload-document-modal.service';
 import { AlertService } from '../../../services/alert.service';
-import { type DocumentType } from '../../../models/document.model';
+import { type DocumentExtractionPreview, type DocumentType } from '../../../models/document.model';
 
 // --------------------------------------------------------------------------
 // TIPOS INTERNOS
@@ -59,7 +59,7 @@ interface OptionItem {
 // --------------------------------------------------------------------------
 const PROGRESS_MAP: Record<Step, number> = {
   'method': 25,
-  'image-upload': 100,
+  'image-upload': 50,
   'type-select': 50,
   'ticket-category': 75,
   'category-select': 75,
@@ -158,6 +158,15 @@ export class UploadDocumentModalComponent {
   protected readonly selectedTicketCategory = signal<string | null>(null);
   protected readonly customTicketCategory = signal('');
   protected readonly imageFile = signal<File | null>(null);
+  protected readonly imagePreviewUrl = signal<string | null>(null);
+  /** Controla la visibilidad del lightbox de la imagen subida. */
+  protected readonly lightboxOpen = signal(false);
+  /**
+   * Indica si el formulario llega prerellenado a partir de un preview de
+   * OCR/IA. En ese caso, al confirmar manualmente se mantiene el flag
+   * {@code aiProcessed} en el documento creado.
+   */
+  protected readonly aiPreviewApplied = signal(false);
   protected readonly useAi = signal(false);
   protected readonly loading = signal(false);
 
@@ -213,6 +222,20 @@ export class UploadDocumentModalComponent {
         }
       });
     });
+
+    // Mantiene una URL de objeto para previsualizar la imagen subida en el
+    // formulario de confirmación. Cuando el archivo cambia (o el modal se
+    // resetea) revocamos la URL anterior para evitar fugas de memoria.
+    effect((onCleanup) => {
+      const file = this.imageFile();
+      if (!file) {
+        this.imagePreviewUrl.set(null);
+        return;
+      }
+      const url = URL.createObjectURL(file);
+      this.imagePreviewUrl.set(url);
+      onCleanup(() => URL.revokeObjectURL(url));
+    });
   }
 
   // --------------------------------------------------------------------------
@@ -220,6 +243,12 @@ export class UploadDocumentModalComponent {
   // --------------------------------------------------------------------------
   @HostListener('document:keydown.escape')
   protected onEscape(): void {
+    // Si el lightbox está abierto, Escape sólo lo cierra. Así se mantiene
+    // el modal con el formulario y se evita perder los datos revisados.
+    if (this.lightboxOpen()) {
+      this.lightboxOpen.set(false);
+      return;
+    }
     this.close();
   }
 
@@ -301,7 +330,12 @@ export class UploadDocumentModalComponent {
         this.customCategory.set('');
         break;
       case 'form':
-        if (this.selectedKind() === 'ticket') {
+        if (this.selectedMethod() === 'image') {
+          // Flujo OCR/IA: el usuario llegó al formulario desde la subida de
+          // imagen; al volver, mostramos de nuevo el selector de imagen para
+          // que pueda repetir la extracción si lo desea.
+          this.currentStep.set('image-upload');
+        } else if (this.selectedKind() === 'ticket') {
           this.currentStep.set('ticket-category');
         } else {
           this.currentStep.set('category-select');
@@ -318,25 +352,84 @@ export class UploadDocumentModalComponent {
   }
 
   // --------------------------------------------------------------------------
+  // LIGHTBOX (imagen ampliada)
+  // --------------------------------------------------------------------------
+  protected openLightbox(): void {
+    if (!this.imagePreviewUrl()) return;
+    this.lightboxOpen.set(true);
+  }
+
+  protected closeLightbox(): void {
+    this.lightboxOpen.set(false);
+  }
+
+  // --------------------------------------------------------------------------
   // EXTRAER DATOS (desde imagen)
   // --------------------------------------------------------------------------
+  /**
+   * Envía la imagen al backend para que OCR/IA extraigan los datos del
+   * documento. En lugar de crear el documento automáticamente, se
+   * prerrellena el formulario manual con los datos detectados y se navega
+   * al paso 'form' para que el usuario revise y confirme la creación.
+   */
   protected extractData(): void {
     const file = this.imageFile();
     if (!file || this.loading()) return;
 
     this.loading.set(true);
     const groupId = this.modalService.groupId();
-    this.documentService.extractFromImage(file, this.useAi(), groupId ?? undefined).subscribe({
-      next: () => {
-        this.alert.show('success', 'Documento creado desde imagen correctamente');
-        this.documentCreated.emit();
-        this.close();
+    this.documentService.previewFromImage(file, this.useAi(), groupId ?? undefined).subscribe({
+      next: (preview: DocumentExtractionPreview) => {
+        this.applyPreview(preview);
+        this.aiPreviewApplied.set(Boolean(preview.aiProcessed));
+        this.loading.set(false);
+        this.currentStep.set('form');
+        this.alert.show('success', 'Datos extraídos. Revisa y confirma para crear el documento.');
       },
       error: (err: HttpErrorResponse) => {
         const msg = err.error?.error ?? 'No se pudo extraer los datos de la imagen';
         this.alert.show('error', msg);
         this.loading.set(false);
       },
+    });
+  }
+
+  /**
+   * Vuelca el preview devuelto por el backend en el estado del formulario
+   * para que el usuario pueda revisarlo y editarlo antes de confirmar.
+   */
+  private applyPreview(preview: DocumentExtractionPreview): void {
+    // Tipo (ticket | document) y categoría dentro del flujo del modal.
+    this.selectedKind.set(preview.kind);
+    if (preview.kind === 'ticket') {
+      const ticketCategories = ['Devolución', 'Garantía'];
+      const cat = preview.category;
+      if (cat && ticketCategories.includes(cat)) {
+        this.selectedTicketCategory.set(cat);
+        this.customTicketCategory.set('');
+      } else {
+        this.selectedTicketCategory.set('OTHER');
+        // Limitamos a la longitud máxima permitida por el input (12 caracteres).
+        this.customTicketCategory.set((cat ?? '').slice(0, 12));
+      }
+    } else {
+      const docCategories = ['DNI', 'Pasaporte', 'Carnet de conducir'];
+      const cat = preview.category;
+      if (cat && docCategories.includes(cat)) {
+        this.selectedCategory.set(cat);
+        this.customCategory.set('');
+      } else {
+        this.selectedCategory.set('OTHER');
+        this.customCategory.set((cat ?? '').slice(0, 12));
+      }
+    }
+
+    // Campos del formulario. El título se trunca al máximo del input (25).
+    this.docForm.patchValue({
+      title: (preview.title ?? '').slice(0, 25),
+      storeName: preview.storeName ?? '',
+      issueDate: preview.issueDate ?? '',
+      expiryDate: preview.expiryDate ?? '',
     });
   }
 
@@ -358,7 +451,13 @@ export class UploadDocumentModalComponent {
       issueDate: issueDate || null,
       expiryDate: expiryDate || null,
       category: this.resolveCategory(),
-    };
+      // Preservamos el flag aiProcessed cuando el formulario se prerellenó
+      // desde un preview de OCR/IA. En el flujo manual puro, se envía
+      // false explícitamente para que el backend lo registre así.
+      aiProcessed: this.aiPreviewApplied(),      // Distingue manual puro / OCR confirmado / IA confirmada para el historial.
+      creationMethod: this.selectedMethod() === 'image'
+        ? (this.aiPreviewApplied() ? 'AI' : 'OCR')
+        : 'MANUAL',    };
 
     const groupId = this.modalService.groupId();
     const imageFile = this.imageFile();
@@ -421,6 +520,8 @@ export class UploadDocumentModalComponent {
     this.selectedTicketCategory.set(null);
     this.customTicketCategory.set('');
     this.imageFile.set(null);
+    this.lightboxOpen.set(false);
+    this.aiPreviewApplied.set(false);
     this.useAi.set(false);
     this.loading.set(false);
     this.docForm.reset({ title: '', storeName: '', issueDate: '', expiryDate: '' });

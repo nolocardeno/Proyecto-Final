@@ -41,6 +41,20 @@ public class DocumentProcessingPipeline {
     }
 
     public ProcessDocumentResponse process(MultipartFile file, boolean useAi) {
+        return process(file, useAi, true);
+    }
+
+    /**
+     * Ejecuta la extracción sin persistir la imagen en disco. Se usa cuando
+     * solo necesitamos los datos detectados para prerellenar el formulario
+     * del frontend; la imagen definitiva se subirá cuando el usuario
+     * confirme la creación del documento.
+     */
+    public ProcessDocumentResponse processForPreview(MultipartFile file, boolean useAi) {
+        return process(file, useAi, false);
+    }
+
+    private ProcessDocumentResponse process(MultipartFile file, boolean useAi, boolean storeImage) {
         validator.validate(file);
 
         byte[] bytes;
@@ -50,11 +64,13 @@ public class DocumentProcessingPipeline {
             throw new IllegalArgumentException("No se puede leer el archivo");
         }
 
-        String storedPath;
-        try {
-            storedPath = fileStorageService.store(file);
-        } catch (IOException e) {
-            throw new IllegalStateException("No se pudo almacenar la imagen", e);
+        String storedPath = null;
+        if (storeImage) {
+            try {
+                storedPath = fileStorageService.store(file);
+            } catch (IOException e) {
+                throw new IllegalStateException("No se pudo almacenar la imagen", e);
+            }
         }
 
         ExtractionResult raw = dispatcher.dispatch(bytes, file.getContentType(), useAi);

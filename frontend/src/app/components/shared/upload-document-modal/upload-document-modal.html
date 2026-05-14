@@ -236,7 +236,18 @@
 
           <label class="upload-modal__file-group">
             <span class="upload-modal__file-label">Imagen</span>
-            <app-file-picker (fileSelected)="onImageSelected($event)" />
+            @if (selectedMethod() === 'image' && imagePreviewUrl()) {
+              <figure class="upload-modal__image-preview">
+                <img
+                  class="upload-modal__image-preview-img"
+                  [src]="imagePreviewUrl()"
+                  alt="Imagen subida del documento"
+                  (click)="openLightbox()"
+                />
+              </figure>
+            } @else {
+              <app-file-picker (fileSelected)="onImageSelected($event)" />
+            }
           </label>
 
           <footer class="upload-modal__actions">
@@ -256,3 +267,24 @@
     </section>
   </article>
 </aside>
+
+<!-- ============================================================
+     LIGHTBOX: vista ampliada de la imagen subida
+     ============================================================ -->
+@if (lightboxOpen() && imagePreviewUrl()) {
+  <aside
+    class="upload-lightbox"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Vista completa de la imagen"
+    (click)="closeLightbox()"
+    tabindex="0"
+  >
+    <img
+      class="upload-lightbox__image"
+      [src]="imagePreviewUrl()!"
+      alt="Vista completa de la imagen subida"
+      (click)="$event.stopPropagation()"
+    />
+  </aside>
+}

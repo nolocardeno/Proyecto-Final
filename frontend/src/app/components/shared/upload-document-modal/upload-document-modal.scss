@@ -15,17 +15,23 @@
 
   // --------------------------------------------------------------------------
   // TARJETA DEL MODAL
+  //
+  // Layout flex en columna: la cabecera se mantiene fija (no shrink) y el
+  // cuerpo es el único elemento que produce scroll cuando el contenido es
+  // más largo que el alto disponible.
   // --------------------------------------------------------------------------
   &__card {
     width: 37.5rem;
     max-width: 95vw;
     max-height: 90vh;
-    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
     background-color: var(--color-surface);
     border: v.$border-thin solid var(--color-modal-border);
     border-radius: v.$radius-card;
     box-shadow: var(--shadow-card);
     animation: card-in v.$transition-base;
+    overflow: hidden;
   }
 
   // --------------------------------------------------------------------------
@@ -41,6 +47,7 @@
     padding: v.$spacing-3 v.$spacing-3 v.$spacing-2;
     background: v.$color-gradient-primary;
     border-radius: v.$radius-card v.$radius-card 0 0;
+    flex-shrink: 0;
 
     &--with-back {
       min-height: 9.25rem;
@@ -88,12 +95,18 @@
 
   // --------------------------------------------------------------------------
   // CUERPO
+  //
+  // Es el único contenedor con scroll vertical: la cabecera queda siempre
+  // visible cuando el contenido del paso actual supera el alto del modal.
   // --------------------------------------------------------------------------
   &__body {
     display: flex;
     flex-direction: column;
     padding: v.$spacing-3 v.$spacing-4 v.$spacing-4;
     gap: v.$spacing-3;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
   }
 
   // --------------------------------------------------------------------------
@@ -180,6 +193,27 @@
   }
 
   // --------------------------------------------------------------------------
+  // PREVISUALIZACIÓN DE IMAGEN (flujo OCR/IA)
+  // --------------------------------------------------------------------------
+  &__image-preview {
+    margin: 0;
+    padding: v.$spacing-2;
+    background-color: var(--color-input-bg);
+    border: v.$border-thin solid v.$neutral-200;
+    border-radius: v.$radius-input;
+    display: flex;
+    justify-content: center;
+  }
+
+  &__image-preview-img {
+    max-width: 100%;
+    max-height: 240px;
+    object-fit: contain;
+    border-radius: v.$radius-input;
+    cursor: pointer;
+  }
+
+  // --------------------------------------------------------------------------
   // SELECTOR DE EXTRACCIÓN CON IA
   // --------------------------------------------------------------------------
   &__ai-toggle {
@@ -253,5 +287,32 @@
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
+  }
+}
+
+// --------------------------------------------------------------------------
+// LIGHTBOX: vista ampliada de la imagen subida (reutiliza el patrón del
+// detalle de documento).
+// --------------------------------------------------------------------------
+.upload-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  background-color: var(--color-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: v.$spacing-3;
+  outline: none;
+  animation: backdrop-in v.$transition-fast;
+
+  &__image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: v.$radius-lg;
+    cursor: default;
+    box-shadow: v.$shadow-xl;
   }
 }
