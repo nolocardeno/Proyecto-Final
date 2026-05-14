@@ -15,7 +15,7 @@ import java.util.UUID;
 @Service
 public class FileStorageService {
 
-    private static final Set<String> ALLOWED_EXTENSIONS = Set.of(".jpg", ".jpeg", ".png", ".webp", ".gif");
+    private static final Set<String> ALLOWED_EXTENSIONS = Set.of(".jpg", ".jpeg", ".png", ".webp", ".gif", ".heic", ".heif");
 
     private final Path uploadDir;
 
@@ -72,6 +72,8 @@ public class FileStorageService {
                 case "image/png"  -> ".png";
                 case "image/webp" -> ".webp";
                 case "image/gif"  -> ".gif";
+                case "image/heic" -> ".heic";
+                case "image/heif" -> ".heif";
                 default           -> ".bin";
             };
         }

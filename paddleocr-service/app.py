@@ -24,6 +24,7 @@ import numpy as np
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from PIL import Image
 from paddleocr import PaddleOCR
+from pillow_heif import register_heif_opener
 
 # `latin` covers Spanish + English + most European languages with a single
 # recognizer, which matches the previous `spa+eng` Tesseract setup.
@@ -35,6 +36,9 @@ logging.basicConfig(
     format="%(asctime)s [%(levelname)s] %(name)s - %(message)s",
 )
 log = logging.getLogger("paddleocr-service")
+
+# Register HEIF/HEIC support so Pillow can open images from iPhone cameras.
+register_heif_opener()
 
 app = FastAPI(title="Scantral PaddleOCR sidecar", version="1.0.0")
 

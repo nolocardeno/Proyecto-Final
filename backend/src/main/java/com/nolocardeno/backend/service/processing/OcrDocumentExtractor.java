@@ -124,6 +124,8 @@ public class OcrDocumentExtractor implements DocumentExtractor {
         if (mt.contains("png")) return "image.png";
         if (mt.contains("webp")) return "image.webp";
         if (mt.contains("tiff")) return "image.tiff";
+        if (mt.contains("heic")) return "image.heic";
+        if (mt.contains("heif")) return "image.heif";
         return "image.jpg";
     }
 
