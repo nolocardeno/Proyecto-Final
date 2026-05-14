@@ -39,7 +39,8 @@ jobs:
       # these placeholders from application.properties. Provide empty
       # values so the Spring context can start in CI.
       MAIL_USERNAME: ''
-      MAIL_PASSWORD: ''
+      RESEND_API_KEY: ''
+      MAIL_FROM: ''
       GOOGLE_API_KEY: ''
 
     steps:

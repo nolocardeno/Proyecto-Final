@@ -52,7 +52,7 @@ Técnicamente, el sistema está diseñado siguiendo principios de arquitectura l
 
 - **Alertas de caducidad** — el sistema comprueba periódicamente las fechas de expiración y envía un email de aviso cuando un documento está próximo a caducar.
 - **Antelación configurable** — cada usuario puede definir con cuántos días de anticipación quiere recibir la notificación.
-- **Envío por Gmail SMTP** — las alertas se envían a través de una cuenta de Gmail con App Password, sin necesidad de infraestructura de email propia.
+- **Envío vía Resend** — las alertas se envían a través del relay SMTP de Resend desde un dominio propio verificado, sin necesidad de infraestructura de email propia.
 
 ### Seguridad y autenticación
 
@@ -142,7 +142,7 @@ Cada servicio tiene su propio README con detalles internos:
 - **Docker Engine ≥ 24** con **Docker Compose v2** — única dependencia real.
 - 4 GB de RAM libres (la primera vez PaddleOCR descarga ~16 MB de modelos; la imagen pesa ~1 GB).
 - (Opcional) API key de [Google AI Studio](https://aistudio.google.com/apikey) para la extracción IA con Gemini.
-- (Opcional) Cuenta de Gmail con [App Password](https://myaccount.google.com/apppasswords) para las alertas por email.
+- (Opcional) Cuenta en [Resend](https://resend.com) con un dominio verificado para enviar las alertas por email.
 
 ### Pasos
 
@@ -185,8 +185,8 @@ Resumen:
 | `POSTGRES_DB/USER/PASSWORD` | no   | Credenciales BD (default: `scantral` / `scantral_dev`) |
 | `JWT_SECRET`         | **sí** (prod) | Secreto HMAC ≥ 32 bytes para firmar los JWT          |
 | `JWT_EXPIRATION_MS`  | no          | TTL del token (default 24 h)                           |
-| `MAIL_USERNAME`      | no          | Cuenta Gmail para enviar alertas                       |
-| `MAIL_PASSWORD`      | no          | App password de Gmail                                  |
+| `RESEND_API_KEY`     | no          | API key de Resend para enviar alertas. Si vacía → desactivado |
+| `MAIL_FROM`          | no          | Remitente (dominio verificado en Resend), p.ej. `alertas@tudominio.com` |
 | `GOOGLE_API_KEY`     | no          | Key de Google AI Studio (Gemini). Si vacía → solo OCR  |
 | `AI_MODEL`           | no          | Modelo de Gemini (default `gemini-2.5-flash-lite`)     |
 | `OCR_LANGUAGE`       | no          | Idioma PaddleOCR (default `latin`)                     |

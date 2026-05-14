@@ -98,7 +98,7 @@ Una tarea programada se ejecuta automáticamente cada día a las 08:00. Esta tar
 
 **Requisitos de configuración**
 
-El envío de correos utiliza SMTP (por defecto Gmail) y requiere configurar las variables de entorno `MAIL_USERNAME` y `MAIL_PASSWORD` en el servidor para que las notificaciones funcionen.
+El envío de correos se realiza a través del relay SMTP de [Resend](https://resend.com) y requiere configurar las variables de entorno `RESEND_API_KEY` (API key generada en el panel de Resend) y `MAIL_FROM` (dirección de remitente perteneciente a un dominio previamente verificado en Resend) en el servidor para que las notificaciones funcionen.
 
 ### Dashboard y panel de resumen
 

@@ -425,7 +425,7 @@ Se publica en <http://localhost:8080>. Necesita Postgres en `5432`
 | `AI_MODEL`                                  | `gemini-2.5-flash-lite`          | Modelo IA                         |
 | `OCR_SERVICE_URL`                           | `http://localhost:8001`          | URL del sidecar PaddleOCR         |
 | `OCR_TIMEOUT_MS`                            | `30000`                          | Timeout OCR                       |
-| `MAIL_USERNAME` / `MAIL_PASSWORD`           | —                                | SMTP Gmail (App Password)         |
+| `RESEND_API_KEY` / `MAIL_FROM`              | —                                | SMTP de Resend (API key + remitente del dominio verificado) |
 | `scantral.security.rate-limit.window-ms`    | `60000`                          | Ventana de rate-limit (ms)        |
 | `scantral.security.rate-limit.max-requests` | `10`                             | Peticiones por IP y ventana       |
 

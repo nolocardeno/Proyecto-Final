@@ -313,9 +313,11 @@ POSTGRES_PASSWORD=<contraseña segura>
 # API de Google Gemini (extractor IA primario)
 GOOGLE_API_KEY=<clave de la Google AI Studio>
 
-# SMTP para alertas de caducidad (opcional; si están vacías no se envían emails)
-MAIL_USERNAME=cuenta@gmail.com
-MAIL_PASSWORD=<app-password de Gmail>
+# Resend para alertas de caducidad (opcional; si están vacías no se envían emails).
+# Crear la API key en https://resend.com/api-keys y verificar previamente el
+# dominio del remitente (registros SPF/DKIM en el DNS).
+RESEND_API_KEY=<api-key de Resend>
+MAIL_FROM=alertas@tudominio.com
 ```
 
 Docker Compose inyecta las variables en cada contenedor mediante la sintaxis

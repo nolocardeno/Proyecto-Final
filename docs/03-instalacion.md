@@ -240,8 +240,8 @@ La columna *Por defecto* indica el valor que toma la variable si no se define en
 | `POSTGRES_PASSWORD` | `postgres`, `backend` | No | `scantral_dev` | Contraseña de PostgreSQL |
 | `JWT_SECRET` | `backend` | **Sí** ⚠ | `dev-only-change-me-…` | Secreto HMAC-SHA256 para firmar tokens JWT. Mínimo 32 bytes. El valor por defecto **no es seguro para producción**. |
 | `JWT_EXPIRATION_MS` | `backend` | No | `86400000` | Tiempo de vida del token JWT en milisegundos (24 h) |
-| `MAIL_USERNAME` | `backend` | No | *(vacío)* | Cuenta de Gmail para el envío de alertas de caducidad. Si está vacía, el envío queda deshabilitado |
-| `MAIL_PASSWORD` | `backend` | No | *(vacío)* | Contraseña de aplicación de Gmail (App Password). Solo requerida si `MAIL_USERNAME` está definida |
+| `RESEND_API_KEY` | `backend` | No | *(vacío)* | API key de [Resend](https://resend.com) para el envío de alertas de caducidad. Si está vacía, el envío queda deshabilitado |
+| `MAIL_FROM` | `backend` | No | `no-reply@scantral.local` | Dirección remitente. Debe pertenecer a un dominio verificado en Resend (p.ej. `alertas@tudominio.com`) |
 | `GOOGLE_API_KEY` | `backend` | No | *(vacío)* | Clave de Google AI Studio para el extractor IA (Gemini). Si está vacía, el pipeline cae directamente al sidecar OCR |
 | `AI_MODEL` | `backend` | No | `gemini-2.5-flash-lite` | Identificador del modelo Gemini a utilizar |
 | `OCR_LANGUAGE` | `paddleocr` | No | `latin` | Idioma del modelo PP-OCR. `latin` cubre español e inglés |
@@ -253,7 +253,7 @@ La columna *Por defecto* indica el valor que toma la variable si no se define en
 > openssl rand -base64 48
 > ```
 
-> **Nota sobre `MAIL_USERNAME` / `MAIL_PASSWORD`:** se requiere una *App Password* de Google (autenticación de dos factores activada en la cuenta). Las credenciales ordinarias de Gmail no son aceptadas por el servidor SMTP con las opciones de seguridad modernas.
+> **Nota sobre `RESEND_API_KEY` / `MAIL_FROM`:** el envío de correo se realiza a través del relay SMTP de [Resend](https://resend.com) (`smtp.resend.com:587`). Para usarlo es necesario (1) crear una API key en el panel de Resend, (2) añadir y verificar el dominio que aparecerá como remitente mediante los registros DNS (SPF/DKIM) que Resend indica. El usuario SMTP es la cadena literal `resend` y la contraseña es la API key — ambos valores ya están cableados en `application.properties`, por lo que solo se necesita definir las dos variables anteriores.
 
 ---
 
@@ -272,7 +272,7 @@ cd Scantral
 cp .env.example .env
 ```
 
-Abrir `.env` con cualquier editor de texto y revisar como mínimo el valor de `JWT_SECRET`. Si se desea habilitar la extracción IA, añadir también `GOOGLE_API_KEY`. Para habilitar las alertas por correo, definir `MAIL_USERNAME` y `MAIL_PASSWORD`.
+Abrir `.env` con cualquier editor de texto y revisar como mínimo el valor de `JWT_SECRET`. Si se desea habilitar la extracción IA, añadir también `GOOGLE_API_KEY`. Para habilitar las alertas por correo, definir `RESEND_API_KEY` y `MAIL_FROM` (esta última debe ser una dirección de un dominio verificado en Resend).
 
 ### Paso 3 — Construir e iniciar los contenedores
 

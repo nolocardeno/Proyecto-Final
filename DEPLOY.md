@@ -104,9 +104,11 @@ JWT_SECRET=<≥ 32 bytes>
 # Opcional pero recomendado: si está vacía, sólo se usa el sidecar OCR
 GOOGLE_API_KEY=<tu-api-key-de-gemini>
 
-# Opcional: si están vacías, los emails de alerta no se envían
-MAIL_USERNAME=tu-cuenta@gmail.com
-MAIL_PASSWORD=<app-password>
+# Opcional: si están vacías, los emails de alerta no se envían.
+# RESEND_API_KEY se obtiene en https://resend.com/api-keys
+# MAIL_FROM debe pertenecer a un dominio verificado en Resend.
+RESEND_API_KEY=<tu-api-key-de-resend>
+MAIL_FROM=alertas@tudominio.com
 ```
 
 El resto de variables (`POSTGRES_*`, `OCR_LANGUAGE`, `JWT_EXPIRATION_MS`,

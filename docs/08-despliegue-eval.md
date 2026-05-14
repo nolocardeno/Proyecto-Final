@@ -300,8 +300,8 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-scantral_dev}
       JWT_SECRET: ${JWT_SECRET:-dev-only-change-me-please-32-bytes-minimum-secret-key-1234567890}
       JWT_EXPIRATION_MS: ${JWT_EXPIRATION_MS:-86400000}
-      MAIL_USERNAME: ${MAIL_USERNAME}
-      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      RESEND_API_KEY: ${RESEND_API_KEY}
+      MAIL_FROM: ${MAIL_FROM}
       GOOGLE_API_KEY: ${GOOGLE_API_KEY}
       AI_MODEL: ${AI_MODEL:-gemini-2.5-flash-lite}
       OCR_SERVICE_URL: http://paddleocr:8001
@@ -404,8 +404,9 @@ JWT_SECRET=change-me-please-32-bytes-minimum-secret-key
 JWT_EXPIRATION_MS=86400000
 
 # ---- Email (alertas de caducidad) — opcional -------------------------------
-MAIL_USERNAME=
-MAIL_PASSWORD=
+# Envío vía relay SMTP de Resend (https://resend.com).
+RESEND_API_KEY=
+MAIL_FROM=
 
 # ---- IA (Google Gemini) — opcional; sin clave usa sólo OCR ----------------
 GOOGLE_API_KEY=
@@ -670,7 +671,7 @@ Aspectos configurados:
 | JWT | Secreto y expiración inyectados por variables de entorno |
 | Rate limiting | Filtro `RateLimitFilter` en `/api/auth/login` — 10 req/min por IP, configurable en `scantral.security.rate-limit.*` |
 | OCR | `OCR_SERVICE_URL=http://paddleocr:8001`, timeout configurable `OCR_TIMEOUT_MS` |
-| Mail | Activado sólo si `MAIL_USERNAME` está definido |
+| Mail | Activado sólo si `RESEND_API_KEY` está definido |
 | Logs | Configuración de Logback; los logs de inicio incluyen información de Tomcat, HikariCP y el contexto Spring |
 
 ### Rutas y contextos del backend
