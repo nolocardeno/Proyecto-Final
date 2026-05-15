@@ -393,7 +393,7 @@ futuras visitas.
 ---
 
 **¿Puedo subir cualquier formato de imagen?**  
-El sistema acepta los formatos más habituales: JPG, JPEG, PNG y PDF de una sola página.
+El sistema acepta los formatos más habituales: JPG, JPEG, PNG, WEBP y HEIC/HEIF (fotos tomadas con iPhone).
 Para mejores resultados de extracción, usa imágenes con buena iluminación, enfoque nítido
 y el documento centrado y sin recortes.
 

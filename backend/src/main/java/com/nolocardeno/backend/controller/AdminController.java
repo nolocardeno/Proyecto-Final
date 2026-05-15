@@ -5,6 +5,7 @@ import com.nolocardeno.backend.model.User;
 import com.nolocardeno.backend.model.enums.Role;
 import com.nolocardeno.backend.repository.UserRepository;
 import com.nolocardeno.backend.repository.spec.UserSpecifications;
+import com.nolocardeno.backend.service.AlertSchedulerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +14,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminController {
 
     private final UserRepository userRepository;
+    private final AlertSchedulerService alertSchedulerService;
 
     /**
      * Listado paginado y filtrable de usuarios.
@@ -51,6 +54,18 @@ public class AdminController {
                 .and(UserSpecifications.textMatches(q));
         Page<AuthResponse> page = userRepository.findAll(spec, pageable).map(this::toResponse);
         return ResponseEntity.ok(page);
+    }
+
+    /**
+     * Dispara manualmente el procesamiento de alertas de caducidad.
+     * Útil para verificar que el envío de correos funciona sin esperar al cron de las 08:00.
+     *
+     * <pre>POST /api/admin/alerts/trigger</pre>
+     */
+    @PostMapping("/alerts/trigger")
+    public ResponseEntity<String> triggerAlerts() {
+        alertSchedulerService.processAlerts();
+        return ResponseEntity.ok("Procesamiento de alertas ejecutado. Revisa los logs para ver el resultado.");
     }
 
     private AuthResponse toResponse(User u) {

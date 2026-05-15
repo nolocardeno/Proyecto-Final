@@ -20,14 +20,19 @@ public interface DocumentAlertRepository extends JpaRepository<DocumentAlert, Lo
 
     List<DocumentAlert> findByNotifiedAtIsNullAndDocumentExpiryDateIsNotNull();
 
+    @Query("SELECT DISTINCT a.daysBeforeExpiry FROM DocumentAlert a")
+    List<Integer> findDistinctDaysBeforeExpiry();
+
     @Query("""
             SELECT a FROM DocumentAlert a
             JOIN FETCH a.user
             JOIN FETCH a.document
             WHERE a.document.expiryDate = :targetDate
+            AND a.daysBeforeExpiry = :days
             AND (a.notifiedAt IS NULL OR CAST(a.notifiedAt AS LocalDate) < :today)
             """)
     List<DocumentAlert> findAlertsToFire(@Param("targetDate") LocalDate targetDate,
+                                         @Param("days") int days,
                                          @Param("today") LocalDate today);
 }
 

@@ -58,7 +58,7 @@ En conjunto, Scantral es un proyecto que ha cumplido su promesa central: demostr
 |---|:---:|---|
 | Registro y autenticación segura de usuarios | ✅ Cumplido | JWT + refresh tokens, rate limiting, blacklist de tokens |
 | Registro manual de documentos con fechas | ✅ Cumplido | Asistente paso a paso con validación completa |
-| Subida de imágenes para análisis automático | ✅ Cumplido | Formatos JPG, JPEG, PNG y PDF |
+| Subida de imágenes para análisis automático | ✅ Cumplido | Formatos JPG, JPEG, PNG, WEBP y HEIC/HEIF |
 | Extracción de datos mediante OCR (PaddleOCR) | ✅ Cumplido | Sidecar local en Python, sin envío de imágenes a terceros |
 | Extracción opcional mediante IA (Gemini) | ✅ Cumplido | Activable por el usuario; fallback automático a OCR |
 | Cálculo automático de plazos de caducidad | ✅ Cumplido | Basado en tipo de documento y datos extraídos |

@@ -18,6 +18,7 @@ import com.nolocardeno.backend.repository.UserRepository;
 import com.nolocardeno.backend.security.CustomUserDetails;
 import com.nolocardeno.backend.service.AuthService;
 import com.nolocardeno.backend.service.DashboardService;
+import com.nolocardeno.backend.service.AlertSchedulerService;
 import com.nolocardeno.backend.service.DocumentAlertService;
 import com.nolocardeno.backend.service.DocumentService;
 import com.nolocardeno.backend.service.GroupService;
@@ -46,6 +47,7 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.ArgumentMatchers;
@@ -311,7 +313,7 @@ class ControllersUnitTest {
     // ---------- AdminController ----------
     @Test
     void admin_list_users_returns_page() {
-        AdminController admin = new AdminController(userRepository);
+        AdminController admin = new AdminController(userRepository, mock(AlertSchedulerService.class));
         User u = User.builder().id(1L).email("a@x.com").name("A")
                 .passwordHash("p").role(Role.ADMIN).build();
         Page<User> page = new PageImpl<>(List.of(u));

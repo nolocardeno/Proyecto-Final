@@ -282,12 +282,13 @@ Todas las pruebas del backend finalizan con **0 fallos y 0 errores**.
 | `JwtServiceTest` | Unitaria | 4 | ✅ |
 | `RateLimitFilterTest` | Unitaria | 5 | ✅ |
 | `TokenBlacklistServiceTest` | Unitaria | 4 | ✅ |
+| `AlertSchedulerServiceTest` | Unitaria | 7 | ✅ |
 | `AuthServiceTest` | Unitaria | 7 | ✅ |
 | `DashboardServiceTest` | Unitaria | 2 | ✅ |
 | `DocumentAlertServiceTest` | Unitaria | 8 | ✅ |
 | `GroupServiceTest` | Unitaria | 9 | ✅ |
 | `UserServiceTest` | Unitaria | 6 | ✅ |
-| **TOTAL** | — | **94** | **✅ 100 %** |
+| **TOTAL** | — | **101** | **✅ 100 %** |
 
 El tiempo total de ejecución de la suite completa es de aproximadamente **15,5 segundos**,
 de los cuales cerca de 12 segundos corresponden a `BackendDelProyectoFinalApplicationTests`,
@@ -297,13 +298,13 @@ que necesita arrancar el contexto completo de Spring Boot con H2.
 
 | Métrica | Valor |
 |---|---|
-| Total de pruebas | 94 |
-| Pruebas exitosas | 94 |
+| Total de pruebas | 101 |
+| Pruebas exitosas | 101 |
 | Fallos | 0 |
 | Errores | 0 |
 | Omitidas | 0 |
 | Tasa de éxito | 100 % |
-| Suites de prueba | 18 |
+| Suites de prueba | 19 |
 | Tiempo total | ≈ 15,5 s |
 
 ### 7.4.2. Desglose por spec — Frontend
