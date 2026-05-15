@@ -328,4 +328,15 @@ class ControllersUnitTest {
         assertThat(r.getBody().getContent().get(0).getUserId()).isEqualTo(1L);
         assertThat(r.getBody().getContent().get(0).getRole()).isEqualTo("ADMIN");
     }
+
+    @Test
+    void admin_trigger_alerts_delegates_to_scheduler_and_returns_200() {
+        AlertSchedulerService schedulerService = mock(AlertSchedulerService.class);
+        AdminController admin = new AdminController(userRepository, schedulerService);
+
+        ResponseEntity<String> r = admin.triggerAlerts();
+
+        verify(schedulerService).processAlerts();
+        assertThat(r.getStatusCode().value()).isEqualTo(200);
+    }
 }
