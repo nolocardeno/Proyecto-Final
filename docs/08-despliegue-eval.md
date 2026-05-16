@@ -243,7 +243,7 @@ flowchart LR
 - **backend → Google Gemini API:** HTTPS saliente. Extractor IA primario;
   si `GOOGLE_API_KEY` está vacía, el pipeline usa sólo el sidecar OCR como
   fallback.
-- **backend → Resend SMTP:** envío de emails de alerta de caducidad
+- **backend → Resend API (HTTPS):** envío de emails de alerta de caducidad
   (opcional; si `RESEND_API_KEY` está vacía no se envían).
 
 ### Decisiones de diseño principales
@@ -404,7 +404,7 @@ JWT_SECRET=change-me-please-32-bytes-minimum-secret-key
 JWT_EXPIRATION_MS=86400000
 
 # ---- Email (alertas de caducidad) — opcional -------------------------------
-# Envío vía relay SMTP de Resend (https://resend.com).
+# Envío vía API HTTP de Resend (https://resend.com) — usa HTTPS (puerto 443), no SMTP.
 RESEND_API_KEY=
 MAIL_FROM=
 

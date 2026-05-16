@@ -1,40 +1,37 @@
 package com.nolocardeno.backend.service;
 
-import jakarta.mail.MessagingException;
-import jakarta.mail.Session;
-import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.http.HttpMethod;
+import org.springframework.test.web.client.MockRestServiceServer;
+import org.springframework.web.client.RestClient;
 
 import java.time.LocalDate;
-import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withServerError;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
-@ExtendWith(MockitoExtension.class)
 class EmailServiceTest {
 
-    @Mock
-    JavaMailSender mailSender;
+    private static final String RESEND_BASE_URL = "https://api.resend.com";
 
-    @InjectMocks
-    EmailService emailService;
+    private MockRestServiceServer server;
+    private EmailService emailService;
 
     @BeforeEach
     void setUp() {
-        ReflectionTestUtils.setField(emailService, "fromAddress", "alertas@scantral.com");
+        RestClient.Builder builder = RestClient.builder().baseUrl(RESEND_BASE_URL);
+        server = MockRestServiceServer.bindTo(builder).build();
+        emailService = new EmailService(builder.build(), "alertas@scantral.com");
     }
 
-    private MimeMessage realMimeMessage() {
-        return new MimeMessage(Session.getInstance(new Properties()));
+    private void expectSuccess() {
+        server.expect(requestTo(RESEND_BASE_URL + "/emails"))
+              .andExpect(method(HttpMethod.POST))
+              .andRespond(withSuccess());
     }
 
     // -----------------------------------------------------------------------
@@ -43,7 +40,7 @@ class EmailServiceTest {
 
     @Test
     void sendAlertEmail_daysLeftOne_caducaManana_returnsTrue() {
-        when(mailSender.createMimeMessage()).thenReturn(realMimeMessage());
+        expectSuccess();
 
         boolean result = emailService.sendAlertEmail(
                 "user@test.com", "Test User", "Mi DNI",
@@ -52,12 +49,12 @@ class EmailServiceTest {
         );
 
         assertThat(result).isTrue();
-        verify(mailSender).send(any(MimeMessage.class));
+        server.verify();
     }
 
     @Test
     void sendAlertEmail_daysLeft7_colorError_returnsTrue() {
-        when(mailSender.createMimeMessage()).thenReturn(realMimeMessage());
+        expectSuccess();
 
         boolean result = emailService.sendAlertEmail(
                 "user@test.com", "Test User", "Pasaporte",
@@ -70,7 +67,7 @@ class EmailServiceTest {
 
     @Test
     void sendAlertEmail_daysLeft10_colorWarning_returnsTrue() {
-        when(mailSender.createMimeMessage()).thenReturn(realMimeMessage());
+        expectSuccess();
 
         boolean result = emailService.sendAlertEmail(
                 "user@test.com", "Test User", "ITV",
@@ -83,7 +80,7 @@ class EmailServiceTest {
 
     @Test
     void sendAlertEmail_daysLeft30_colorInfo_returnsTrue() {
-        when(mailSender.createMimeMessage()).thenReturn(realMimeMessage());
+        expectSuccess();
 
         boolean result = emailService.sendAlertEmail(
                 "user@test.com", "Test User", "Seguro del coche",
@@ -100,7 +97,7 @@ class EmailServiceTest {
 
     @Test
     void sendAlertEmail_allOptionalFieldsNull_returnsTrue() {
-        when(mailSender.createMimeMessage()).thenReturn(realMimeMessage());
+        expectSuccess();
 
         boolean result = emailService.sendAlertEmail(
                 "user@test.com", "Test User", "Documento sin detalles",
@@ -112,7 +109,7 @@ class EmailServiceTest {
 
     @Test
     void sendAlertEmail_blankStoreName_isSkippedInDetails() {
-        when(mailSender.createMimeMessage()).thenReturn(realMimeMessage());
+        expectSuccess();
 
         boolean result = emailService.sendAlertEmail(
                 "user@test.com", "Test User", "Recibo",
@@ -136,7 +133,8 @@ class EmailServiceTest {
         };
 
         for (String type : types) {
-            when(mailSender.createMimeMessage()).thenReturn(realMimeMessage());
+            server.reset();
+            expectSuccess();
 
             boolean result = emailService.sendAlertEmail(
                     "user@test.com", "Usuario", "Documento",
@@ -145,6 +143,7 @@ class EmailServiceTest {
             );
 
             assertThat(result).withFailMessage("Falló para el tipo: " + type).isTrue();
+            server.verify();
         }
     }
 
@@ -154,7 +153,7 @@ class EmailServiceTest {
 
     @Test
     void sendAlertEmail_htmlCharsInFields_areEscaped_returnsTrue() {
-        when(mailSender.createMimeMessage()).thenReturn(realMimeMessage());
+        expectSuccess();
 
         boolean result = emailService.sendAlertEmail(
                 "user@test.com", "Test <User> & \"Co\"",
@@ -167,15 +166,13 @@ class EmailServiceTest {
     }
 
     // -----------------------------------------------------------------------
-    // Ruta de fallo — MessagingException → devuelve false
+    // Ruta de fallo — error del servidor → devuelve false
     // -----------------------------------------------------------------------
 
     @Test
-    void sendAlertEmail_messagingException_returnsFalse() throws MessagingException {
-        MimeMessage mockMsg = mock(MimeMessage.class);
-        when(mailSender.createMimeMessage()).thenReturn(mockMsg);
-        doThrow(new MessagingException("SMTP error"))
-                .when(mockMsg).setFrom(any(jakarta.mail.Address.class));
+    void sendAlertEmail_serverError_returnsFalse() {
+        server.expect(requestTo(RESEND_BASE_URL + "/emails"))
+              .andRespond(withServerError());
 
         boolean result = emailService.sendAlertEmail(
                 "user@test.com", "Test User", "Mi DNI",
@@ -183,6 +180,6 @@ class EmailServiceTest {
         );
 
         assertThat(result).isFalse();
-        verify(mailSender, never()).send(any(MimeMessage.class));
     }
 }
+

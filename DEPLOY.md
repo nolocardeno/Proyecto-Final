@@ -43,7 +43,7 @@ flowchart LR
     BE -->|JDBC :5432| DB[("postgres<br/>PostgreSQL 17")]
     BE -->|HTTP :8001| OCR["paddleocr<br/>FastAPI + PaddleOCR"]
     BE -->|HTTPS| Gemini[("Google Gemini API")]
-    BE -->|SMTP| Mail[("Resend SMTP")]
+    BE -->|HTTPS| Mail[("Resend API")]
 
     subgraph "scantral-net (red interna Docker)"
         FE
@@ -77,8 +77,8 @@ flowchart LR
 - **backend → Google Gemini API**: HTTPS saliente. Extractor IA
   primario; si la `GOOGLE_API_KEY` está vacía, se usa sólo el sidecar
   OCR como fallback.
-- **backend → Resend SMTP**: envío de emails de alerta de caducidad
-  (opcional; si `MAIL_*` están vacíos, no se envían).
+- **backend → Resend API (HTTPS)**: envío de emails de alerta de caducidad
+  (opcional; si `RESEND_API_KEY` está vacía, no se envían).
 
 ## 1. Requisitos
 

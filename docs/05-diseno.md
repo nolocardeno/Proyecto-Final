@@ -529,7 +529,7 @@ Los ficheros de imagen subidos por los usuarios se almacenan en un volumen de di
 | Backend | PostgreSQL | JDBC | SQL |
 | Backend | PaddleOCR sidecar | HTTP interno (Docker network) | multipart → JSON |
 | Backend | Gemini API (opcional) | HTTPS | JSON |
-| Backend | Cliente de correo | SMTP | MIME |
+| Backend | Resend API | HTTPS | JSON |
 
 ---
 

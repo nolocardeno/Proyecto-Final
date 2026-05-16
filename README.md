@@ -52,7 +52,7 @@ Técnicamente, el sistema está diseñado siguiendo principios de arquitectura l
 
 - **Alertas de caducidad** — el sistema comprueba periódicamente las fechas de expiración y envía un email de aviso cuando un documento está próximo a caducar.
 - **Antelación configurable** — cada usuario puede definir con cuántos días de anticipación quiere recibir la notificación.
-- **Envío vía Resend** — las alertas se envían a través del relay SMTP de Resend desde un dominio propio verificado, sin necesidad de infraestructura de email propia.
+- **Envío vía Resend** — las alertas se envían a través de la API HTTP de Resend (HTTPS, puerto 443) desde un dominio propio verificado, sin necesidad de infraestructura de email propia.
 
 ### Seguridad y autenticación
 
@@ -87,12 +87,12 @@ Técnicamente, el sistema está diseñado siguiendo principios de arquitectura l
 flowchart LR
     Browser["Navegador"] -->|HTTP :80| FE["frontend<br/>Nginx + Angular SPA"]
     FE -->|/| FE
-    FE -->"/api → :8080"| BE["backend<br/>Spring Boot 4"]
-    FE -->"/uploads → :8080"| BE
+    FE -->|/api :8080| BE["backend<br/>Spring Boot 4"]
+    FE -->|/uploads :8080| BE
     BE -->|JDBC :5432| DB[("postgres<br/>PostgreSQL 17")]
     BE -->|HTTP :8001| OCR["paddleocr<br/>FastAPI + PaddleOCR"]
     BE -->|HTTPS| Gemini[("Google Gemini API")]
-    BE -->|SMTP| Mail[("Resend SMTP")]
+    BE -->|HTTPS| Mail[("Resend API")]
 
     subgraph "scantral-net (red interna Docker)"
         FE

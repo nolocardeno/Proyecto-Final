@@ -1,20 +1,21 @@
 package com.nolocardeno.backend.service;
 
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClientException;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
+import java.util.List;
+import java.util.Map;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class EmailService {
 
@@ -34,13 +35,32 @@ public class EmailService {
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    private final JavaMailSender mailSender;
+    private final RestClient resendClient;
+    private final String fromAddress;
+    private final String logoDataUri;
 
-    @Value("${scantral.mail.from}")
-    private String fromAddress;
+    public EmailService(RestClient resendRestClient,
+                        @Value("${scantral.mail.from}") String fromAddress) {
+        this.resendClient = resendRestClient;
+        this.fromAddress  = fromAddress;
+        this.logoDataUri  = loadLogoAsDataUri();
+    }
+
+    private String loadLogoAsDataUri() {
+        try {
+            ClassPathResource logo = new ClassPathResource("static/logo.png");
+            if (logo.exists()) {
+                byte[] bytes = logo.getInputStream().readAllBytes();
+                return "data:image/png;base64," + Base64.getEncoder().encodeToString(bytes);
+            }
+        } catch (IOException e) {
+            log.warn("No se pudo cargar el logo para los correos: {}", e.getMessage());
+        }
+        return "";
+    }
 
     /**
-     * Envía el correo de alerta de forma síncrona.
+     * Envía el correo de alerta de forma síncrona mediante la API HTTP de Resend.
      * Devuelve {@code true} si el correo se envió con éxito, {@code false} en caso de error.
      * El llamador debe comprobar el valor de retorno antes de marcar la alerta como notificada.
      */
@@ -48,17 +68,8 @@ public class EmailService {
                                   String storeName, String type, String category,
                                   LocalDate issueDate, LocalDate expiryDate, int daysLeft) {
         try {
-            MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-
-            helper.setFrom(fromAddress);
-            helper.setTo(toEmail);
-            helper.setSubject("Recordatorio: \"" + escapeHtml(documentTitle) + "\" caduca en " + daysLeft + (daysLeft == 1 ? " día" : " días"));
-
-            ClassPathResource logo = new ClassPathResource("static/logo.png");
-            if (logo.exists()) {
-                helper.addInline("logo", logo);
-            }
+            String subject = "Recordatorio: \"" + documentTitle + "\" caduca en "
+                    + daysLeft + (daysLeft == 1 ? " día" : " días");
 
             final String urgencyColor;
             final String urgencyText;
@@ -77,13 +88,32 @@ public class EmailService {
             }
 
             String detailRows = buildDetailRows(storeName, type, category, issueDate, expiryDate);
-            helper.setText(buildEmailBody(escapeHtml(userName), escapeHtml(documentTitle), urgencyColor, urgencyText, detailRows), true);
+            String html = buildEmailBody(escapeHtml(userName), escapeHtml(documentTitle),
+                    urgencyColor, urgencyText, detailRows);
 
-            mailSender.send(message);
+            Map<String, Object> body = Map.of(
+                    "from",    fromAddress,
+                    "to",      List.of(toEmail),
+                    "subject", subject,
+                    "html",    html
+            );
+
+            resendClient.post()
+                    .uri("/emails")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(body)
+                    .retrieve()
+                    .toBodilessEntity();
+
             log.info("Alerta enviada a {} para el documento \"{}\" ({} días restantes)", toEmail, documentTitle, daysLeft);
             return true;
-        } catch (MessagingException e) {
-            log.error("Error al enviar alerta a {} para el documento \"{}\": {}", toEmail, documentTitle, e.getMessage());
+        } catch (RestClientException e) {
+            log.error("Error al enviar alerta a {} para el documento \"{}\": {} - {}",
+                    toEmail, documentTitle, e.getClass().getSimpleName(), e.getMessage());
+            return false;
+        } catch (Exception e) {
+            log.error("Error inesperado al enviar alerta a {} para el documento \"{}\": {} - {}",
+                    toEmail, documentTitle, e.getClass().getSimpleName(), e.getMessage());
             return false;
         }
     }
@@ -127,16 +157,10 @@ public class EmailService {
     }
 
     private String formatDocumentType(String type) {
+        if (type == null) return "Documento";
         return switch (type) {
-            case "DNI"             -> "DNI";
-            case "PASSPORT"        -> "Pasaporte";
-            case "DRIVING_LICENSE" -> "Permiso de conducir";
-            case "INSURANCE"       -> "Seguro";
-            case "ITV"             -> "ITV";
-            case "RECEIPT"         -> "Recibo";
-            case "WARRANTY"        -> "Garantía";
-            case "INVOICE"         -> "Factura";
-            default                -> escapeHtml(type);
+            case "RECEIPT", "WARRANTY", "INVOICE" -> "Ticket";
+            default                               -> "Documento";
         };
     }
 
@@ -164,7 +188,7 @@ public class EmailService {
                           <table role="presentation" cellpadding="0" cellspacing="0">
                             <tr>
                               <td style="vertical-align:middle;padding-right:12px;">
-                                <img src="cid:logo" height="36" style="display:block;" alt="">
+                                %s
                               </td>
                               <td style="vertical-align:middle;">
                                 <h1 style="color:%s;margin:0;font-size:22px;font-weight:700;">Scantral</h1>
@@ -220,7 +244,9 @@ public class EmailService {
             """.formatted(
                 FONT_PRIMARY, COLOR_BODY_BG,         // body
                 COLOR_BODY_BG,                       // outer table bg
-                COLOR_PRIMARY, COLOR_HEADER_TEXT,    // cabecera bg + texto
+                COLOR_PRIMARY,                       // cabecera bg
+                logoDataUri.isBlank() ? "" : "<img src=\"" + logoDataUri + "\" height=\"36\" style=\"display:block;\" alt=\"\">",  // logo
+                COLOR_HEADER_TEXT,                   // texto h1 cabecera
                 COLOR_BODY_TEXT, userName,           // saludo
                 COLOR_BODY_TEXT,                     // subtítulo
                 urgencyColor,                        // borde tarjeta

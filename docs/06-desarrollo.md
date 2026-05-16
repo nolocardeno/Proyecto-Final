@@ -100,7 +100,7 @@ Se abordó en dos frentes: por un lado, se revisaron y configuraron correctament
 
 ### Arranque del contexto de Spring en CI sin credenciales externas
 
-Al configurar el pipeline de integración continua se descubrió que los tests de integración (`@SpringBootTest`) fallaban en el entorno de GitHub Actions porque el contexto completo de Spring intenta resolver todos los `@Value` al arrancar, incluyendo las credenciales de correo (SMTP) y la clave de la API de Gemini. Estas variables no existen en el entorno de CI por razones de seguridad.
+Al configurar el pipeline de integración continua se descubrió que los tests de integración (`@SpringBootTest`) fallaban en el entorno de GitHub Actions porque el contexto completo de Spring intenta resolver todos los `@Value` al arrancar, incluyendo las credenciales de la API de correo (Resend) y la clave de la API de Gemini. Estas variables no existen en el entorno de CI por razones de seguridad.
 
 Se resolvió declarando las variables de entorno con valor vacío directamente en el job de CI del workflow, lo que permite al contexto de Spring arrancar sin errores al no encontrar un valor nulo sino una cadena vacía. Los tests que realmente necesitan estas credenciales están aislados o mockeados, por lo que el resultado de los tests no se ve afectado.
 
@@ -144,7 +144,7 @@ Se configuró un pipeline de **GitHub Actions** con dos flujos automáticos.
 
 **Flujo CI** (`ci.yml`) — se ejecuta en cada push y en cada pull request sobre `main`. Lanza tres jobs en paralelo, uno por servicio:
 
-- **Backend (Spring Boot)**: levanta un contenedor de PostgreSQL 17 como servicio del propio job, configura JDK 21 con caché de Maven, y ejecuta `./mvnw -B verify`, que compila el proyecto, lanza todos los tests unitarios e de integración y genera el informe de cobertura con JaCoCo. Las variables de entorno sensibles (SMTP, clave de Gemini) se declaran vacías en el job para que el contexto de Spring pueda arrancar sin errores en CI.
+- **Backend (Spring Boot)**: levanta un contenedor de PostgreSQL 17 como servicio del propio job, configura JDK 21 con caché de Maven, y ejecuta `./mvnw -B verify`, que compila el proyecto, lanza todos los tests unitarios e de integración y genera el informe de cobertura con JaCoCo. Las variables de entorno sensibles (API key de Resend, clave de Gemini) se declaran vacías en el job para que el contexto de Spring pueda arrancar sin errores en CI.
 - **Frontend (Angular)**: configura Node.js 20 con caché de npm, instala dependencias con `npm ci` y ejecuta `npm run build --configuration production` para verificar que la compilación de producción no produce errores de tipado ni de bundling.
 - **Microservicio OCR (Python)**: configura Python 3.11 y ejecuta `python -m py_compile app.py` para verificar que el fichero principal no tiene errores de sintaxis, sin necesidad de instalar las dependencias pesadas de PaddleOCR.
 

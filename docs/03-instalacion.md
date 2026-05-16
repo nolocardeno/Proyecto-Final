@@ -253,7 +253,7 @@ La columna *Por defecto* indica el valor que toma la variable si no se define en
 > openssl rand -base64 48
 > ```
 
-> **Nota sobre `RESEND_API_KEY` / `MAIL_FROM`:** el envío de correo se realiza a través del relay SMTP de [Resend](https://resend.com) (`smtp.resend.com:587`). Para usarlo es necesario (1) crear una API key en el panel de Resend, (2) añadir y verificar el dominio que aparecerá como remitente mediante los registros DNS (SPF/DKIM) que Resend indica. El usuario SMTP es la cadena literal `resend` y la contraseña es la API key — ambos valores ya están cableados en `application.properties`, por lo que solo se necesita definir las dos variables anteriores.
+> **Nota sobre `RESEND_API_KEY` / `MAIL_FROM`:** el envío de correo se realiza a través de la **API HTTP de [Resend](https://resend.com)** (HTTPS, puerto 443 — no usa SMTP). Para usarlo es necesario (1) crear una API key en el panel de Resend, (2) añadir y verificar el dominio que aparecerá como remitente mediante los registros DNS (SPF/DKIM) que Resend indica. La API key se pasa en la cabecera `Authorization: Bearer <key>` — el valor ya está cableado en `application.properties`, por lo que solo se necesita definir las dos variables anteriores.
 
 ---
 

@@ -81,7 +81,7 @@ Cloudflare (TLS termination)
 │   └── OCR/IA → paddleocr (:8001)                                      │
 │                     │                                                  │
 │                     ├──── Google Gemini API (HTTPS saliente)          │
-│                     └──── Resend SMTP (alertas caducidad)              │
+│                     └──── Resend API / HTTPS (alertas caducidad)       │
 │                                                                        │
 │   paddleocr (python:3.11-slim + FastAPI + PaddleOCR PP-OCRv4)        │
 │   └── paddleocr_models (volumen, ~16 MB pesos)                        │
