@@ -3,6 +3,7 @@ package com.nolocardeno.backend.dto;
 import com.nolocardeno.backend.model.DocumentHistory;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 
 public final class DocumentMapper {
@@ -13,7 +14,7 @@ public final class DocumentMapper {
     public static DocumentResponse toResponse(com.nolocardeno.backend.model.Document doc) {
         Long daysRemaining = null;
         if (doc.getExpiryDate() != null) {
-            daysRemaining = ChronoUnit.DAYS.between(LocalDate.now(), doc.getExpiryDate());
+            daysRemaining = ChronoUnit.DAYS.between(LocalDate.now(ZoneId.of("Europe/Madrid")), doc.getExpiryDate());
         }
 
         return DocumentResponse.builder()
