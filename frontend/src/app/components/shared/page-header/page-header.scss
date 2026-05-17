@@ -57,7 +57,7 @@
   font-family: v.$font-primary;
   font-weight: v.$font-weight-medium;
   font-size: v.$font-size-md;
-  color: var(--color-text-secondary);
+  color: var(--color-text-on-brand);
   overflow-wrap: break-word;
 
   @include m.respond-down(sm) {

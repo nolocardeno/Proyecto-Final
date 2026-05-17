@@ -45,7 +45,7 @@
   &__desc {
     font-family: v.$font-primary;
     font-size: v.$font-size-sm;
-    color: var(--color-text-faint);
+    color: var(--color-text-secondary);
     @include m.truncate(1);
   }
 

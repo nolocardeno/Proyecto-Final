@@ -57,7 +57,7 @@
   &__subtitle {
     font-family: v.$font-primary;
     font-size: v.$font-size-sm;
-    color: var(--color-text-faint);
+    color: var(--color-text-muted);
     line-height: v.$line-height-normal;
   }
 
@@ -71,7 +71,7 @@
     font-family: v.$font-primary;
     font-weight: v.$font-weight-semibold;
     font-size: v.$font-size-sm;
-    color: var(--color-text-faint);
+    color: var(--color-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.06em;
   }
@@ -132,7 +132,7 @@
     height: 5.5rem;
     font-family: v.$font-primary;
     font-size: v.$font-size-sm;
-    color: var(--color-text-disabled);
+    color: var(--color-text-secondary);
     font-style: italic;
     white-space: nowrap;
   }

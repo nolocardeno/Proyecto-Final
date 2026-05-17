@@ -120,6 +120,8 @@ En lugar de duplicar las hojas de estilo para cada tema, se definieron custom pr
 
 El backend usa autenticación JWT sin estado (stateless), lo que simplifica el escalado horizontal. Para cubrir el caso de logout explícito se mantiene en memoria una lista negra de tokens invalidados, balanceando la ausencia de sesión en servidor con la posibilidad de revocar tokens de forma inmediata.
 
+La gestión de sesión en el cliente se reforzó con una doble capa de protección: al arrancar la aplicación, `AuthService.loadUser()` decodifica el claim `exp` del JWT almacenado en `localStorage` y descarta la sesión si el token ya ha expirado, evitando que el usuario acceda al dashboard con credenciales caducas incluso antes de realizar cualquier petición al backend. Para los tokens que expiran durante una sesión activa, el interceptor HTTP captura cualquier respuesta `401` de los endpoints protegidos y ejecuta automáticamente el logout y la redirección a la página de inicio.
+
 ### Rate limiting en el filtro de seguridad
 
 Se añadió un filtro de limitación de peticiones antes de llegar a los controladores para proteger los endpoints de autenticación frente a ataques de fuerza bruta, sin depender de librerías externas y con configuración centralizada en las variables de entorno.

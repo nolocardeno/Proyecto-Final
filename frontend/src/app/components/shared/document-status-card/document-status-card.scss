@@ -49,7 +49,7 @@
     font-size: v.$font-size-sm;
     line-height: v.$line-height-tight;
 
-    &--expired { color: v.$color-error-dark; }
+    &--expired { color: var(--color-error-text); }
     &--active  { color: var(--color-text-muted); }
   }
 

@@ -39,6 +39,16 @@
     color: var(--color-text-muted);
     line-height: v.$line-height-normal;
     margin: 0;
+
+    a {
+      color: var(--color-text-body);
+      font-weight: v.$font-weight-semibold;
+      text-decoration: underline;
+
+      &:hover {
+        color: var(--color-text-primary);
+      }
+    }
   }
 
   // --------------------------------------------------------------------------

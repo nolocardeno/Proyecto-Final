@@ -226,7 +226,19 @@ La aplicación se organiza como una **Single Page Application (SPA)** con la sig
 - Diseño **responsive** adaptado a escritorio, tablet y móvil.
 - Uso de **contraste suficiente** y tamaños de fuente legibles.
 - Navegación por **teclado** y atributos **ARIA** en los componentes interactivos.
-- La interfaz persigue la conformidad con las recomendaciones **WCAG 2.1 AA**; su grado de cumplimiento se evidenciará más adelante mediante capturas de análisis realizados con herramientas como **WAVE**.
+- La interfaz cumple la conformidad con las recomendaciones **WCAG 2.1 nivel AA**, verificada mediante análisis con **WAVE** y con **Google Lighthouse**.
+
+**WAVE — Web Accessibility Evaluation Tool**
+
+![Análisis WAVE — vista principal](assets/wave.png)
+
+![Análisis WAVE — detalle de resultados](assets/wave2.png)
+
+**Google Lighthouse**
+
+![Lighthouse — auditoría completa](assets/lighthouse.png)
+
+![Lighthouse — detalle de accesibilidad](assets/lighthouse2.png)
 
 ### Retroalimentación al usuario
 

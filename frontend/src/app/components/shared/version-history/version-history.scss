@@ -65,7 +65,7 @@
   &__subtitle {
     font-family: v.$font-primary;
     font-size: v.$font-size-sm;
-    color: var(--color-text-faint);
+    color: var(--color-text-muted);
     line-height: v.$line-height-normal;
   }
 
@@ -81,7 +81,7 @@
   &__empty {
     font-family: v.$font-primary;
     font-size: v.$font-size-sm-md;
-    color: var(--color-text-faint);
+    color: var(--color-text-muted);
     text-align: center;
     padding: v.$spacing-4 0;
   }
@@ -129,7 +129,7 @@
     height: 2rem;
     border-radius: v.$radius-full;
     background-color: var(--color-input-bg);
-    color: var(--color-text-faint);
+    color: var(--color-text-muted);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -194,7 +194,7 @@
   &__description {
     font-family: v.$font-primary;
     font-size: v.$font-size-sm;
-    color: var(--color-text-faint);
+    color: var(--color-text-muted);
     line-height: v.$line-height-normal;
     white-space: pre-line;
   }
@@ -236,12 +236,12 @@
     gap: v.$spacing-half;
     font-family: v.$font-primary;
     font-size: v.$font-size-sm;
-    color: var(--color-text-faint);
+    color: var(--color-text-muted);
   }
 
   &__time {
     font-family: v.$font-primary;
     font-size: v.$font-size-sm;
-    color: var(--color-text-disabled);
+    color: var(--color-text-secondary);
   }
 }

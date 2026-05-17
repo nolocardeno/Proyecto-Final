@@ -48,7 +48,7 @@
   font-family: v.$font-primary;
   font-weight: v.$font-weight-bold;
   font-size: v.$font-size-sm;
-  color: var(--color-text-faint);
+  color: var(--color-text-muted);
   // Solo transicionar propiedades sin impacto en layout para evitar saltos.
   transition:
     background-color v.$transition-base,

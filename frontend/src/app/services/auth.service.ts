@@ -34,6 +34,25 @@ export interface RegisterRequest {
 }
 
 // --------------------------------------------------------------------------
+// HELPERS
+// --------------------------------------------------------------------------
+
+/**
+ * Decodifica el payload del JWT (sin verificar firma) y comprueba si ya
+ * ha expirado según el claim `exp` (segundos epoch).
+ * Devuelve `true` también si el token está malformado.
+ */
+function isJwtExpired(token: string): boolean {
+  try {
+    const base64Payload = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    const payload = JSON.parse(atob(base64Payload)) as { exp?: number };
+    return typeof payload.exp === 'number' && payload.exp * 1000 < Date.now();
+  } catch {
+    return true;
+  }
+}
+
+// --------------------------------------------------------------------------
 // SERVICIO: AUTH (HTTP + Session state)
 // --------------------------------------------------------------------------
 
@@ -124,12 +143,22 @@ export class AuthService {
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(merged));
   }
 
-  /** Recupera el usuario almacenado en `localStorage` (si lo hay). */
+  /** Recupera el usuario almacenado en `localStorage` (si lo hay).
+   *
+   * Si el JWT almacenado ya ha expirado, limpia el almacenamiento y
+   * devuelve `null` para que el guard redirija a la landing en vez de
+   * dejar al usuario en el dashboard sin poder hacer nada.
+   */
   private loadUser(): AuthResponse | null {
-    const raw = localStorage.getItem('scantral_user');
+    const raw = localStorage.getItem(this.STORAGE_KEY);
     if (!raw) return null;
     try {
-      return JSON.parse(raw) as AuthResponse;
+      const user = JSON.parse(raw) as AuthResponse;
+      if (user.token && isJwtExpired(user.token)) {
+        localStorage.removeItem(this.STORAGE_KEY);
+        return null;
+      }
+      return user;
     } catch {
       // JSON corrupto: ignoramos y forzamos sesión vacía.
       return null;

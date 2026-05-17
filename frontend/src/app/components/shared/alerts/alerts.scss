@@ -33,7 +33,7 @@
     align-items: center;
     gap: v.$spacing-2;
     padding: 0.75rem v.$spacing-2;
-    background-color: #ffffff;
+    background-color: var(--color-surface);
     border: v.$border-thin solid var(--color-surface-border);
     border-radius: v.$radius-lg;
     box-shadow: var(--shadow-md);
@@ -56,23 +56,23 @@
     border-radius: v.$radius-full;
 
     .alerts__item--success & {
-      background-color: v.$color-success-light;
-      color: v.$color-success-dark;
+      background-color: var(--color-badge-success-bg);
+      color: var(--color-badge-success-icon);
     }
 
     .alerts__item--error & {
-      background-color: v.$color-error-light;
-      color: v.$color-error-dark;
+      background-color: var(--color-badge-error-bg);
+      color: var(--color-badge-error-icon);
     }
 
     .alerts__item--warning & {
-      background-color: v.$color-warning-light;
-      color: v.$color-warning-dark;
+      background-color: var(--color-badge-warning-bg);
+      color: var(--color-badge-warning-icon);
     }
 
     .alerts__item--info & {
-      background-color: v.$color-info-light;
-      color: v.$color-info-dark;
+      background-color: var(--color-badge-info-bg);
+      color: var(--color-badge-info-icon);
     }
   }
 
