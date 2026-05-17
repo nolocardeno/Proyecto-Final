@@ -13,13 +13,19 @@ describe('AuthService', () => {
   let service: AuthService;
   let http: HttpTestingController;
 
+  // Token con exp=9999999999 (año ~2286) para que nunca sea tratado como expirado
+  const VALID_TEST_TOKEN =
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9' +
+    '.eyJzdWIiOiI3IiwiZXhwIjo5OTk5OTk5OTk5fQ' +
+    '.fake-sig';
+
   const sampleUser: AuthResponse = {
     userId: 7,
     email: 'a@b.com',
     name: 'Manolo',
     profileImagePath: '/img.png',
     role: 'USER',
-    token: 'jwt-123',
+    token: VALID_TEST_TOKEN,
   };
 
   beforeEach(() => {
@@ -57,7 +63,7 @@ describe('AuthService', () => {
     const fresh = TestBed.inject(AuthService);
     expect(fresh.user()?.email).toBe('a@b.com');
     expect(fresh.isLoggedIn()).toBeTrue();
-    expect(fresh.getToken()).toBe('jwt-123');
+    expect(fresh.getToken()).toBe(VALID_TEST_TOKEN);
   });
 
   it('debe ignorar JSON corrupto en storage y considerar sin sesión', () => {
@@ -145,7 +151,7 @@ describe('AuthService', () => {
   it('setUser() conserva el token previo cuando no llega en el payload', () => {
     service.setUser(sampleUser);
     service.setUser({ ...sampleUser, token: undefined, role: undefined } as AuthResponse);
-    expect(service.getToken()).toBe('jwt-123');
+    expect(service.getToken()).toBe(VALID_TEST_TOKEN);
     expect(service.user()?.role).toBe('USER');
   });
 
