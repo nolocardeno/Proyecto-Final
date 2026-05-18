@@ -30,7 +30,13 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: url('/assets/images/Fondo Landing.png') center / cover no-repeat;
+    background-image: image-set(
+      url('/assets/images/Fondo Landing.webp') type('image/webp'),
+      url('/assets/images/Fondo Landing.png') type('image/png')
+    );
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
     opacity: 0.1;
     z-index: 0;
   }

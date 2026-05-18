@@ -24,6 +24,24 @@ import { AlertService } from '../../../services/alert.service';
 // --------------------------------------------------------------------------
 
 /**
+ * Validador a nivel de campo que exige contraseña robusta:
+ * mínimo 8 caracteres, al menos una mayúscula, una minúscula
+ * y un carácter especial (no alfanumérico).
+ */
+function passwordStrengthValidator(control: AbstractControl): ValidationErrors | null {
+  const value: string = control.value ?? '';
+  if (!value) return null; // `required` gestiona el caso vacío
+
+  const errors: ValidationErrors = {};
+  if (value.length < 8)              errors['passwordTooShort'] = true;
+  if (!/[A-Z]/.test(value))          errors['passwordMissingUppercase'] = true;
+  if (!/[a-z]/.test(value))          errors['passwordMissingLowercase'] = true;
+  if (!/[^A-Za-z0-9]/.test(value))   errors['passwordMissingSpecial'] = true;
+
+  return Object.keys(errors).length ? errors : null;
+}
+
+/**
  * Validador a nivel de grupo que comprueba que `password` y
  * `confirmPassword` tengan el mismo valor. Devuelve `null` si son válidos
  * o un objeto de error `{ passwordsMismatch: true }` en caso contrario.
@@ -64,7 +82,7 @@ export class RegisterComponent {
   protected readonly registerForm = this.fb.group(
     {
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      password: ['', [Validators.required, passwordStrengthValidator]],
       confirmPassword: ['', [Validators.required]],
       acceptTerms: [false, [Validators.requiredTrue]],
     },

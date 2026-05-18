@@ -6,11 +6,17 @@
        INFO (Logo + Copyright)
        -------------------------------------------------------------------------- -->
   <section class="footer__info">
-    <img
-      src="assets/images/Logo Scantral.png"
-      alt="Logo de Scantral"
-      class="footer__logo"
-    />
+    <picture>
+      <source srcset="assets/images/Logo Scantral.webp" type="image/webp" />
+      <img
+        src="assets/images/Logo Scantral.png"
+        alt="Logo de Scantral"
+        class="footer__logo"
+        loading="lazy"
+        width="40"
+        height="40"
+      />
+    </picture>
     <small class="footer__copy">
       &copy; {{ currentYear }} Scantral. All rights reserved.
     </small>

@@ -41,6 +41,11 @@
   min-width: 0;
 }
 
+.footer__info picture {
+  flex-shrink: 0;   // era flex-shrink del img; ahora picture es el flex-item
+  margin-top: 0.5rem;
+}
+
 .footer__logo {
   width: 3.5rem;  // 56px
   height: 3.5rem; // 56px

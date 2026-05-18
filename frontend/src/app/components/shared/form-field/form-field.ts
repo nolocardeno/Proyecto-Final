@@ -1,8 +1,8 @@
 // --------------------------------------------------------------------------
 // IMPORTS
 // --------------------------------------------------------------------------
-import { Component, forwardRef, input } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Component, inject, input } from '@angular/core';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
 
 // --------------------------------------------------------------------------
 // COMPONENTE: FORM FIELD (Reusable input with ControlValueAccessor)
@@ -12,22 +12,14 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
  * Campo de formulario reutilizable que implementa `ControlValueAccessor`
  * para integrarse de forma transparente con Reactive Forms.
  *
- * Expone los hooks de Angular (`writeValue`, `registerOnChange`,
- * `registerOnTouched`, `setDisabledState`) y captura los eventos `input`
- * y `blur` del campo nativo subyacente para sincronizar el modelo del
- * formulario padre.
+ * Inyecta `NgControl` directamente (sin `NG_VALUE_ACCESSOR` en providers)
+ * para acceder al estado de validación y mostrar mensajes de error inline
+ * cuando el campo ha sido tocado y contiene errores.
  */
 @Component({
   selector: 'app-form-field',
   templateUrl: './form-field.html',
   styleUrl: './form-field.scss',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => FormFieldComponent),
-      multi: true,
-    },
-  ],
 })
 export class FormFieldComponent implements ControlValueAccessor {
   /** Etiqueta visible asociada al campo. */
@@ -43,6 +35,49 @@ export class FormFieldComponent implements ControlValueAccessor {
 
   protected value = '';
   protected disabled = false;
+
+  /** Referencia al NgControl del formulario padre para leer errores y estado. */
+  private readonly ngControl = inject(NgControl, { self: true, optional: true });
+
+  constructor() {
+    // Registra este componente como valueAccessor del NgControl inyectado,
+    // evitando la dependencia circular que surgiría con NG_VALUE_ACCESSOR.
+    if (this.ngControl) {
+      this.ngControl.valueAccessor = this;
+    }
+  }
+
+  /** ID del elemento de error para aria-describedby. */
+  protected get errorId(): string {
+    return `${this.inputId()}-error`;
+  }
+
+  /** Indica si el campo debe mostrar estado de error. */
+  protected get hasError(): boolean {
+    return !!(this.ngControl?.touched && this.ngControl.invalid);
+  }
+
+  /** Primer mensaje de error legible según el tipo de fallo. */
+  protected get errorMessage(): string | null {
+    if (!this.hasError || !this.ngControl?.errors) return null;
+    const errors = this.ngControl.errors;
+    if (errors['required']) return 'Este campo es obligatorio';
+    if (errors['email']) return 'Introduce un email válido';
+    if (errors['minlength']) {
+      const req = errors['minlength'].requiredLength as number;
+      return `Mínimo ${req} caracteres`;
+    }
+    if (errors['maxlength']) {
+      const max = errors['maxlength'].requiredLength as number;
+      return `Máximo ${max} caracteres`;
+    }
+    if (errors['pattern']) return 'Formato no válido';
+    if (errors['passwordTooShort'])         return 'Mínimo 8 caracteres';
+    if (errors['passwordMissingUppercase']) return 'Añade al menos una letra mayúscula';
+    if (errors['passwordMissingLowercase']) return 'Añade al menos una letra minúscula';
+    if (errors['passwordMissingSpecial'])   return 'Añade al menos un carácter especial (!, @, #…)';
+    return 'Campo no válido';
+  }
 
   private onChange: (value: string) => void = () => {};
   private onTouched: () => void = () => {};

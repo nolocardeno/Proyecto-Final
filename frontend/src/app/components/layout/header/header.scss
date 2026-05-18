@@ -77,11 +77,15 @@
   overflow: hidden;
 }
 
+.header__brand picture {
+  flex-shrink: 0;   // era flex-shrink del img; ahora picture es el flex-item
+  margin-top: 0.5rem;
+}
+
 .header__logo {
   width: 4.0625rem;  // 65px (desktop)
   height: 4.0625rem;
   object-fit: contain;
-  flex-shrink: 0;
 
   @include m.respond-down(lg) {
     width: 3rem;     // 48px

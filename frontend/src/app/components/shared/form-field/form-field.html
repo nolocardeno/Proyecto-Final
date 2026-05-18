@@ -1,5 +1,5 @@
 <!-- --------------------------------------------------------------------------
-     CAMPO FORMULARIO: Label + Input reutilizable
+     CAMPO FORMULARIO: Label + Input + Error inline
      -------------------------------------------------------------------------- -->
 <label class="form-field" [attr.for]="inputId()">
   @if (label()) {
@@ -7,13 +7,21 @@
   }
   <input
     class="form-field__input"
+    [class.form-field__input--error]="hasError"
     [id]="inputId()"
     [type]="type()"
     [value]="value"
     [disabled]="disabled"
     [readOnly]="readonly()"
     [attr.maxlength]="maxlength()"
+    [attr.aria-invalid]="hasError ? 'true' : null"
+    [attr.aria-describedby]="hasError ? errorId : null"
     (input)="onInput($event)"
     (blur)="onBlur()"
   />
 </label>
+@if (hasError && errorMessage) {
+  <span class="form-field__error" [id]="errorId" role="alert" aria-live="assertive">
+    {{ errorMessage }}
+  </span>
+}

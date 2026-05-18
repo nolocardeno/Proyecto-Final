@@ -20,11 +20,17 @@
        BRAND (Logo + Texto)
        -------------------------------------------------------------------------- -->
   <a [routerLink]="authService.isLoggedIn() ? '/dashboard' : '/'" class="header__brand">
-    <img
-      src="assets/images/Logo Scantral.png"
-      alt="Logo de Scantral"
-      class="header__logo"
-    />
+    <picture>
+      <source srcset="assets/images/Logo Scantral.webp" type="image/webp" />
+      <img
+        src="assets/images/Logo Scantral.png"
+        alt="Logo de Scantral"
+        class="header__logo"
+        loading="lazy"
+        width="65"
+        height="65"
+      />
+    </picture>
     <span class="header__title">Scantral</span>
   </a>
 

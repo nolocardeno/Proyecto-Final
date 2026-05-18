@@ -33,5 +33,27 @@
       border-color: v.$color-primary;
       box-shadow: 0 0 0 0.1875rem v.$color-focus-glow;
     }
+
+    // Estado de error: borde rojo semántico
+    &--error {
+      border-color: var(--color-error);
+
+      &:focus {
+        border-color: var(--color-error);
+        box-shadow: 0 0 0 0.1875rem rgba(v.$color-error, 0.2);
+      }
+    }
   }
+}
+
+// --------------------------------------------------------------------------
+// ERROR: Mensaje inline debajo del input
+// --------------------------------------------------------------------------
+.form-field__error {
+  font-family: v.$font-primary;
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-medium;
+  color: var(--color-error);
+  margin-top: calc(v.$spacing-half * -1 + 0.125rem);
+  padding-left: 0.0625rem;
 }

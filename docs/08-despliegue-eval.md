@@ -210,7 +210,7 @@ flowchart LR
     BE -->|JDBC :5432| DB[("postgres<br/>PostgreSQL 17")]
     BE -->|HTTP :8001| OCR["paddleocr<br/>FastAPI + PaddleOCR"]
     BE -->|HTTPS| Gemini[("Google Gemini API")]
-    BE -->|SMTP| Mail[("Gmail SMTP")]
+    BE -->|HTTPS| Mail[("Resend API")]
 
     subgraph "scantral-net (red interna Docker)"
         FE
