@@ -48,8 +48,8 @@ describe('RegisterComponent', () => {
     const { comp } = build();
     comp.registerForm.setValue({
       email: 'a@b.com',
-      password: '123456',
-      confirmPassword: 'distinto',
+      password: 'Pass1234!',
+      confirmPassword: 'Distinto1!',
       acceptTerms: true,
     });
     comp.onSubmit();
@@ -62,8 +62,8 @@ describe('RegisterComponent', () => {
     const { comp } = build();
     comp.registerForm.setValue({
       email: 'a@b.com',
-      password: '123456',
-      confirmPassword: '123456',
+      password: 'Pass1234!',
+      confirmPassword: 'Pass1234!',
       acceptTerms: false,
     });
     comp.onSubmit();
@@ -78,8 +78,8 @@ describe('RegisterComponent', () => {
     const { comp } = build();
     comp.registerForm.setValue({
       email: 'a@b.com',
-      password: '123456',
-      confirmPassword: '123456',
+      password: 'Pass1234!',
+      confirmPassword: 'Pass1234!',
       acceptTerms: true,
     });
     comp.onSubmit();
@@ -95,8 +95,8 @@ describe('RegisterComponent', () => {
     const { comp } = build();
     comp.registerForm.setValue({
       email: 'a@b.com',
-      password: '123456',
-      confirmPassword: '123456',
+      password: 'Pass1234!',
+      confirmPassword: 'Pass1234!',
       acceptTerms: true,
     });
     comp.onSubmit();
@@ -111,11 +111,59 @@ describe('RegisterComponent', () => {
     const { comp } = build();
     comp.registerForm.setValue({
       email: 'a@b.com',
-      password: '123456',
-      confirmPassword: '123456',
+      password: 'Pass1234!',
+      confirmPassword: 'Pass1234!',
       acceptTerms: true,
     });
     comp.onSubmit();
     expect(alertSpy).toHaveBeenCalledWith('error', jasmine.stringMatching(/No se pudo crear/));
+  });
+
+  // -------------------------------------------------------------------------
+  // passwordStrengthValidator — cobertura de ramas
+  // -------------------------------------------------------------------------
+  describe('passwordStrengthValidator', () => {
+    it('acepta contraseña válida (todos los requisitos)', () => {
+      const { comp } = build();
+      comp.registerForm.get('password').setValue('Pass1234!');
+      expect(comp.registerForm.get('password').valid).toBeTrue();
+    });
+
+    it('error passwordTooShort cuando tiene menos de 8 caracteres', () => {
+      const { comp } = build();
+      comp.registerForm.get('password').setValue('Ab1!');
+      expect(comp.registerForm.get('password').hasError('passwordTooShort')).toBeTrue();
+    });
+
+    it('error passwordMissingUppercase cuando falta mayúscula', () => {
+      const { comp } = build();
+      comp.registerForm.get('password').setValue('pass1234!');
+      expect(comp.registerForm.get('password').hasError('passwordMissingUppercase')).toBeTrue();
+    });
+
+    it('error passwordMissingLowercase cuando falta minúscula', () => {
+      const { comp } = build();
+      comp.registerForm.get('password').setValue('PASS1234!');
+      expect(comp.registerForm.get('password').hasError('passwordMissingLowercase')).toBeTrue();
+    });
+
+    it('error passwordMissingSpecial cuando falta carácter especial', () => {
+      const { comp } = build();
+      comp.registerForm.get('password').setValue('Password1');
+      expect(comp.registerForm.get('password').hasError('passwordMissingSpecial')).toBeTrue();
+    });
+
+    it('retorna null para campo vacío (required lo gestiona)', () => {
+      const { comp } = build();
+      comp.registerForm.get('password').setValue('');
+      expect(comp.registerForm.get('password').hasError('passwordTooShort')).toBeFalse();
+      expect(comp.registerForm.get('password').hasError('required')).toBeTrue();
+    });
+
+    it('retorna null cuando el valor del control es null', () => {
+      const { comp } = build();
+      comp.registerForm.get('password').setValue(null);
+      expect(comp.registerForm.get('password').hasError('passwordTooShort')).toBeFalse();
+    });
   });
 });
