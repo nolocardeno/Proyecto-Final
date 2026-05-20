@@ -312,8 +312,8 @@ describe('UploadDocumentModalComponent', () => {
     expect(comp['resolveDocumentType']()).toBe('RECEIPT');
     comp.selectedTicketCategory.set('Garantía');
     expect(comp['resolveDocumentType']()).toBe('WARRANTY');
-    comp.selectedTicketCategory.set('OTHER');
-    expect(comp['resolveDocumentType']()).toBe('OTHER');
+    comp.selectedTicketCategory.set('OTHER');  // 'OTHER' en ticket también mapea a RECEIPT
+    expect(comp['resolveDocumentType']()).toBe('RECEIPT');
   });
 
   it('resolveDocumentType para document mapea por categoría', () => {
@@ -486,5 +486,42 @@ describe('UploadDocumentModalComponent', () => {
     expect(comp['resolveCategory']()).toBe('TC');
     comp.customTicketCategory.set('');
     expect(comp['resolveCategory']()).toBeNull();
+  });
+
+  it('extractData con PDF aplica convertedImageBase64 al preview', () => {
+    spyOn(docService, 'previewFromImage').and.returnValue(
+      of({
+        type: 'RECEIPT',
+        kind: 'ticket',
+        title: 'Factura',
+        category: 'Garantía',
+        storeName: null,
+        amount: null,
+        issueDate: null,
+        expiryDate: null,
+        aiProcessed: false,
+        convertedImageBase64: 'data:image/png;base64,abc123',
+      } as any),
+    );
+    spyOn(alert, 'show');
+    const { comp } = build();
+    comp.imageFile.set(new File(['%PDF'], 'factura.pdf', { type: 'application/pdf' }));
+    comp.extractData();
+    expect(comp.convertedImageUrl()).toBe('data:image/png;base64,abc123');
+  });
+
+  it('activePreviewUrl devuelve convertedImageUrl cuando es PDF con imagen convertida', () => {
+    const { comp } = build();
+    comp.imageFile.set(new File(['%PDF'], 'doc.pdf', { type: 'application/pdf' }));
+    comp.convertedImageUrl.set('data:image/png;base64,xyz');
+    expect(comp.activePreviewUrl()).toBe('data:image/png;base64,xyz');
+  });
+
+  it('openLightbox abre cuando hay imagen convertida de PDF', () => {
+    const { comp } = build();
+    comp.imageFile.set(new File(['%PDF'], 'doc.pdf', { type: 'application/pdf' }));
+    comp.convertedImageUrl.set('data:image/png;base64,xyz');
+    comp.openLightbox();
+    expect(comp.lightboxOpen()).toBeTrue();
   });
 });

@@ -13,7 +13,7 @@ import { AlertService } from '../../../services/alert.service';
  * Demuestra el uso del objeto predefinido `RegExp` para validaciones
  * complejas en cliente.
  */
-const IMAGE_EXTENSION_REGEX = /\.(jpe?g|png|webp|heic|heif)$/i;
+const IMAGE_EXTENSION_REGEX = /\.(jpe?g|png|webp|heic|heif|pdf)$/i;
 
 /** Tamaño máximo permitido en bytes (10 MB). */
 const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
@@ -62,7 +62,7 @@ export class FilePickerComponent {
     if (!file) return;
 
     if (!IMAGE_EXTENSION_REGEX.test(file.name)) {
-      this.alertService.show('error', 'Formato no soportado. Usa JPG, PNG, WEBP o HEIC.');
+      this.alertService.show('error', 'Formato no soportado. Usa JPG, PNG, WEBP, HEIC o PDF.');
       input.value = '';
       return;
     }

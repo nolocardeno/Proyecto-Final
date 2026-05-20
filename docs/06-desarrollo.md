@@ -134,6 +134,25 @@ Todo el frontend usa componentes standalone de Angular, eliminando la necesidad 
 
 Todos los servicios se comunican a través de una red interna (`scantral-net`). Al exterior solo se expone el puerto del frontend. El backend, la base de datos y el microservicio OCR son inaccesibles directamente desde el host, reduciendo la superficie de ataque.
 
+### Conversión de PDF a imagen en el servidor (Apache PDFBox)
+
+El pipeline de extracción —OCR con PaddleOCR y análisis semántico con Gemini— opera
+sobre imágenes rasterizadas, no sobre el formato PDF. Se evaluaron tres opciones:
+
+| Opción | Inconveniente |
+|---|---|
+| Rechazar PDFs en el backend | Mala experiencia de usuario; los documentos escaneados suelen ser PDFs |
+| Conversión en el cliente (JavaScript) | Complejidad elevada, dependencia de `pdf.js` o `canvas`, soporte inconsistente entre navegadores |
+| **Conversión en el servidor** | ✅ Solución elegida: transparente para todo el pipeline |
+
+Se eligió la conversión server-side mediante **Apache PDFBox 3.0.3** (`pdfbox-app`), que
+renderiza la primera página del PDF a un `BufferedImage` a 150 DPI y lo codifica como PNG.
+El servicio encargado es `PdfPageConverter`, un `@Component` con una sola
+responsabilidad, fácilmente sustituible o ampliable. El PNG resultante es el que recibe
+el validador, el OCR, la IA y el almacenamiento, sin que ninguna de esas capas necesite
+conocer el formato original. Adicionalmente, el PNG se devuelve al frontend codificado en
+Base64 para que el usuario vea la imagen del documento nada más terminar el escaneo.
+
 ---
 
 ## 6.4. Control de versiones

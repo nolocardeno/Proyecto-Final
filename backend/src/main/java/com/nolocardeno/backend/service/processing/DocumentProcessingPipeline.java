@@ -32,6 +32,7 @@ public class DocumentProcessingPipeline {
     private final ExtractionDispatcher dispatcher;
     private final DocumentNormalizer normalizer;
     private final RulesEngine rulesEngine;
+    private final PdfPageConverter pdfConverter;
 
     @Value("${scantral.processing.review-threshold:0.7}")
     private double reviewThreshold;
@@ -66,10 +67,19 @@ public class DocumentProcessingPipeline {
             throw new IllegalArgumentException("No se puede leer el archivo");
         }
 
+        // PDFs cannot be sent directly to the OCR sidecar or the AI extractor
+        // via inline_data images. Convert first page to PNG so the rest of
+        // the pipeline handles it uniformly as an image.
+        boolean wasPdf = "application/pdf".equals(effectiveMime);
+        if (wasPdf) {
+            bytes = pdfConverter.firstPageAsPng(bytes);
+            effectiveMime = "image/png";
+        }
+
         String storedPath = null;
         if (storeImage) {
             try {
-                storedPath = fileStorageService.store(file);
+                storedPath = fileStorageService.storeConvertingPdf(file);
             } catch (IOException e) {
                 throw new IllegalStateException("No se pudo almacenar la imagen", e);
             }

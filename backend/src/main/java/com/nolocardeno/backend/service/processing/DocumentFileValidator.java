@@ -24,7 +24,8 @@ public class DocumentFileValidator {
             "image/png",
             "image/webp",
             "image/heic",
-            "image/heif"
+            "image/heif",
+            "application/pdf"
     );
 
     private final long maxSizeBytes;
@@ -84,6 +85,8 @@ public class DocumentFileValidator {
         // HEIF/HEIC: ISO Base Media ftyp box at bytes 4-7
         if (head.length >= 12
                 && head[4] == 0x66 && head[5] == 0x74 && head[6] == 0x79 && head[7] == 0x70) return "image/heic";
+        // PDF: %PDF = 25 50 44 46
+        if ((head[0] & 0xFF) == 0x25 && head[1] == 0x50 && head[2] == 0x44 && head[3] == 0x46) return "application/pdf";
         return "application/octet-stream";
     }
 }

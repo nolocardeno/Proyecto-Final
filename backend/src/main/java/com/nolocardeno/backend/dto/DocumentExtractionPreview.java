@@ -35,4 +35,12 @@ public class DocumentExtractionPreview {
 
     /** True si la extracción la hizo el motor de IA (Gemini); false si fue el OCR local. */
     private Boolean aiProcessed;
+
+    /**
+     * PNG de la primera página codificado en Base64 (data-URL), presente
+     * únicamente cuando el archivo subido era un PDF. El frontend lo usa
+     * para mostrar una previsualización real de la imagen en lugar del
+     * icono genérico de PDF.
+     */
+    private String convertedImageBase64;
 }

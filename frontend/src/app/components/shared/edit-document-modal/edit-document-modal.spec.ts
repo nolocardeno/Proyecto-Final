@@ -149,8 +149,8 @@ describe('EditDocumentModalComponent', () => {
     expect(comp['resolveDocumentType']()).toBe('RECEIPT');
     comp.selectedCategory.set('Garantía');
     expect(comp['resolveDocumentType']()).toBe('WARRANTY');
-    comp.selectedCategory.set('Otro');
-    expect(comp['resolveDocumentType']()).toBe('OTHER');
+    comp.selectedCategory.set('Otro');  // 'Otro' en ticket sigue mapeando a RECEIPT
+    expect(comp['resolveDocumentType']()).toBe('RECEIPT');
     comp.selectedKind.set('document');
     comp.selectedCategory.set('Pasaporte');
     expect(comp['resolveDocumentType']()).toBe('PASSPORT');

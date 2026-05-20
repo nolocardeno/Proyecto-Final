@@ -26,6 +26,7 @@ import {
   faCirclePlus,
   faArrowRotateLeft,
   faShieldHalved,
+  faFilePdf,
 } from '@fortawesome/free-solid-svg-icons';
 import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 import { type IconDefinition } from '@fortawesome/fontawesome-svg-core';
@@ -159,6 +160,8 @@ export class UploadDocumentModalComponent {
   protected readonly customTicketCategory = signal('');
   protected readonly imageFile = signal<File | null>(null);
   protected readonly imagePreviewUrl = signal<string | null>(null);
+  /** PNG convertida del primer plano del PDF, recibida del backend tras el escaneo. */
+  protected readonly convertedImageUrl = signal<string | null>(null);
   /** Controla la visibilidad del lightbox de la imagen subida. */
   protected readonly lightboxOpen = signal(false);
   /**
@@ -172,11 +175,24 @@ export class UploadDocumentModalComponent {
 
   // --- Iconos ---
   protected readonly faGoogle = faGoogle;
+  protected readonly faFilePdf = faFilePdf;
 
   // --- Progreso ---
   protected readonly progress = computed(() => PROGRESS_MAP[this.currentStep()]);
   protected readonly showCustomInput = computed(() => this.selectedCategory() === 'OTHER');
   protected readonly showCustomTicketInput = computed(() => this.selectedTicketCategory() === 'OTHER');
+  /** True when the selected image file is a PDF. */
+  protected readonly isPdfFile = computed(() => this.imageFile()?.type === 'application/pdf');
+  /**
+   * URL activa para la previsualización: la imagen PNG convertida del backend
+   * cuando el archivo es un PDF; la blob URL del archivo original en cualquier
+   * otro caso.
+   */
+  protected readonly activePreviewUrl = computed(() =>
+    this.isPdfFile() && this.convertedImageUrl()
+      ? this.convertedImageUrl()
+      : this.imagePreviewUrl()
+  );
 
   // --- Opciones ---
   protected readonly methodOptions = METHOD_OPTIONS;
@@ -349,13 +365,15 @@ export class UploadDocumentModalComponent {
   // --------------------------------------------------------------------------
   protected onImageSelected(file: File): void {
     this.imageFile.set(file);
+    // Limpiar la imagen convertida anterior cuando el usuario elige un nuevo archivo.
+    this.convertedImageUrl.set(null);
   }
 
   // --------------------------------------------------------------------------
   // LIGHTBOX (imagen ampliada)
   // --------------------------------------------------------------------------
   protected openLightbox(): void {
-    if (!this.imagePreviewUrl()) return;
+    if (!this.activePreviewUrl()) return;
     this.lightboxOpen.set(true);
   }
 
@@ -431,6 +449,11 @@ export class UploadDocumentModalComponent {
       issueDate: preview.issueDate ?? '',
       expiryDate: preview.expiryDate ?? '',
     });
+
+    // Si el backend convirtió un PDF a PNG, usamos esa imagen como preview.
+    if (preview.convertedImageBase64) {
+      this.convertedImageUrl.set(preview.convertedImageBase64);
+    }
   }
 
   // --------------------------------------------------------------------------
@@ -484,7 +507,7 @@ export class UploadDocumentModalComponent {
       const cat = this.selectedTicketCategory();
       if (cat === 'Devolución') return 'RECEIPT';
       if (cat === 'Garantía') return 'WARRANTY';
-      return 'OTHER';
+      return 'RECEIPT';
     }
     const cat = this.selectedCategory();
     const docTypeMap: Partial<Record<string, DocumentType>> = {
@@ -524,6 +547,7 @@ export class UploadDocumentModalComponent {
     this.aiPreviewApplied.set(false);
     this.useAi.set(false);
     this.loading.set(false);
+    this.convertedImageUrl.set(null);
     this.docForm.reset({ title: '', storeName: '', issueDate: '', expiryDate: '' });
   }
 }

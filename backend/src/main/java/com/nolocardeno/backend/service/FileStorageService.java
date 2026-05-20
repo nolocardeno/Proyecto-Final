@@ -1,5 +1,6 @@
 package com.nolocardeno.backend.service;
 
+import com.nolocardeno.backend.service.processing.PdfPageConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,10 +19,27 @@ public class FileStorageService {
     private static final Set<String> ALLOWED_EXTENSIONS = Set.of(".jpg", ".jpeg", ".png", ".webp", ".gif", ".heic", ".heif");
 
     private final Path uploadDir;
+    private final PdfPageConverter pdfConverter;
 
-    public FileStorageService(@Value("${scantral.uploads.path:./uploads}") String uploadsPath) throws IOException {
+    public FileStorageService(
+            @Value("${scantral.uploads.path:./uploads}") String uploadsPath,
+            PdfPageConverter pdfConverter
+    ) throws IOException {
         this.uploadDir = Paths.get(uploadsPath).toAbsolutePath().normalize();
         Files.createDirectories(this.uploadDir);
+        this.pdfConverter = pdfConverter;
+    }
+
+    /**
+     * Stores a user-uploaded image file, automatically converting PDFs to PNG.
+     * Use this method for all user-facing image uploads instead of {@link #store}.
+     */
+    public String storeConvertingPdf(MultipartFile file) throws IOException {
+        if (isPdfFile(file)) {
+            byte[] pngBytes = pdfConverter.firstPageAsPng(file.getBytes());
+            return storeBytes(pngBytes, ".png");
+        }
+        return store(file);
     }
 
     /**
@@ -44,6 +62,27 @@ public class FileStorageService {
         }
 
         Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
+        return "/uploads/" + fileName;
+    }
+
+    /**
+     * Stores raw bytes in the uploads directory with a given extension.
+     * Used when the original file has already been transformed (e.g. PDF → PNG).
+     */
+    public String storeBytes(byte[] bytes, String extension) throws IOException {
+        if (!ALLOWED_EXTENSIONS.contains(extension.toLowerCase())) {
+            throw new IllegalArgumentException("Tipo de archivo no permitido: " + extension);
+        }
+
+        String fileName = UUID.randomUUID().toString() + extension;
+        Path targetPath = this.uploadDir.resolve(fileName).normalize();
+
+        // Prevent path traversal
+        if (!targetPath.startsWith(this.uploadDir)) {
+            throw new IllegalArgumentException("Ruta de archivo inválida");
+        }
+
+        Files.write(targetPath, bytes);
         return "/uploads/" + fileName;
     }
 
@@ -78,5 +117,11 @@ public class FileStorageService {
             };
         }
         return ".bin";
+    }
+
+    private boolean isPdfFile(MultipartFile file) {
+        if ("application/pdf".equals(file.getContentType())) return true;
+        String name = file.getOriginalFilename();
+        return name != null && name.toLowerCase().endsWith(".pdf");
     }
 }

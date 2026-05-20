@@ -59,6 +59,8 @@ export interface DocumentExtractionPreview {
   issueDate: string | null;
   expiryDate: string | null;
   aiProcessed: boolean;
+  /** Base64 data-URL (data:image/png;base64,...) of the first PDF page, only present for PDF uploads. */
+  convertedImageBase64?: string | null;
 }
 
 // --------------------------------------------------------------------------

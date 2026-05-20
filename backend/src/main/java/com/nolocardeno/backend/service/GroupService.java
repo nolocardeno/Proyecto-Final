@@ -129,7 +129,7 @@ public class GroupService {
 
         if (file != null && !file.isEmpty()) {
             try {
-                doc.setImagePath(fileStorageService.store(file));
+                doc.setImagePath(fileStorageService.storeConvertingPdf(file));
             } catch (IOException e) {
                 throw new RuntimeException("No se pudo guardar la imagen", e);
             }

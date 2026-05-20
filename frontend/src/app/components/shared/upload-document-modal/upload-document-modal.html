@@ -50,7 +50,7 @@
       @if (currentStep() === 'image-upload') {
         <label class="upload-modal__file-group">
           <span class="upload-modal__file-label">Imagen</span>
-          <app-file-picker (fileSelected)="onImageSelected($event)" />
+          <app-file-picker [accept]="'image/*,application/pdf'" (fileSelected)="onImageSelected($event)" />
         </label>
 
         <section class="upload-modal__ai-toggle">
@@ -237,16 +237,24 @@
           <label class="upload-modal__file-group">
             <span class="upload-modal__file-label">Imagen</span>
             @if (selectedMethod() === 'image' && imagePreviewUrl()) {
-              <figure class="upload-modal__image-preview">
-                <img
-                  class="upload-modal__image-preview-img"
-                  [src]="imagePreviewUrl()"
-                  alt="Imagen subida del documento"
-                  (click)="openLightbox()"
-                />
-              </figure>
+              @if (isPdfFile() && !convertedImageUrl()) {
+                <!-- PDF seleccionado pero aún sin escanear: icono de espera -->
+                <figure class="upload-modal__image-preview upload-modal__image-preview--pdf">
+                  <fa-icon [icon]="faFilePdf" class="upload-modal__pdf-icon" />
+                  <span class="upload-modal__pdf-name">{{ imageFile()!.name }}</span>
+                </figure>
+              } @else {
+                <figure class="upload-modal__image-preview">
+                  <img
+                    class="upload-modal__image-preview-img"
+                    [src]="activePreviewUrl()"
+                    alt="Imagen subida del documento"
+                    (click)="openLightbox()"
+                  />
+                </figure>
+              }
             } @else {
-              <app-file-picker (fileSelected)="onImageSelected($event)" />
+              <app-file-picker [accept]="'image/*,application/pdf'" (fileSelected)="onImageSelected($event)" />
             }
           </label>
 
@@ -271,7 +279,7 @@
 <!-- ============================================================
      LIGHTBOX: vista ampliada de la imagen subida
      ============================================================ -->
-@if (lightboxOpen() && imagePreviewUrl()) {
+@if (lightboxOpen() && activePreviewUrl()) {
   <aside
     class="upload-lightbox"
     role="dialog"
@@ -282,7 +290,7 @@
   >
     <img
       class="upload-lightbox__image"
-      [src]="imagePreviewUrl()!"
+      [src]="activePreviewUrl()!"
       alt="Vista completa de la imagen subida"
       (click)="$event.stopPropagation()"
     />

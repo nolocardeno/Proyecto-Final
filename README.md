@@ -31,7 +31,7 @@ Técnicamente, el sistema está diseñado siguiendo principios de arquitectura l
 ### Gestión de documentos
 
 - **Almacenamiento centralizado** — todos los documentos en un único lugar seguro, accesible desde cualquier dispositivo con navegador.
-- **Subida por foto** — el usuario fotografía o escanea el documento; la app procesa la imagen y la asocia al registro.
+- **Subida por foto o PDF** — el usuario fotografía, escanea o adjunta un PDF del documento; si se sube un PDF, el backend convierte automáticamente la primera página a imagen antes de procesarla. La app extrae los datos y los asocia al registro.
 - **Tipos y categorías** — los documentos se clasifican por tipo (identidad, vehículo, médico, financiero…) y pueden filtrarse y buscarse por nombre, tipo, fecha y otros campos.
 
 ### Grupos compartidos

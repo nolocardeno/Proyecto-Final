@@ -22,6 +22,7 @@ import com.nolocardeno.backend.repository.RenewalHistoryRepository;
 import com.nolocardeno.backend.repository.UserRepository;
 import com.nolocardeno.backend.repository.spec.DocumentSpecifications;
 import com.nolocardeno.backend.service.processing.DocumentProcessingPipeline;
+import com.nolocardeno.backend.service.processing.PdfPageConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,6 +36,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -54,6 +56,7 @@ public class DocumentService {
     private final GroupRepository groupRepository;
     private final FileStorageService fileStorageService;
     private final DocumentProcessingPipeline processingPipeline;
+    private final PdfPageConverter pdfConverter;
 
     @Transactional
     public List<DocumentResponse> getDocumentsByUser(Long userId) {
@@ -121,7 +124,7 @@ public class DocumentService {
 
         if (file != null && !file.isEmpty()) {
             try {
-                doc.setImagePath(fileStorageService.store(file));
+                doc.setImagePath(fileStorageService.storeConvertingPdf(file));
             } catch (IOException e) {
                 throw new RuntimeException("No se pudo guardar la imagen", e);
             }
@@ -221,7 +224,28 @@ public class DocumentService {
         validateGroupForImageUpload(userId, groupId);
 
         ProcessDocumentResponse result = processingPipeline.processForPreview(file, useAi);
-        return buildPreviewOrThrow(result);
+        DocumentExtractionPreview preview = buildPreviewOrThrow(result);
+
+        // When the uploaded file is a PDF, attach the converted first page as
+        // a base64 data-URL so the frontend can render a real image preview
+        // instead of a generic PDF icon.
+        if (isPdfUpload(file)) {
+            try {
+                byte[] png = pdfConverter.firstPageAsPng(file.getBytes());
+                preview.setConvertedImageBase64("data:image/png;base64,"
+                        + Base64.getEncoder().encodeToString(png));
+            } catch (IOException e) {
+                // Non-fatal: the frontend will fall back to the PDF icon.
+            }
+        }
+
+        return preview;
+    }
+
+    private boolean isPdfUpload(MultipartFile file) {
+        if ("application/pdf".equals(file.getContentType())) return true;
+        String name = file.getOriginalFilename();
+        return name != null && name.toLowerCase().endsWith(".pdf");
     }
 
     private DocumentGroup validateGroupForImageUpload(Long userId, Long groupId) {
@@ -530,7 +554,7 @@ public class DocumentService {
                 fileStorageService.delete(doc.getImagePath());
             }
             try {
-                doc.setImagePath(fileStorageService.store(file));
+                doc.setImagePath(fileStorageService.storeConvertingPdf(file));
             } catch (IOException e) {
                 throw new RuntimeException("No se pudo guardar la imagen", e);
             }

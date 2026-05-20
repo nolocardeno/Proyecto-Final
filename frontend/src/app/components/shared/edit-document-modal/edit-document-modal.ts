@@ -143,7 +143,7 @@ export class EditDocumentModalComponent implements OnInit, OnDestroy {
     if (kind === 'ticket') {
       if (cat === 'Devolución') return 'RECEIPT';
       if (cat === 'Garantía') return 'WARRANTY';
-      return 'OTHER';
+      return 'RECEIPT';
     }
     const map: Partial<Record<string, DocumentType>> = {
       DNI: 'DNI',

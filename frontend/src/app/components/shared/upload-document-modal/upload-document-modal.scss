@@ -203,6 +203,13 @@
     border-radius: v.$radius-input;
     display: flex;
     justify-content: center;
+
+    &--pdf {
+      flex-direction: column;
+      align-items: center;
+      gap: v.$spacing-1;
+      padding: v.$spacing-4;
+    }
   }
 
   &__image-preview-img {
@@ -211,6 +218,18 @@
     object-fit: contain;
     border-radius: v.$radius-input;
     cursor: pointer;
+  }
+
+  &__pdf-icon {
+    font-size: 3rem;
+    color: var(--color-primary, #e74c3c);
+  }
+
+  &__pdf-name {
+    font-size: v.$font-size-sm;
+    color: var(--color-text-muted);
+    word-break: break-all;
+    text-align: center;
   }
 
   // --------------------------------------------------------------------------

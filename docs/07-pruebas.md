@@ -247,10 +247,10 @@ pruebas son los siguientes:
 
 | Métrica    | Cubierto | Total | Porcentaje |
 |------------|----------|-------|------------|
-| Statements | 1 053    | 1 129 | **93,26 %** |
-| Branches   | 206      | 250   | **82,40 %** |
-| Functions  | 220      | 258   | **85,27 %** |
-| Lines      | 976      | 1 036 | **94,20 %** |
+| Statements | 1 180  | 1 299 | **90,83 %** |
+| Branches   | 264      | 328   | **80,48 %** |
+| Functions  | 243      | 288   | **84,37 %** |
+| Lines      | 1 090    | 1 183 | **92,13 %** |
 
 La cobertura de sentencias y líneas supera el 93 %, lo que refleja que la combinación
 de pruebas unitarias de servicios más la batería de humo de componentes ejerce la
@@ -270,7 +270,7 @@ Todas las pruebas del backend finalizan con **0 fallos y 0 errores**.
 | Suite de pruebas | Tipo | Pruebas | Resultado |
 |---|---|---|---|
 | `BackendDelProyectoFinalApplicationTests` | Integración (contexto) | 1 | ✅ |
-| `ControllersUnitTest` | Unitaria | 22 | ✅ |
+| `ControllersUnitTest` | Unitaria | 23 | ✅ |
 | `GlobalExceptionHandlerTest` | Unitaria | 7 | ✅ |
 | `DocumentRepositoryTest` | Integración (H2) | 3 | ✅ |
 | `DocumentSpecificationsTest` | Integración (H2) | 3 | ✅ |
@@ -286,9 +286,10 @@ Todas las pruebas del backend finalizan con **0 fallos y 0 errores**.
 | `AuthServiceTest` | Unitaria | 7 | ✅ |
 | `DashboardServiceTest` | Unitaria | 2 | ✅ |
 | `DocumentAlertServiceTest` | Unitaria | 8 | ✅ |
+| `EmailServiceTest` | Unitaria | 9 | ✅ |
 | `GroupServiceTest` | Unitaria | 9 | ✅ |
 | `UserServiceTest` | Unitaria | 6 | ✅ |
-| **TOTAL** | — | **101** | **✅ 100 %** |
+| **TOTAL** | — | **110** | **✅ 100 %** |
 
 El tiempo total de ejecución de la suite completa es de aproximadamente **15,5 segundos**,
 de los cuales cerca de 12 segundos corresponden a `BackendDelProyectoFinalApplicationTests`,
@@ -298,13 +299,13 @@ que necesita arrancar el contexto completo de Spring Boot con H2.
 
 | Métrica | Valor |
 |---|---|
-| Total de pruebas | 101 |
-| Pruebas exitosas | 101 |
+| Total de pruebas | 110 |
+| Pruebas exitosas | 110 |
 | Fallos | 0 |
 | Errores | 0 |
 | Omitidas | 0 |
 | Tasa de éxito | 100 % |
-| Suites de prueba | 19 |
+| Suites de prueba | 20 |
 | Tiempo total | ≈ 15,5 s |
 
 ### 7.4.2. Desglose por spec — Frontend
@@ -315,9 +316,9 @@ cada componente de la aplicación (64 componentes). El total real de tests ejecu
 
 | Origen | Specs | Tests |
 |---|---|---|
-| Pruebas explícitas (`it(...)`) | 34 | 178 |
+| Pruebas explícitas (`it(...)`) | 34 | 203 |
 | Smoke tests generados dinámicamente | 1 (71 componentes) | 71 |
-| **TOTAL** | **35** | **249** |
+| **TOTAL** | **35** | **274** |
 
 Desglose por categoría de los tests explícitos:
 
@@ -334,8 +335,8 @@ Desglose por categoría de los tests explícitos:
 
 | Métrica | Valor |
 |---|---|
-| Total de pruebas | 249 |
-| Pruebas exitosas | 249 |
+| Total de pruebas | 274 |
+| Pruebas exitosas | 274 |
 | Fallos | 0 |
 | Errores | 0 |
 | Specs (archivos) | 35 |

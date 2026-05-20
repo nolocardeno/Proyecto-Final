@@ -51,7 +51,7 @@ describe('FilePickerComponent', () => {
 
   it('rechaza archivos con extensión no soportada', () => {
     const spy = spyOn(alert, 'show');
-    const file = new File(['x'], 'doc.pdf', { type: 'application/pdf' });
+    const file = new File(['x'], 'documento.txt', { type: 'text/plain' });
     const { comp } = build();
     comp.onFileChange(fakeEvent(file));
     expect(spy).toHaveBeenCalledWith('error', jasmine.stringMatching(/Formato/));

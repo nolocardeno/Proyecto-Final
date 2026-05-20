@@ -115,10 +115,14 @@ Elige entre dos opciones:
 - **Desde imagen**: subes una foto o escaneo del documento y el sistema extrae los datos
   automáticamente.
 
-**Paso 2 (si elegiste «Desde imagen») — Subida de imagen**
+**Paso 2 (si elegiste «Desde imagen») — Subida de imagen o PDF**
 
-Selecciona el archivo desde tu dispositivo. Una vez cargado, el sistema
-procesa la imagen con el siguiente pipeline de extracción:
+Selecciona el archivo desde tu dispositivo. Se aceptan imágenes (JPG, PNG, WEBP, HEIC) y
+también archivos **PDF**: si subes un PDF, el backend extrae automáticamente la primera
+página y la convierte a imagen antes de procesarla. Una vez escaneado, verás una
+vista previa de la imagen resultante en el propio asistente.
+
+El sistema procesa la imagen con el siguiente pipeline de extracción:
 
 1. **Extractor OCR (PaddleOCR)**: el sidecar PaddleOCR ejecutado localmente extrae el texto
    de la imagen y aplica reglas de reconocimiento de patrones para identificar los datos

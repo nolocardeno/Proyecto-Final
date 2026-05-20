@@ -101,7 +101,7 @@
            ---------------------------------------------------------------- -->
       <label class="edit-modal__select-group">
         <span class="edit-modal__select-label">Imagen del documento</span>
-        <app-file-picker (fileSelected)="imageFile.set($event)" />
+        <app-file-picker [accept]="'image/*,application/pdf'" (fileSelected)="imageFile.set($event)" />
       </label>
 
       <!-- ----------------------------------------------------------------
